@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const AdminLogin = ({ setToken }) => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+            const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
             setToken(res.data.token);
             localStorage.setItem('adminToken', res.data.token);
         } catch (err) {
-            setError('Invalid credentials');
+            setError(err.response?.data?.message || 'Invalid credentials');
         }
+        setLoading(false);
     };
 
     return (
@@ -28,46 +32,72 @@ const AdminLogin = ({ setToken }) => {
             <form onSubmit={handleLogin} style={{
                 background: 'var(--glass)',
                 padding: '3rem',
-                borderRadius: '12px',
+                borderRadius: '24px',
                 border: '1px solid var(--glass-border)',
-                width: '100%',
-                maxWidth: '400px'
+                width: '90%',
+                maxWidth: '400px',
+                backdropFilter: 'blur(20px)'
             }}>
-                <h2 style={{ color: 'var(--gold)', marginBottom: '2rem', textAlign: 'center' }}>Admin Access</h2>
-                {error && <p style={{ color: '#ff4d4d', marginBottom: '1rem' }}>{error}</p>}
+                <h2 style={{ color: 'var(--gold)', marginBottom: '0.5rem', textAlign: 'center', fontWeight: 900 }}>ADMIN PORTAL</h2>
+                <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '2rem', fontSize: '0.9rem' }}>Secure Access Only</p>
+
+                {error && <div style={{
+                    background: 'rgba(255, 77, 77, 0.1)',
+                    color: '#ff4d4d',
+                    padding: '0.8rem',
+                    borderRadius: '8px',
+                    marginBottom: '1.5rem',
+                    fontSize: '0.85rem',
+                    textAlign: 'center',
+                    border: '1px solid rgba(255, 77, 77, 0.2)'
+                }}>{error}</div>}
+
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Username</label>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.85rem' }}>Email Address</label>
                     <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="admin@fiveeight9.co.za"
                         style={{
                             width: '100%',
-                            padding: '0.8rem',
-                            background: 'rgba(255,255,255,0.05)',
+                            padding: '1rem',
+                            background: 'rgba(255,255,255,0.03)',
                             border: '1px solid var(--glass-border)',
                             color: 'white',
-                            borderRadius: '4px'
+                            borderRadius: '12px',
+                            outline: 'none'
                         }}
                     />
                 </div>
-                <div style={{ marginBottom: '2rem' }}>
-                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Password</label>
+                <div style={{ marginBottom: '2.5rem' }}>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.85rem' }}>Security Password</label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        required
+                        placeholder="••••••••"
                         style={{
                             width: '100%',
-                            padding: '0.8rem',
-                            background: 'rgba(255,255,255,0.05)',
+                            padding: '1rem',
+                            background: 'rgba(255,255,255,0.03)',
                             border: '1px solid var(--glass-border)',
                             color: 'white',
-                            borderRadius: '4px'
+                            borderRadius: '12px',
+                            outline: 'none'
                         }}
                     />
                 </div>
-                <button className="cta-button" type="submit" style={{ width: '100%' }}>LOGIN</button>
+                <button
+                    className="cta-button"
+                    type="submit"
+                    disabled={loading}
+                    style={{ width: '100%', padding: '1.2rem', borderRadius: '12px' }}
+                >
+                    {loading ? 'AUTHENTICATING...' : 'ACCESS DASHBOARD'}
+                </button>
             </form>
         </div>
     );

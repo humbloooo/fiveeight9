@@ -1,20 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const Admin = require('../models/Admin');
 
-// For initial launch, we'll use env variables, but ideally these would be in DB
+// Admin Login
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const adminUser = process.env.ADMIN_USERNAME;
-    const adminPass = process.env.ADMIN_PASSWORD;
+    const { email, password } = req.body;
 
-    if (username === adminUser && password === adminPass) {
-        const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '24h' });
-        return res.json({ token });
+    try {
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const token = jwt.sign(
+            { id: admin._id, role: admin.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({ token, admin: { email: admin.email, role: admin.role } });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
     }
-
-    res.status(401).json({ message: 'Invalid credentials' });
 });
 
 module.exports = router;
