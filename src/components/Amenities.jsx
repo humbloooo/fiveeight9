@@ -14,7 +14,7 @@ const Amenities = () => {
     ];
 
     return (
-        <div className="amenities-grid">
+        <div id="amenities-list" className="amenities-grid">
             {amenities.map((item, i) => (
                 <div key={i} className="amenity-item">
                     <div className="amenity-icon">{item.icon}</div>
