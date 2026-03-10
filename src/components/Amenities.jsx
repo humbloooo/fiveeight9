@@ -89,6 +89,14 @@ const Amenities = () => {
                     color: #000;
                     border-color: var(--gold);
                 }
+                /* (104) Icon Morphing / Pulse effect */
+                .amenity-mini-item:hover div svg {
+                    animation: pulseIcon 0.6s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+                }
+                @keyframes pulseIcon {
+                    0% { transform: scale(1); }
+                    100% { transform: scale(1.18) rotate(5deg); }
+                }
             `}</style>
         </div>
     );

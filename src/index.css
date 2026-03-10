@@ -3,7 +3,8 @@
 :root {
   --navy: #050a1a;
   --gold: #C5A059;
-  --gold-gradient: linear-gradient(135deg, #C5A059 0%, #E8D1A5 50%, #C5A059 100%);
+  /* (103) Non-Linear Cubic Gradient Approximation */
+  --gold-gradient: linear-gradient(135deg, #A88647 0%, #C5A059 25%, #E8D1A5 50%, #C5A059 75%, #A88647 100%);
   --gold-glow: rgba(197, 160, 89, 0.4);
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
@@ -23,8 +24,8 @@
     /* Added for light theme */
     --gold: #9a7634;
     --gold-dark: #7a5e2a;
-    /* Added for light theme */
-    --gold-gradient: linear-gradient(135deg, #9a7634 0%, #c5a059 100%);
+    /* (103) Non-Linear Cubic Gradient Approx (Light Mode) */
+    --gold-gradient: linear-gradient(135deg, #7a5e2a 0%, #9a7634 30%, #c5a059 70%, #9a7634 100%);
     --gold-glow: rgba(154, 118, 52, 0.1);
     --text-primary: #1a202c;
     --text-secondary: #4a5568;
@@ -68,6 +69,12 @@
   font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
   scroll-behavior: smooth;
 }
+
+/* (006) Golden Ratio Typography Scale (1 : 1.618) */
+h1 { font-size: clamp(3rem, 8vw, 6.854rem); line-height: 1.1; letter-spacing: -0.05em; }
+h2 { font-size: clamp(2rem, 5vw, 4.236rem); line-height: 1.2; letter-spacing: -0.03em; }
+h3 { font-size: clamp(1.4rem, 3vw, 2.618rem); line-height: 1.3; letter-spacing: -0.02em; }
+h4 { font-size: clamp(1.2rem, 2vw, 1.618rem); line-height: 1.4; }
 
 body {
   background-color: var(--navy);
@@ -209,11 +216,19 @@ body {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-size: 0.85rem;
+  /* (004) Magnetic Hover Preparation (Will-change) */
+  will-change: transform, box-shadow;
 }
 
 .cta-button:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 15px 30px var(--gold-glow);
+}
+
+/* (010) Haptic Texture Simulation (Tactile Click) */
+.cta-button:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 5px 15px var(--gold-glow) inset;
 }
 
 .room-display-grid {
@@ -353,4 +368,44 @@ body {
   .amenities-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* OLED Noise Texture (Refinement 101) */
+.app-container::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Dynamic Counter Aesthetic (Refinement 001) */
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    font-weight: 600;
 }

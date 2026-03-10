@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Bell } from 'lucide-react';
 import Toast from './Toast';
+import logo from '../assets/brand/logo.png';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,8 +10,25 @@ const Navigation = () => {
   const [userRole] = useState(localStorage.getItem('userRole') || 'student'); // 'student' or 'admin'
   const [showToast, setShowToast] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
+  const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  // Context CTA Scroll Logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY < 600) setCtaText('BOOK A VIEWING');
+      else if (scrollY < 1800) setCtaText('EXPLORE ROOMS');
+      else setCtaText('RESERVE NOW');
+    };
+    
+    // Call once to set initial state based on current scroll
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // System Theme Sync & Login Notification
   useEffect(() => {
@@ -55,9 +73,8 @@ const Navigation = () => {
     <nav className="nav-cluster">
       {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
 
-      <div className="nav-logo" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
-        <span style={{ color: 'var(--text-primary)', fontWeight: 900, fontSize: '1.4rem', letterSpacing: '-1px' }}>FIVE</span>
-        <span style={{ color: 'var(--gold)', fontWeight: 900, fontSize: '1.4rem', letterSpacing: '-1px', marginLeft: '4px' }}>EIGHT 9</span>
+      <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => window.location.href = '/'}>
+        <img src={logo} alt="Five Eight 9" style={{ height: '35px', width: 'auto' }} />
       </div>
 
       {/* Desktop Main Links */}
@@ -83,6 +100,21 @@ const Navigation = () => {
             </div>
           )}
         </div>
+
+        {/* (301) NSFAS Application Cycle Countdown Badge */}
+        <div style={{
+          background: 'rgba(255, 215, 0, 0.1)',
+          border: '1px solid var(--gold)',
+          color: 'var(--gold)',
+          padding: '0.3rem 0.8rem',
+          borderRadius: '20px',
+          fontSize: '0.65rem',
+          fontWeight: 900,
+          marginLeft: '1rem',
+          letterSpacing: '1px'
+        }}>
+          NSFAS '26 OPEN
+        </div>
       </div>
 
       <div className="nav-actions desktop-only">
@@ -91,7 +123,9 @@ const Navigation = () => {
             <a href="/login" className="nav-link" style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <LogIn size={14} /> STUDENT LOG
             </a>
-            <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>BOOK A VIEWING</button>
+            <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>
+              {ctaText}
+            </button>
           </div>
         ) : (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -147,7 +181,7 @@ const Navigation = () => {
               ))}
               <div style={{ marginTop: '2rem' }}>
                 <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
-                  BOOK A VIEWING
+                  {ctaText}
                 </button>
               </div>
             </div>

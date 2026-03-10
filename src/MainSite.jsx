@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import BackToTop from './components/BackToTop';
 import BookingModal from './components/BookingModal';
+import logo from './assets/brand/logo.png';
 
 import axios from 'axios';
 import API_BASE_URL from './config';
@@ -69,12 +70,24 @@ const MainSite = () => {
             <main>
                 {/* Section 1: Hero */}
                 <section id="home" className="section hero-section reveal">
-                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px' }}>
-                        <StableLogo />
+                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', justifyContent: 'center' }}>
+                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '400px', height: 'auto', animation: 'fadeIn 1s ease' }} />
                     </div>
-                    <p style={{ marginTop: '2rem', maxWidth: '600px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 20px', lineHeight: '1.8' }}>
-                        Providing secure, high-quality, and modern lofts for the next generation of leaders.
-                        Experience comfort, safety, and a vibrant community designed for your academic journey.
+                    
+                    {/* Dynamic Room Counter (Refinement 001) */}
+                    <div className="reveal reveal-delay-1" style={{ display: 'flex', gap: '4rem', marginTop: '3rem' }}>
+                        <div className="stat-item">
+                            <span className="stat-value">231</span>
+                            <span className="stat-label">Luxury Lofts</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-value">15%</span>
+                            <span className="stat-label">Sharing Options</span>
+                        </div>
+                    </div>
+
+                    <p style={{ marginTop: '2.5rem', maxWidth: '600px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 20px', lineHeight: '1.8' }}>
+                        Providing secure, high-quality, and modern lofts for the next generation of leaders in Thohoyandou.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '3rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button className="cta-button" onClick={() => setIsBookingOpen(true)}>BOOK YOUR SPOT</button>

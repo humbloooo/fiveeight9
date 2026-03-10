@@ -1,28 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check, User, Mail, Phone, Hash, BookOpen } from 'lucide-react';
 
 const BookingModal = ({ isOpen, onClose }) => {
     const [submitted, setSubmitted] = useState(false);
+    const [step, setStep] = useState(1);
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', studentNo: '', roomType: '' });
+
+    // Refinement 008: Closing Logic
+    useEffect(() => {
+        const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
 
     if (!isOpen) return null;
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (step === 1) return setStep(2);
         setSubmitted(true);
     };
 
     return (
-        <div style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(5, 10, 26, 0.95)',
-            backdropFilter: 'blur(30px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 3000,
-            padding: '2rem'
-        }}>
+        <div 
+            onClick={(e) => e.target === e.currentTarget && onClose()}
+            style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(5, 10, 26, 0.95)',
+                backdropFilter: 'blur(30px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 3000,
+                padding: '2rem'
+            }}
+        >
             <div style={{
                 background: 'var(--navy)',
                 width: '100%',
@@ -34,25 +47,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                 boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
                 overflow: 'hidden'
             }}>
-                {/* Decorative Elements */}
-                <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '200px', height: '200px', background: 'var(--gold)', filter: 'blur(100px)', opacity: 0.1, pointerEvents: 'none' }}></div>
-
-                <button onClick={onClose} style={{
-                    position: 'absolute',
-                    top: '2rem',
-                    right: '2rem',
-                    background: 'var(--glass)',
-                    border: '1px solid var(--glass-border)',
-                    color: 'white',
-                    cursor: 'pointer',
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.3s ease'
-                }} className="hover:rotate-90">
+                <button onClick={onClose} className="hover:rotate-90" style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'white', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
                     <X size={20} />
                 </button>
 
@@ -62,56 +57,63 @@ const BookingModal = ({ isOpen, onClose }) => {
                             <Check color="#000" size={45} strokeWidth={3} />
                         </div>
                         <h2 style={{ color: 'white', marginBottom: '1.2rem', fontWeight: 900, fontSize: '2rem' }}>REQUEST SENT</h2>
-                        <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', lineHeight: '1.6' }}>Excellent choice. Our residential team will contact you within 24 hours to finalize your viewing date.</p>
-                        <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={onClose}>RETURN TO SITE</button>
+                        <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={onClose}>FINISH</button>
                     </div>
                 ) : (
                     <>
-                        <div style={{ marginBottom: '3rem' }}>
-                            <h2 style={{ color: 'white', marginBottom: '0.8rem', fontWeight: 900, fontSize: '2.2rem', letterSpacing: '-1.5px', lineHeight: 1 }}>BOOK A<br /><span style={{ color: 'var(--gold)' }}>VIEWING</span></h2>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 500 }}>Secure your academic home for the next season.</p>
+                        <div style={{ marginBottom: '2.5rem' }}>
+                            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                                <div style={{ flex: 1, height: '4px', background: 'var(--gold)', borderRadius: '2px' }}></div>
+                                <div style={{ flex: 1, height: '4px', background: step === 2 ? 'var(--gold)' : 'rgba(255,255,255,0.1)', borderRadius: '2px', transition: '0.3s' }}></div>
+                            </div>
+                            <h2 style={{ color: 'white', marginBottom: '0.5rem', fontWeight: 900, fontSize: '2rem' }}>
+                                {step === 1 ? 'PERSONAL INFO' : 'PICK YOUR LOFT'}
+                            </h2>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                Step {step} of 2: {step === 1 ? 'Tell us who you are.' : 'Select your desired accomodation.'}
+                            </p>
                         </div>
 
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                            <div className="input-group">
-                                <User size={18} className="input-icon" />
-                                <input type="text" placeholder="Full Name" required />
-                            </div>
-
-                            <div className="input-group">
-                                <Mail size={18} className="input-icon" />
-                                <input type="email" placeholder="Email Address" required />
-                            </div>
-
-                            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.2rem' }}>
-                                <div className="input-group">
-                                    <Phone size={18} className="input-icon" />
-                                    <input type="tel" placeholder="Phone" required />
-                                </div>
-                                <div className="input-group">
-                                    <Hash size={18} className="input-icon" />
-                                    <input type="text" placeholder="Student No." required />
-                                </div>
-                            </div>
-
-                            <div className="input-group">
-                                <BookOpen size={18} className="input-icon" />
-                                <select required style={{ paddingLeft: '3.5rem' }}>
-                                    <option value="">Select Room Type</option>
-                                    <option>Standard Single Loft</option>
-                                    <option>Premium Single Loft</option>
-                                    <option>Sharing Studio Loft</option>
-                                </select>
-                            </div>
-
-                            <button type="submit" className="cta-button" style={{
-                                marginTop: '1.5rem',
-                                padding: '1.2rem',
-                                width: '100%',
-                                fontSize: '1rem'
-                            }}>
-                                CONFIRM REQUEST
-                            </button>
+                            {step === 1 ? (
+                                <>
+                                    <div className="input-group">
+                                        <User size={18} className="input-icon" />
+                                        <input type="text" placeholder="Full Name" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+                                    </div>
+                                    <div className="input-group">
+                                        <Mail size={18} className="input-icon" />
+                                        <input type="email" placeholder="Email Address" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.2rem' }}>
+                                        <div className="input-group">
+                                            <Phone size={18} className="input-icon" />
+                                            <input type="tel" placeholder="Phone" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                                        </div>
+                                        <div className="input-group">
+                                            <Hash size={18} className="input-icon" />
+                                            <input type="text" placeholder="Student No." required value={formData.studentNo} onChange={(e) => setFormData({...formData, studentNo: e.target.value})} />
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="cta-button" style={{ marginTop: '1.5rem', padding: '1.2rem' }}>NEXT STEP</button>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="input-group">
+                                        <BookOpen size={18} className="input-icon" />
+                                        <select required style={{ paddingLeft: '3.5rem' }} value={formData.roomType} onChange={(e) => setFormData({...formData, roomType: e.target.value})}>
+                                            <option value="">Select Room Type</option>
+                                            <option>Standard Single Loft</option>
+                                            <option>Premium Single Loft</option>
+                                            <option>Sharing Studio Loft</option>
+                                        </select>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                                        <button type="button" className="cta-button" style={{ flex: 1, background: 'var(--glass)', color: 'white' }} onClick={() => setStep(1)}>BACK</button>
+                                        <button type="submit" className="cta-button" style={{ flex: 2 }}>BOOK VIEWING</button>
+                                    </div>
+                                </>
+                            )}
                         </form>
                     </>
                 )}
