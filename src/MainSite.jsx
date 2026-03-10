@@ -10,6 +10,7 @@ import BackToTop from './components/BackToTop';
 import BookingModal from './components/BookingModal';
 
 import axios from 'axios';
+import API_BASE_URL from './config';
 
 const MainSite = () => {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -18,7 +19,7 @@ const MainSite = () => {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/settings');
+                const res = await axios.get(`${API_BASE_URL}/api/settings`);
                 setSettings(res.data);
             } catch (err) {
                 console.error('Error fetching settings:', err);
@@ -29,13 +30,13 @@ const MainSite = () => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal');
+                    entry.target.classList.add('reveal-visible');
                 }
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('section').forEach(section => {
-            observer.observe(section);
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
         });
 
         return () => observer.disconnect();
@@ -100,11 +101,11 @@ const MainSite = () => {
                 </section>
 
                 {/* Section 2: Rooms */}
-                <section id="rooms" className="section">
+                <section id="rooms" className="section reveal">
                     <h2 className="section-title">Room <span>Options</span></h2>
                     <div className="room-display-grid">
                         {rooms.map((room, i) => (
-                            <div key={i} className="reveal" style={{ animationDelay: `${i * 0.2}s` }}>
+                            <div key={i} className={`reveal reveal-delay-${i + 1}`}>
                                 <RoomCard {...room} />
                             </div>
                         ))}
@@ -112,7 +113,7 @@ const MainSite = () => {
                 </section>
 
                 {/* Section 3: Amenities */}
-                <section id="amenities" className="section">
+                <section id="amenities" className="section reveal">
                     <h2 className="section-title">Student <span>Experience</span></h2>
                     <Amenities />
                 </section>
@@ -143,12 +144,6 @@ const MainSite = () => {
             <BackToTop />
             <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
 
-            <style>{`
-                .section { opacity: 0; transition: var(--transition-premium); transform: translateY(30px); }
-                .section.reveal { opacity: 1; transform: translateY(0); }
-                .room-display-grid > div { transition: var(--transition-premium); }
-                .room-display-grid > div:hover { transform: translateY(-10px); }
-            `}</style>
         </div>
     );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Instagram, Twitter, MessageCircle, Mail, MapPin, Phone, ShieldOutlined, ExternalLink } from 'lucide-react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 const Footer = () => {
     const [settings, setSettings] = useState(null);
@@ -17,7 +18,7 @@ const Footer = () => {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/settings');
+                const res = await axios.get(`${API_BASE_URL}/api/settings`);
                 setSettings(res.data);
             } catch (err) {
                 console.error('Error fetching footer settings:', err);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench } from 'lucide-react';
 import AdminModal from '../components/AdminModal';
 
@@ -12,48 +13,55 @@ const AdminDashboard = ({ token, setToken }) => {
     const [editingItem, setEditingItem] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    const handleLogout = () => {
-        setToken(null);
-        localStorage.removeItem('adminToken');
-    };
-
     const fetchData = React.useCallback(async () => {
         setLoading(true);
         try {
             const endpoint = (activeTab === 'tickets' || activeTab === 'settings') ? `settings` : activeTab;
-            const res = await axios.get(`http://localhost:5000/api/${endpoint}`, {
+            const res = await axios.get(`${API_BASE_URL}/api/${endpoint}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setData(res.data);
         } catch (err) {
-            console.error(err);
-            if (err.response?.status === 401) handleLogout();
+            console.error('Fetch error:', err);
+            if (err.response?.status === 401) {
+                setToken(null);
+                localStorage.removeItem('adminToken');
+            }
             setData([]);
         }
         setLoading(false);
-    }, [activeTab, token]);
+    }, [activeTab, token, setToken]);
 
     useEffect(() => {
-        fetchData();
+        let isMounted = true;
+        
+        const executeFetch = async () => {
+            if (isMounted) await fetchData();
+        };
+
+        executeFetch();
+
+        return () => { isMounted = false; };
     }, [fetchData]);
 
     const handleCreateOrUpdate = async (formData) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             if (activeTab === 'settings') {
-                await axios.post(`http://localhost:5000/api/settings`, formData, {
+                await axios.post(`${API_BASE_URL}/api/settings`, formData, {
                     headers: { 'x-auth-token': token }
                 });
                 setMessage({ type: 'success', text: 'Universal settings updated' });
             } else if (editingItem) {
-                await axios.patch(`http://localhost:5000/api/${activeTab}/${editingItem._id}`, formData, config);
+                await axios.patch(`${API_BASE_URL}/api/${activeTab}/${editingItem._id}`, formData, config);
                 setMessage({ type: 'success', text: 'Updated successfully' });
             } else {
-                await axios.post(`http://localhost:5000/api/${activeTab}`, formData, config);
+                await axios.post(`${API_BASE_URL}/api/${activeTab}`, formData, config);
                 setMessage({ type: 'success', text: 'Created successfully' });
             }
             fetchData();
-        } catch (err) {
+        } catch (error) {
+            console.error('Update operation failed:', error);
             setMessage({ type: 'error', text: 'Operation failed' });
         }
     };
@@ -61,12 +69,13 @@ const AdminDashboard = ({ token, setToken }) => {
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure?')) return;
         try {
-            await axios.delete(`http://localhost:5000/api/${activeTab}/${id}`, {
+            await axios.delete(`${API_BASE_URL}/api/${activeTab}/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage({ type: 'success', text: 'Deleted successfully' });
             fetchData();
-        } catch (err) {
+        } catch (error) {
+            console.error('Delete operation failed:', error);
             setMessage({ type: 'error', text: 'Delete failed' });
         }
     };
@@ -127,7 +136,7 @@ const AdminDashboard = ({ token, setToken }) => {
                         </button>
                     ))}
                 </nav>
-                <button onClick={handleLogout} style={{ marginTop: 'auto', width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontWeight: 'bold' }}>
+                <button onClick={() => { setToken(null); localStorage.removeItem('adminToken'); }} style={{ marginTop: 'auto', width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontWeight: 'bold' }}>
                     <LogOut size={18} /> Logout
                 </button>
             </div>
