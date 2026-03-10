@@ -1,30 +1,55 @@
 const express = require('express');
 const router = express.Router();
-const Setting = require('../models/Setting');
-const auth = require('../middleware/auth');
+const Settings = require('../models/Settings');
+const jwt = require('jsonwebtoken');
 
-// Public: Get all settings
+// Middleware to check admin token
+const auth = (req, res, next) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (e) {
+        res.status(400).json({ msg: 'Token is not valid' });
+    }
+};
+
+// @route   GET api/settings
+// @desc    Get all site settings
 router.get('/', async (req, res) => {
     try {
-        const settings = await Setting.find();
+        let settings = await Settings.findOne();
+        if (!settings) {
+            // Create default settings if none exist
+            settings = new Settings();
+            await settings.save();
+        }
         res.json(settings);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).send('Server Error');
     }
 });
 
-// Admin: Upsert setting
+// @route   POST api/settings
+// @desc    Update site settings
 router.post('/', auth, async (req, res) => {
-    const { key, value, description } = req.body;
     try {
-        const setting = await Setting.findOneAndUpdate(
-            { key },
-            { value, description },
-            { upsert: true, new: true }
-        );
-        res.json(setting);
+        let settings = await Settings.findOne();
+        if (settings) {
+            settings = await Settings.findOneAndUpdate(
+                {},
+                { $set: req.body },
+                { new: true }
+            );
+        } else {
+            settings = new Settings(req.body);
+            await settings.save();
+        }
+        res.json(settings);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).send('Server Error');
     }
 });
 

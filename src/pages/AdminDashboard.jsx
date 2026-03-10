@@ -12,10 +12,14 @@ const AdminDashboard = ({ token, setToken }) => {
     const [editingItem, setEditingItem] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    const fetchData = async () => {
+    const handleLogout = () => {
+        setToken(null);
+        localStorage.removeItem('adminToken');
+    };
+
+    const fetchData = React.useCallback(async () => {
         setLoading(true);
         try {
-            // For tabs that don't have endpoints yet, we mock or use empty array
             const endpoint = (activeTab === 'tickets' || activeTab === 'settings') ? `settings` : activeTab;
             const res = await axios.get(`http://localhost:5000/api/${endpoint}`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -27,16 +31,21 @@ const AdminDashboard = ({ token, setToken }) => {
             setData([]);
         }
         setLoading(false);
-    };
+    }, [activeTab, token]);
 
     useEffect(() => {
         fetchData();
-    }, [activeTab]);
+    }, [fetchData]);
 
     const handleCreateOrUpdate = async (formData) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            if (editingItem) {
+            if (activeTab === 'settings') {
+                await axios.post(`http://localhost:5000/api/settings`, formData, {
+                    headers: { 'x-auth-token': token }
+                });
+                setMessage({ type: 'success', text: 'Universal settings updated' });
+            } else if (editingItem) {
                 await axios.patch(`http://localhost:5000/api/${activeTab}/${editingItem._id}`, formData, config);
                 setMessage({ type: 'success', text: 'Updated successfully' });
             } else {
@@ -62,16 +71,11 @@ const AdminDashboard = ({ token, setToken }) => {
         }
     };
 
-    const handleLogout = () => {
-        setToken(null);
-        localStorage.removeItem('adminToken');
-    };
-
     const tabs = [
         { id: 'rooms', name: 'Rooms', icon: <Home size={18} /> },
         { id: 'amenities', name: 'Amenities', icon: <Shield size={18} /> },
         { id: 'cafeteria', name: 'Nari\'s Cafe', icon: <Coffee size={18} /> },
-        { id: 'tickets', name: 'Tickets', icon: <Tool size={18} /> },
+        { id: 'tickets', name: 'Tickets', icon: <Wrench size={18} /> },
         { id: 'settings', name: 'Settings', icon: <Settings size={18} /> },
     ];
 
@@ -168,8 +172,19 @@ const AdminDashboard = ({ token, setToken }) => {
                 {loading ? (
                     <div style={{ color: '#C5A059' }}>Loading data...</div>
                 ) : (
-                    <div className="admin-list-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                        {data.length === 0 ? (
+                    <div className="admin-list-grid" style={{ display: (activeTab === 'settings' || (Array.isArray(data) && data.length === 0)) ? 'block' : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                        {activeTab === 'settings' ? (
+                            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                                <Settings size={48} style={{ color: 'var(--gold)', marginBottom: '1.5rem' }} />
+                                <h2 style={{ marginBottom: '1rem' }}>Universal Site Settings</h2>
+                                <p style={{ color: '#a0aec0', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                    Manage social links, emergency contacts, and global visibility toggles across the entire platform.
+                                </p>
+                                <button className="cta-button" onClick={() => { setEditingItem(data); setIsModalOpen(true); }}>
+                                    CONFIGURE SYSTEM
+                                </button>
+                            </div>
+                        ) : data.length === 0 ? (
                             <div style={{ color: 'var(--text-secondary)' }}>No items found in this category.</div>
                         ) : (
                             data.map((item) => (

@@ -9,10 +9,23 @@ import WhatsAppButton from './components/WhatsAppButton';
 import BackToTop from './components/BackToTop';
 import BookingModal from './components/BookingModal';
 
+import axios from 'axios';
+
 const MainSite = () => {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const [settings, setSettings] = useState(null);
 
     useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/api/settings');
+                setSettings(res.data);
+            } catch (err) {
+                console.error('Error fetching settings:', err);
+            }
+        };
+        fetchSettings();
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -28,9 +41,11 @@ const MainSite = () => {
         return () => observer.disconnect();
     }, []);
 
+    const showPrices = settings?.displayOptions?.showRoomPrices ?? true;
+
     const rooms = [
-        { title: 'Single Room', price: 'R4,400 p/m', subtitle: 'Private space for focused success.', nsfas: true },
-        { title: 'Sharing Room', price: 'R4,400 p/m', subtitle: 'Shared comfort and community living.', nsfas: true },
+        { title: 'Single Room', price: showPrices ? 'R4,400 p/m' : '', subtitle: 'Private space for focused success.', nsfas: true },
+        { title: 'Sharing Room', price: showPrices ? 'R4,400 p/m' : '', subtitle: 'Shared comfort and community living.', nsfas: true },
     ];
 
     return (
