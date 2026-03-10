@@ -20,9 +20,22 @@ cloudinary.config({
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error('MongoDB Connection Error:', err));
+const connectDB = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+        });
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (err) {
+        console.error('CRITICAL: MongoDB Connection Error');
+        console.error('Error Details:', err.message);
+        if (err.message.includes('ENOTFOUND')) {
+            console.error('SUGGESTION: The internal host could not be resolved. Check if your Mongo service is running or use the Public URI.');
+        }
+    }
+};
+
+connectDB();
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
