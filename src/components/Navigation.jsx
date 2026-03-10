@@ -135,18 +135,18 @@ const Navigation = () => {
             </div>
 
             <div className="overlay-section">
-              <h3>Resident Portal</h3>
-              {residentLinks.map(link => (
-                <a key={link.name} href={link.href} onClick={toggleMenu}>{link.name}</a>
-              ))}
+              <h3>Portals</h3>
+              <a href="/admin" onClick={toggleMenu}>Staff Portal</a>
+              <a href="/login" onClick={toggleMenu}>Student Portal</a>
             </div>
 
             <div className="overlay-section">
-              <h3>Account</h3>
-              <a href="/admin"><Shield size={16} /> Admin Login</a>
-              <a href="/login"><User size={16} /> Student Portal</a>
+              <h3>Resident Services</h3>
+              {residentLinks.slice(0, 3).map(link => (
+                <a key={link.name} href={link.href} onClick={toggleMenu}>{link.name}</a>
+              ))}
               <div style={{ marginTop: '2rem' }}>
-                <button className="cta-button" style={{ width: '100%' }} onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
+                <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
                   BOOK A VIEWING
                 </button>
               </div>
@@ -242,9 +242,9 @@ const Navigation = () => {
         .overlay-content { width: 90%; max-width: 1100px; padding: 2rem; }
         .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; }
         .overlay-label { font-size: 0.7rem; color: var(--gold); font-weight: 900; text-transform: uppercase; letter-spacing: 4px; }
-        .overlay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 4rem; }
-        .overlay-section h3 { font-size: 0.8rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; opacity: 0.7; }
-        .overlay-section a { display: block; font-size: 1.8rem; font-weight: 800; color: #fff; text-decoration: none; margin-bottom: 1rem; transition: all 0.3s ease; }
+        .overlay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
+        .overlay-section h3 { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; opacity: 0.5; }
+        .overlay-section a { display: block; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; color: #fff; text-decoration: none; margin-bottom: 1rem; transition: var(--transition-premium); }
         .overlay-section a:hover { color: var(--gold); transform: translateX(10px); }
 
         .admin-menu-bar { 
@@ -266,7 +266,9 @@ const Navigation = () => {
 
         @media (max-width: 1024px) {
             .desktop-only { display: none; }
-            .overlay-section a { font-size: 1.4rem; }
+            .overlay-content { width: 85%; }
+            .overlay-section a { font-size: 1.6rem; }
+            .overlay-grid { gap: 2rem; }
         }
       `}</style>
     </nav>

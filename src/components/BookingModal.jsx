@@ -131,23 +131,23 @@ const BookingModal = ({ isOpen, onClose }) => {
                     }
                     input, select {
                         width: 100%;
-                        padding: 1.1rem 1.1rem 1.1rem 3.5rem;
-                        background: rgba(255,255,255,0.03);
+                        padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+                        background: var(--glass-thick);
                         border: 1px solid var(--glass-border);
                         color: white !important;
-                        border-radius: 16px;
+                        border-radius: 20px;
                         font-family: inherit;
-                        font-size: 0.95rem;
-                        transition: all 0.3s ease;
+                        font-size: 1rem;
+                        transition: var(--transition-premium);
                         outline: none;
                     }
                     input:focus, select:focus {
                         border-color: var(--gold);
-                        background: rgba(255,255,255,0.06);
-                        box-shadow: 0 0 20px rgba(197,160,89,0.1);
+                        background: rgba(255,255,255,0.08);
+                        box-shadow: 0 0 30px rgba(197,160,89,0.15);
                     }
                     input::placeholder {
-                        color: rgba(255,255,255,0.3);
+                        color: rgba(255,255,255,0.5); /* Increased contrast from 0.3 */
                     }
                     select option {
                         background: var(--navy);

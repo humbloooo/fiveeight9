@@ -44,8 +44,20 @@ const MainSite = () => {
     const showPrices = settings?.displayOptions?.showRoomPrices ?? true;
 
     const rooms = [
-        { title: 'Single Room', price: showPrices ? 'R4,400 p/m' : '', subtitle: 'Private space for focused success.', nsfas: true },
-        { title: 'Sharing Room', price: showPrices ? 'R4,400 p/m' : '', subtitle: 'Shared comfort and community living.', nsfas: true },
+        {
+            title: 'Single Room',
+            price: showPrices ? 'R4,400 p/m' : '',
+            subtitle: 'Private space for focused success. Featuring premium ensuite and modern workstation.',
+            nsfas: true,
+            image: 'https://images.unsplash.com/photo-1554995207-c18c20360a59?auto=format&fit=crop&q=80&w=800'
+        },
+        {
+            title: 'Sharing Room',
+            price: showPrices ? 'R4,400 p/m' : '',
+            subtitle: 'Shared comfort and community living. Perfectly balanced for collaboration and privacy.',
+            nsfas: true,
+            image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=800'
+        },
     ];
 
     return (
@@ -107,20 +119,21 @@ const MainSite = () => {
 
                 {/* Section 4: Contact/CTA */}
                 <section id="contact" className="section reveal" style={{ minHeight: '60vh' }}>
-                    <div style={{
-                        background: 'var(--glass)',
+                    <div className="glass-panel" style={{
                         padding: '5rem',
-                        borderRadius: '40px',
-                        border: '1px solid var(--glass-border)',
+                        borderRadius: '60px',
                         textAlign: 'center',
-                        maxWidth: '900px',
-                        width: '100%'
+                        maxWidth: '1000px',
+                        width: '100%',
+                        position: 'relative',
+                        overflow: 'hidden'
                     }}>
-                        <h2 className="section-title" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '1.5rem' }}>Ready to <span>Move In?</span></h2>
-                        <p style={{ maxWidth: '600px', marginBottom: '3rem', color: 'var(--text-secondary)', textAlign: 'center', margin: '0 auto 3rem', lineHeight: '1.6' }}>
-                            Join a community of high-achieving students in an environment that fosters academic excellence and vibrant life.
+                        <div style={{ position: 'absolute', top: '-10%;', left: '0', width: '100%', height: '100%', background: 'radial-gradient(circle at center, var(--gold-glow), transparent 70%)', opacity: 0.1, pointerEvents: 'none' }}></div>
+                        <h2 className="section-title" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1.5rem' }}>Ready to <span className="gold-text">Move In?</span></h2>
+                        <p style={{ maxWidth: '650px', marginBottom: '3.5rem', color: 'var(--text-secondary)', textAlign: 'center', margin: '0 auto 3.5rem', lineHeight: '1.8', fontSize: '1.1rem' }}>
+                            Join a community of high-achieving students in an environment that fosters academic excellence and a vibrant social vibe.
                         </p>
-                        <button className="cta-button" style={{ fontSize: '1.1rem', padding: '1.2rem 3.5rem' }} onClick={() => setIsBookingOpen(true)}>REQUEST A VIEWING</button>
+                        <button className="cta-button" style={{ fontSize: '1.1rem', padding: '1.3rem 4rem' }} onClick={() => setIsBookingOpen(true)}>REQUEST A VIEWING</button>
                     </div>
                 </section>
             </main>
@@ -131,8 +144,10 @@ const MainSite = () => {
             <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
 
             <style>{`
-                .section { opacity: 0; }
-                .section.reveal { opacity: 1; }
+                .section { opacity: 0; transition: var(--transition-premium); transform: translateY(30px); }
+                .section.reveal { opacity: 1; transform: translateY(0); }
+                .room-display-grid > div { transition: var(--transition-premium); }
+                .room-display-grid > div:hover { transform: translateY(-10px); }
             `}</style>
         </div>
     );

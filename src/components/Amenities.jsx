@@ -14,32 +14,30 @@ const Amenities = () => {
     ];
 
     return (
-        <div style={{
-            background: 'var(--glass)',
-            backdropFilter: 'blur(30px)',
-            border: '1px solid var(--glass-border)',
-            borderRadius: '24px',
-            padding: '3rem 2rem',
+        <div className="reveal glass-panel" style={{
+            padding: '4rem 2.5rem',
             width: '100%',
             maxWidth: '1200px',
             margin: '0 auto',
             position: 'relative',
-            overflow: 'hidden'
-        }} className="reveal">
+            overflow: 'hidden',
+            borderRadius: '40px'
+        }}>
             <div style={{
                 position: 'absolute',
                 top: 0,
                 left: '50%',
                 transform: 'translateX(-50%)',
-                background: 'var(--gold)',
+                background: 'var(--gold-gradient)',
                 color: '#000',
-                padding: '0.5rem 1.5rem',
-                fontSize: '0.7rem',
+                padding: '0.6rem 2rem',
+                fontSize: '0.75rem',
                 fontWeight: 900,
-                letterSpacing: '2px',
-                borderBottomLeftRadius: '12px',
-                borderBottomRightRadius: '12px',
-                textTransform: 'uppercase'
+                letterSpacing: '3px',
+                borderBottomLeftRadius: '20px',
+                borderBottomRightRadius: '20px',
+                textTransform: 'uppercase',
+                boxShadow: '0 5px 15px rgba(197, 160, 89, 0.3)'
             }}>
                 Student Experience
             </div>
