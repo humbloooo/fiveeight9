@@ -4,9 +4,11 @@ const Background = () => {
     return (
         <div className="background-wrapper">
             <div className="celestial-bg">
-                <div className="stars"></div>
-                <div className="twinkling"></div>
-                <div className="clouds"></div>
+                <div className="stars-container">
+                    <div className="stars-layer s1"></div>
+                    <div className="stars-layer s2"></div>
+                    <div className="stars-layer s3"></div>
+                </div>
             </div>
 
             <style>{`
@@ -30,6 +32,7 @@ const Background = () => {
                     height: 100%;
                     display: block;
                     mix-blend-mode: screen;
+                    opacity: 0.8;
                 }
 
                 /* Strictly follow system theme */
@@ -44,44 +47,67 @@ const Background = () => {
                     }
                 }
 
-                .stars, .twinkling, .clouds {
+                .stars-container {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: transparent;
+                }
+
+                .stars-layer {
                     position: absolute;
                     top: 0;
                     left: 0;
-                    right: 0;
-                    bottom: 0;
                     width: 100%;
                     height: 100%;
-                    display: block;
                 }
 
-                .stars {
-                    background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center;
-                    z-index: 0;
-                    opacity: 0.5;
+                /* CSS ONLY STARS - NO IMAGES */
+                .stars-layer.s1 {
+                    background-image: 
+                        radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+                        radial-gradient(1px 1px at 20% 50%, #fff, transparent),
+                        radial-gradient(1.5px 1.5px at 30% 80%, #fff, transparent),
+                        radial-gradient(1px 1px at 40% 10%, #fff, transparent),
+                        radial-gradient(1.5px 1.5px at 50% 60%, #fff, transparent),
+                        radial-gradient(1px 1px at 60% 30%, #fff, transparent),
+                        radial-gradient(1.5px 1.5px at 70% 90%, #fff, transparent),
+                        radial-gradient(1px 1px at 80% 40%, #fff, transparent),
+                        radial-gradient(1.5px 1.5px at 90% 70%, #fff, transparent);
+                    background-size: 50% 50%;
+                    animation: twinkle 4s ease-in-out infinite alternate;
                 }
 
-                .twinkling {
-                    background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center;
-                    z-index: 1;
-                    animation: move-twink-back 200s linear infinite;
+                .stars-layer.s2 {
+                    background-image: 
+                        radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.8), transparent),
+                        radial-gradient(1px 1px at 35% 45%, rgba(197, 160, 89, 0.5), transparent),
+                        radial-gradient(1.5px 1.5px at 55% 65%, rgba(255,255,255,0.8), transparent),
+                        radial-gradient(1px 1px at 75% 85%, rgba(197, 160, 89, 0.5), transparent),
+                        radial-gradient(1px 1px at 95% 15%, rgba(255,255,255,0.8), transparent);
+                    background-size: 40% 40%;
+                    animation: twinkle 6s ease-in-out infinite alternate-reverse;
                 }
 
-                .clouds {
-                    background: transparent url(https://www.script-tutorials.com/demos/360/images/clouds3.png) repeat top center;
-                    z-index: 2;
-                    opacity: 0.15;
-                    animation: move-clouds-back 300s linear infinite;
+                .stars-layer.s3 {
+                    background-image: 
+                        radial-gradient(2px 2px at 5% 95%, #fff, transparent),
+                        radial-gradient(2px 2px at 45% 5%, #fff, transparent),
+                        radial-gradient(2px 2px at 85% 55%, #fff, transparent);
+                    background-size: 70% 70%;
+                    animation: twinkle 8s ease-in-out infinite alternate;
+                    opacity: 0.3;
                 }
 
-                @keyframes move-twink-back {
-                    from { background-position: 0 0; }
-                    to { background-position: -10000px 5000px; }
+                @keyframes twinkle {
+                    0% { opacity: 0.3; transform: scale(1); }
+                    50% { opacity: 1; transform: scale(1.05); }
+                    100% { opacity: 0.4; transform: scale(1); }
                 }
 
-                @keyframes move-clouds-back {
-                    from { background-position: 0 0; }
-                    to { background-position: 10000px 0; }
+                @keyframes drift {
+                    from { transform: translateX(0); }
+                    to { transform: translateX(-50px); }
                 }
             `}</style>
         </div>

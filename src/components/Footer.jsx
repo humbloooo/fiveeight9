@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Instagram, Twitter, MessageCircle, Mail, MapPin, Phone, ShieldOutlined, ExternalLink } from 'lucide-react';
+import { Instagram, Twitter, MessageCircle, Mail, MapPin, Phone, Shield, ExternalLink } from 'lucide-react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
 

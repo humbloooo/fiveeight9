@@ -44,8 +44,13 @@ app.use('/api/amenities', require('./routes/amenities'));
 app.use('/api/cafeteria', require('./routes/cafeteria'));
 app.use('/api/settings', require('./routes/settings'));
 
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'Server is running' });
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.listen(PORT, () => {
