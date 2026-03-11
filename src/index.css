@@ -42,6 +42,25 @@
   }
 }
 
+body.light-mode {
+  --navy: #f8f9fa;
+  --navy-light: #e0e0e0;
+  --gold: #9a7634;
+  --gold-dark: #7a5e2a;
+  --gold-gradient: linear-gradient(135deg, #7a5e2a 0%, #9a7634 30%, #c5a059 70%, #9a7634 100%);
+  --gold-glow: rgba(154, 118, 52, 0.1);
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --glass: rgba(255, 255, 255, 0.85);
+  --glass-deep: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-thick: rgba(0, 0, 0, 0.05);
+  --nav-bg: rgba(248, 249, 250, 0.85);
+  --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

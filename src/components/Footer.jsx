@@ -119,8 +119,8 @@ const Footer = () => {
                         }} />
                         <button style={{
                             background: 'var(--gold)',
+                            color: 'var(--navy)',
                             border: 'none',
-                            color: '#000',
                             padding: '0 1.2rem',
                             borderRadius: '8px',
                             fontWeight: 900,

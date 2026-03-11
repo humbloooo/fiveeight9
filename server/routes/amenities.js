@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Amenity = require('../models/Amenity');
-const auth = require('../middleware/auth');
+const { auth, requireAdmin } = require('../middleware/auth');
 
 // Public: Get all amenities
 router.get('/', async (req, res) => {
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // Admin: Add/Edit/Remove
-router.post('/', auth, async (req, res) => {
+router.post('/', [auth, requireAdmin], async (req, res) => {
     const amenity = new Amenity(req.body);
     try {
         const newAmenity = await amenity.save();
@@ -24,7 +24,7 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-router.patch('/:id', auth, async (req, res) => {
+router.patch('/:id', [auth, requireAdmin], async (req, res) => {
     try {
         const updated = await Amenity.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.json(updated);
@@ -33,7 +33,7 @@ router.patch('/:id', auth, async (req, res) => {
     }
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', [auth, requireAdmin], async (req, res) => {
     try {
         await Amenity.findByIdAndDelete(req.params.id);
         res.json({ message: 'Amenity deleted' });

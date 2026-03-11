@@ -1,15 +1,20 @@
 import React from 'react';
+// eslint-disable-next-line no-unused-vars
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const Background = () => {
+    const { scrollY } = useScroll();
+    const yBg = useTransform(scrollY, [0, 3000], [0, 300]);
+
     return (
         <div className="background-wrapper">
-            <div className="celestial-bg">
+            <motion.div className="celestial-bg" style={{ y: yBg }}>
                 <div className="stars-container">
                     <div className="stars-layer s1"></div>
                     <div className="stars-layer s2"></div>
                     <div className="stars-layer s3"></div>
                 </div>
-            </div>
+            </motion.div>
 
             <style>{`
                 .background-wrapper {

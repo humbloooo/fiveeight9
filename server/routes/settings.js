@@ -1,20 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Settings = require('../models/Settings');
+const Room = require('../models/Room');
+const Amenity = require('../models/Amenity');
+const CafeteriaItem = require('../models/CafeteriaItem');
 const jwt = require('jsonwebtoken');
 
-// Middleware to check admin token
-const auth = (req, res, next) => {
-    const token = req.header('x-auth-token');
-    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (e) {
-        res.status(400).json({ msg: 'Token is not valid' });
-    }
-};
+const { auth, requireAdmin } = require('../middleware/auth');
 
 // @route   GET api/settings
 // @desc    Get all site settings
@@ -34,7 +26,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST api/settings
 // @desc    Update site settings
-router.post('/', auth, async (req, res) => {
+router.post('/', [auth, requireAdmin], async (req, res) => {
     try {
         let settings = await Settings.findOne();
         if (settings) {
@@ -49,6 +41,22 @@ router.post('/', auth, async (req, res) => {
         }
         res.json(settings);
     } catch (err) {
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   DELETE api/settings/factory-reset
+// @desc    Clear all operational data for a new deployment
+router.delete('/factory-reset', [auth, requireAdmin], async (req, res) => {
+    try {
+        await Promise.all([
+            Room.deleteMany({}),
+            Amenity.deleteMany({}),
+            CafeteriaItem.deleteMany({})
+        ]);
+        res.json({ msg: 'Factory reset complete' });
+    } catch (err) {
+        console.error('Factory reset failed:', err);
         res.status(500).send('Server Error');
     }
 });

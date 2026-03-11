@@ -5,11 +5,11 @@ const Amenity = require('../models/Amenity');
 const CafeteriaItem = require('../models/CafeteriaItem');
 const Settings = require('../models/Settings');
 const Setting = require('../models/Setting');
-const auth = require('../middleware/auth');
+const { auth, requireAdmin } = require('../middleware/auth');
 
 // GET /api/backup
 // Generates a full JSON snapshot of the core database
-router.get('/', auth, async (req, res) => {
+router.get('/', [auth, requireAdmin], async (req, res) => {
     try {
         // We'll skip Admin/users for security reasons, exporting only content rules/data
         const [rooms, amenities, cafeteria, settings, oldSettings] = await Promise.all([

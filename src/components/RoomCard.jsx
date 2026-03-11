@@ -37,7 +37,7 @@ const RoomCard = ({ title, price, subtitle, nsfas, image }) => {
                         <div style={{ display: 'flex', gap: '0.6rem' }}>
                             <span style={{
                                 background: 'var(--gold-gradient)',
-                                color: '#000',
+                                color: 'var(--navy)',
                                 padding: '0.4rem 1rem',
                                 borderRadius: '8px',
                                 fontSize: '0.7rem',

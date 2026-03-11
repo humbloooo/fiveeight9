@@ -8,6 +8,10 @@ import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import BackToTop from './components/BackToTop';
 import BookingModal from './components/BookingModal';
+import CursorGlow from './components/CursorGlow';
+import SkeletonLoader from './components/SkeletonLoader';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import logo from './assets/brand/logo.png';
 
 import axios from 'axios';
@@ -54,7 +58,14 @@ const MainSite = () => {
     const showPrices = settings?.displayOptions?.showRoomPrices ?? true;
 
     return (
-        <div className="app-container">
+        <motion.div 
+            className="app-container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+        >
+            <CursorGlow />
             <Background />
             <Navigation />
 
@@ -62,7 +73,7 @@ const MainSite = () => {
                 {/* Section 1: Hero */}
                 <section id="home" className="section hero-section reveal">
                     <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', justifyContent: 'center' }}>
-                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '280px', height: 'auto', animation: 'fadeIn 1s ease' }} />
+                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '200px', height: 'auto', animation: 'fadeIn 1s ease' }} />
                     </div>
                     
                     {/* Dynamic Room Counter (Refinement 001) */}
@@ -110,7 +121,7 @@ const MainSite = () => {
                     <div className="room-display-grid">
                         {loadingRooms ? (
                             Array(2).fill(0).map((_, i) => (
-                                <div key={i} className="room-card glass-panel skeleton" style={{ height: '450px', borderRadius: '24px' }}></div>
+                                <SkeletonLoader key={i} height="450px" borderRadius="24px" className="room-card glass-panel" />
                             ))
                         ) : rooms.length > 0 ? (
                             rooms.map((room, i) => (
@@ -156,7 +167,7 @@ const MainSite = () => {
             <BackToTop />
             <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
 
-        </div>
+        </motion.div>
     );
 };
 

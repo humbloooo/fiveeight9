@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
 const Toast = ({ message, type = 'success', onClose }) => {
@@ -35,7 +35,7 @@ const Toast = ({ message, type = 'success', onClose }) => {
         }}>
             {icons[type]}
             <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{message}</span>
-            <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#a0aec0', cursor: 'pointer', padding: '0.2rem' }}><X size={16} /></button>
+            <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.2rem' }}><X size={16} /></button>
 
             <style>{`
         @keyframes slideInRight {

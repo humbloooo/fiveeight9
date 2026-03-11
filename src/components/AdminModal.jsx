@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { X, Upload, Save, Loader, Globe, Phone, AlertCircle, Image as ImageIcon, Eye, EyeOff } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
     const [formData, setFormData] = useState({});
@@ -9,7 +11,8 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
     useEffect(() => {
         if (type === 'settings') {
-            setFormData(editingItem || {
+            // eslint-disable-next-line
+            setFormData(() => editingItem || {
                 socialLinks: {
                     twitter: { link: '', visible: false },
                     instagram: { link: '', visible: false },
@@ -191,13 +194,27 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
             <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Description/Subtitle</label>
-                <textarea
-                    name={type === 'rooms' ? 'subtitle' : 'description'}
-                    value={type === 'rooms' ? formData.subtitle : formData.description}
-                    onChange={handleChange}
-                    className="admin-input"
-                    style={{ minHeight: '80px', resize: 'vertical' }}
-                />
+                <div style={{ background: '#fff', color: '#000', borderRadius: '8px', overflow: 'hidden' }}>
+                    <ReactQuill 
+                        theme="snow" 
+                        value={type === 'rooms' ? formData.subtitle || '' : formData.description || ''} 
+                        onChange={(content) => {
+                            if (type === 'rooms') {
+                                setFormData(prev => ({ ...prev, subtitle: content }));
+                            } else {
+                                setFormData(prev => ({ ...prev, description: content }));
+                            }
+                        }}
+                        modules={{
+                            toolbar: [
+                                ['bold', 'italic', 'underline'],
+                                [{'list': 'ordered'}, {'list': 'bullet'}],
+                                ['clean']
+                            ]
+                        }}
+                        style={{ height: '200px', paddingBottom: '40px' }}
+                    />
+                </div>
             </div>
 
             {type === 'rooms' && (

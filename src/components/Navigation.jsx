@@ -3,6 +3,38 @@ import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Bell, Eye } from 
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
 
+const MagneticLink = ({ children, href, className }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e) => {
+      const { clientX, clientY } = e;
+      const { height, width, left, top } = ref.current.getBoundingClientRect();
+      const middleX = clientX - (left + width / 2);
+      const middleY = clientY - (top + height / 2);
+      setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
+  };
+
+  const reset = () => {
+      setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+      <motion.a
+          ref={ref}
+          href={href}
+          className={className}
+          onMouseMove={handleMouse}
+          onMouseLeave={reset}
+          animate={{ x: position.x, y: position.y }}
+          transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+          style={{ display: 'inline-block' }}
+      >
+          {children}
+      </motion.a>
+  );
+};
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isResidentMenuOpen, setIsResidentMenuOpen] = useState(false);
@@ -49,11 +81,22 @@ const Navigation = () => {
     };
     checkLogin();
 
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const applyTheme = () => {
+      if (theme === 'system') {
+        const systemTheme = mediaQuery.matches ? 'dark' : 'light';
+        document.body.classList.toggle('light-mode', systemTheme === 'light');
+      } else {
+        document.body.classList.toggle('light-mode', theme === 'light');
+      }
+    };
+
+    applyTheme();
+
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.body.classList.toggle('light-mode', systemTheme === 'light');
-    } else {
-      document.body.classList.toggle('light-mode', theme === 'light');
+      const handleChange = () => applyTheme();
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
     }
   }, [theme]);
 
@@ -335,3 +378,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+

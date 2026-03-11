@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
-import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench } from 'lucide-react';
+import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle } from 'lucide-react';
 import AdminModal from '../components/AdminModal';
+import SkeletonLoader from '../components/SkeletonLoader';
+import { useToast } from '../context/ToastContext';
 
 const AdminDashboard = ({ token, setToken }) => {
     const [activeTab, setActiveTab] = useState('rooms');
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [message, setMessage] = useState(null);
+    const { addToast } = useToast();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const userRole = localStorage.getItem('userRole') || 'student';
 
     const fetchData = React.useCallback(async () => {
         setLoading(true);
@@ -48,21 +52,19 @@ const AdminDashboard = ({ token, setToken }) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             if (activeTab === 'settings') {
-                await axios.post(`${API_BASE_URL}/api/settings`, formData, {
-                    headers: { 'x-auth-token': token }
-                });
-                setMessage({ type: 'success', text: 'Universal settings updated' });
+                await axios.post(`${API_BASE_URL}/api/settings`, formData, config);
+                addToast('Universal settings updated', 'success');
             } else if (editingItem) {
                 await axios.patch(`${API_BASE_URL}/api/${activeTab}/${editingItem._id}`, formData, config);
-                setMessage({ type: 'success', text: 'Updated successfully' });
+                addToast('Updated successfully', 'success');
             } else {
                 await axios.post(`${API_BASE_URL}/api/${activeTab}`, formData, config);
-                setMessage({ type: 'success', text: 'Created successfully' });
+                addToast('Created successfully', 'success');
             }
             fetchData();
         } catch (error) {
             console.error('Update operation failed:', error);
-            setMessage({ type: 'error', text: 'Operation failed' });
+            addToast('Operation failed', 'error');
         }
     };
 
@@ -72,11 +74,11 @@ const AdminDashboard = ({ token, setToken }) => {
             await axios.delete(`${API_BASE_URL}/api/${activeTab}/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setMessage({ type: 'success', text: 'Deleted successfully' });
+            addToast('Deleted successfully', 'success');
             fetchData();
         } catch (error) {
             console.error('Delete operation failed:', error);
-            setMessage({ type: 'error', text: 'Delete failed' });
+            addToast('Delete failed', 'error');
         }
     };
 
@@ -93,10 +95,63 @@ const AdminDashboard = ({ token, setToken }) => {
             document.body.appendChild(link);
             link.click();
             link.parentNode.removeChild(link);
-            setMessage({ type: 'success', text: 'Backup downloaded safely.' });
+            addToast('Backup downloaded safely.', 'success');
         } catch (error) {
             console.error('Backup download failed:', error);
-            setMessage({ type: 'error', text: 'Backup failed. You must be authenticated.' });
+            addToast('Backup failed. Authentication required.', 'error');
+        }
+    };
+
+    const handleExportCSV = () => {
+        if (!filteredData || filteredData.length === 0) {
+            addToast('No data to export', 'info');
+            return;
+        }
+
+        const headers = Object.keys(filteredData[0]).filter(k => k !== '_id' && k !== '__v');
+        const csvRows = [];
+        
+        csvRows.push(headers.join(','));
+        
+        for (const row of filteredData) {
+            const values = headers.map(header => {
+                const escaped = ('' + row[header]).replace(/"/g, '\\"');
+                return `"${escaped}"`;
+            });
+            csvRows.push(values.join(','));
+        }
+        
+        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${activeTab}_export_${Date.now()}.csv`);
+        // eslint-disable-next-line
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+        addToast('CSV exported safely.', 'success');
+    };
+
+    const handleFactoryReset = async () => {
+        const confirm1 = window.confirm('WARNING: This will delete ALL operational data irreversibly. Are you absolutely certain?');
+        if (!confirm1) return;
+        
+        const confirm2 = window.prompt('Type "RESET" to confirm system wipe:');
+        if (confirm2 !== 'RESET') {
+            addToast('Factory reset aborted.', 'info');
+            return;
+        }
+
+        try {
+            await axios.delete(`${API_BASE_URL}/api/settings/factory-reset`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            addToast('SYSTEM WIPED SUCCESSFULLY', 'success');
+            fetchData();
+        } catch (error) {
+            console.error('Factory reset failed:', error);
+            addToast('Reset failed. Authorization error.', 'error');
         }
     };
 
@@ -105,8 +160,21 @@ const AdminDashboard = ({ token, setToken }) => {
         { id: 'amenities', name: 'Amenities', icon: <Shield size={18} /> },
         { id: 'cafeteria', name: 'Nari\'s Cafe', icon: <Coffee size={18} /> },
         { id: 'tickets', name: 'Tickets', icon: <Wrench size={18} /> },
-        { id: 'settings', name: 'Settings', icon: <Settings size={18} /> },
     ];
+
+    if (userRole === 'admin') {
+        tabs.push({ id: 'settings', name: 'Settings', icon: <Settings size={18} /> });
+    }
+
+    const filteredData = Array.isArray(data) ? data.filter(item => {
+        if (!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        return (
+            (item.name && item.name.toLowerCase().includes(q)) ||
+            (item.title && item.title.toLowerCase().includes(q)) ||
+            (item.type && item.type.toLowerCase().includes(q))
+        );
+    }) : [];
 
     return (
         <div className="admin-dashboard-root" style={{
@@ -177,9 +245,29 @@ const AdminDashboard = ({ token, setToken }) => {
                             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} className="hide-on-mobile">Manage your website content dynamically.</p>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <input 
+                            type="text" 
+                            placeholder={`Search ${activeTab}...`} 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{ 
+                                padding: '0.6rem 1rem', 
+                                borderRadius: '8px', 
+                                border: '1px solid var(--glass-border)', 
+                                background: 'rgba(255,255,255,0.05)', 
+                                color: 'var(--text-primary)',
+                                outline: 'none'
+                             }}
+                        />
                         <button onClick={fetchData} style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer' }}>
                             <RefreshCw size={18} className={loading ? 'spin' : ''} />
+                        </button>
+                        <button 
+                            onClick={handleExportCSV}
+                            style={{ background: 'rgba(72, 187, 120, 0.1)', border: '1px solid #48bb78', color: '#48bb78', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 'bold' }}
+                        >
+                            CSV
                         </button>
                         <button
                             onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
@@ -191,15 +279,13 @@ const AdminDashboard = ({ token, setToken }) => {
                     </div>
                 </div>
 
-                {message && (
-                    <div style={{ padding: '1rem', borderRadius: '8px', marginBottom: '2rem', background: message.type === 'success' ? 'rgba(72, 187, 120, 0.1)' : 'rgba(245, 101, 101, 0.1)', border: `1px solid ${message.type === 'success' ? '#48bb78' : '#f56565'}`, color: message.type === 'success' ? '#48bb78' : '#f56565', display: 'flex', justifyContent: 'space-between' }}>
-                        {message.text}
-                        <button onClick={() => setMessage(null)} style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer' }}>×</button>
-                    </div>
-                )}
-
                 {loading ? (
-                    <div style={{ color: 'var(--gold)' }}>Loading data...</div>
+                    <div style={{ display: 'grid', gap: '1rem', width: '100%' }}>
+                        <SkeletonLoader height="60px" borderRadius="12px" />
+                        <SkeletonLoader height="60px" borderRadius="12px" />
+                        <SkeletonLoader height="60px" borderRadius="12px" />
+                        <SkeletonLoader height="60px" borderRadius="12px" />
+                    </div>
                 ) : (
                     <div className="admin-list-grid" style={{ display: (activeTab === 'settings' || (Array.isArray(data) && data.length === 0)) ? 'block' : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                         {activeTab === 'settings' ? (
@@ -227,11 +313,24 @@ const AdminDashboard = ({ token, setToken }) => {
                                         DOWNLOAD DATABASE SNAPSHOT
                                     </button>
                                 </div>
+                                <div style={{ background: 'rgba(255,100,100,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,100,100,0.2)', textAlign: 'center' }}>
+                                    <AlertCircle size={48} style={{ color: '#ff4d4d', marginBottom: '1.5rem' }} />
+                                    <h2 style={{ marginBottom: '1rem', color: '#ff4d4d' }}>Danger Zone: Factory Reset</h2>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                        Irreversibly delete ALL operational data (Rooms, Amenities, Cafe items) to prepare for a new academic year. Admin accounts and universal settings will remain.
+                                    </p>
+                                    <button 
+                                        onClick={handleFactoryReset}
+                                        style={{ background: 'rgba(255, 77, 77, 0.1)', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '1rem 2.5rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                        WIPE SYSTEM DATA
+                                    </button>
+                                </div>
                             </div>
-                        ) : data.length === 0 ? (
+                        ) : filteredData.length === 0 ? (
                             <div style={{ color: 'var(--text-secondary)' }}>No items found in this category.</div>
                         ) : (
-                            data.map((item) => (
+                            filteredData.map((item) => (
                                 <div key={item._id} style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                                         <h3 style={{ color: 'var(--gold)', fontSize: '1rem' }}>{item.title || item.name || item.key}</h3>

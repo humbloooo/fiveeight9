@@ -95,7 +95,7 @@ const RentCalculator = () => {
                         {/* Breakdown */}
                         <div style={{
                             background: 'var(--gold)',
-                            color: '#000',
+                            color: 'var(--navy)',
                             padding: '2.5rem',
                             borderRadius: '24px',
                             display: 'flex',
@@ -130,7 +130,7 @@ const RentCalculator = () => {
                                 </div>
                             </div>
 
-                            <button className="cta-button" style={{ marginTop: '2rem', background: '#000', color: '#fff', width: '100%' }}>SUBMIT APPLICATION</button>
+                            <button className="cta-button" style={{ marginTop: '2rem', background: 'var(--text-primary)', color: 'var(--navy)', width: '100%' }}>SUBMIT APPLICATION</button>
                         </div>
                     </div>
                 </section>
