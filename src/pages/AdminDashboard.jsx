@@ -80,6 +80,26 @@ const AdminDashboard = ({ token, setToken }) => {
         }
     };
 
+    const handleDownloadBackup = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/backup`, {
+                headers: { Authorization: `Bearer ${token}` },
+                responseType: 'blob'
+            });
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `fiveeight9_backup_${Date.now()}.json`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            setMessage({ type: 'success', text: 'Backup downloaded safely.' });
+        } catch (error) {
+            console.error('Backup download failed:', error);
+            setMessage({ type: 'error', text: 'Backup failed. You must be authenticated.' });
+        }
+    };
+
     const tabs = [
         { id: 'rooms', name: 'Rooms', icon: <Home size={18} /> },
         { id: 'amenities', name: 'Amenities', icon: <Shield size={18} /> },
@@ -183,15 +203,30 @@ const AdminDashboard = ({ token, setToken }) => {
                 ) : (
                     <div className="admin-list-grid" style={{ display: (activeTab === 'settings' || (Array.isArray(data) && data.length === 0)) ? 'block' : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                         {activeTab === 'settings' ? (
-                            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
-                                <Settings size={48} style={{ color: 'var(--gold)', marginBottom: '1.5rem' }} />
-                                <h2 style={{ marginBottom: '1rem' }}>Universal Site Settings</h2>
-                                <p style={{ color: '#a0aec0', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
-                                    Manage social links, emergency contacts, and global visibility toggles across the entire platform.
-                                </p>
-                                <button className="cta-button" onClick={() => { setEditingItem(data); setIsModalOpen(true); }}>
-                                    CONFIGURE SYSTEM
-                                </button>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                                    <Settings size={48} style={{ color: 'var(--gold)', marginBottom: '1.5rem' }} />
+                                    <h2 style={{ marginBottom: '1rem' }}>Universal Site Settings</h2>
+                                    <p style={{ color: '#a0aec0', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                        Manage social links, emergency contacts, and global visibility toggles across the entire platform.
+                                    </p>
+                                    <button className="cta-button" onClick={() => { setEditingItem(data); setIsModalOpen(true); }}>
+                                        CONFIGURE SYSTEM
+                                    </button>
+                                </div>
+                                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                                    <Shield size={48} style={{ color: '#48bb78', marginBottom: '1.5rem' }} />
+                                    <h2 style={{ marginBottom: '1rem' }}>Core Data Backup</h2>
+                                    <p style={{ color: '#a0aec0', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                        Export a complete JSON snapshot of the database (Rooms, Amenities, Settings) securely.
+                                    </p>
+                                    <button 
+                                        onClick={handleDownloadBackup}
+                                        style={{ background: 'rgba(72, 187, 120, 0.1)', border: '1px solid #48bb78', color: '#48bb78', padding: '1rem 2.5rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                        DOWNLOAD DATABASE SNAPSHOT
+                                    </button>
+                                </div>
                             </div>
                         ) : data.length === 0 ? (
                             <div style={{ color: 'var(--text-secondary)' }}>No items found in this category.</div>

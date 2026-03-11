@@ -14,19 +14,27 @@ import axios from 'axios';
 import API_BASE_URL from './config';
 
 const MainSite = () => {
+    const [rooms, setRooms] = useState([]);
+    const [loadingRooms, setLoadingRooms] = useState(true);
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [settings, setSettings] = useState(null);
 
     useEffect(() => {
-        const fetchSettings = async () => {
+        const fetchData = async () => {
             try {
-                const res = await axios.get(`${API_BASE_URL}/api/settings`);
-                setSettings(res.data);
+                const [settingsRes, roomsRes] = await Promise.all([
+                    axios.get(`${API_BASE_URL}/api/settings`),
+                    axios.get(`${API_BASE_URL}/api/rooms`)
+                ]);
+                setSettings(settingsRes.data);
+                setRooms(roomsRes.data);
             } catch (err) {
-                console.error('Error fetching settings:', err);
+                console.error('Error fetching data:', err);
+            } finally {
+                setLoadingRooms(false);
             }
         };
-        fetchSettings();
+        fetchData();
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -44,23 +52,6 @@ const MainSite = () => {
     }, []);
 
     const showPrices = settings?.displayOptions?.showRoomPrices ?? true;
-
-    const rooms = [
-        {
-            title: 'Single Room',
-            price: showPrices ? 'R4,400 p/m' : '',
-            subtitle: 'Private space for focused success. Featuring premium ensuite and modern workstation.',
-            nsfas: true,
-            image: 'https://images.unsplash.com/photo-1554995207-c18c20360a59?auto=format&fit=crop&q=80&w=800'
-        },
-        {
-            title: 'Sharing Room',
-            price: showPrices ? 'R4,400 p/m' : '',
-            subtitle: 'Shared comfort and community living. Perfectly balanced for collaboration and privacy.',
-            nsfas: true,
-            image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=800'
-        },
-    ];
 
     return (
         <div className="app-container">
@@ -117,11 +108,19 @@ const MainSite = () => {
                 <section id="rooms" className="section reveal">
                     <h2 className="section-title">Room <span>Options</span></h2>
                     <div className="room-display-grid">
-                        {rooms.map((room, i) => (
-                            <div key={i} className={`reveal reveal-delay-${i + 1}`}>
-                                <RoomCard {...room} />
-                            </div>
-                        ))}
+                        {loadingRooms ? (
+                            Array(2).fill(0).map((_, i) => (
+                                <div key={i} className="room-card glass-panel skeleton" style={{ height: '450px', borderRadius: '24px' }}></div>
+                            ))
+                        ) : rooms.length > 0 ? (
+                            rooms.map((room, i) => (
+                                <div key={room._id || i} className={`reveal reveal-delay-${(i % 3) + 1}`}>
+                                    <RoomCard {...room} image={room.imageUrl || room.image} price={showPrices ? room.price : ''} />
+                                </div>
+                            ))
+                        ) : (
+                            <p style={{ textAlign: 'center', width: '100%', color: 'var(--text-secondary)' }}>No rooms currently available.</p>
+                        )}
                     </div>
                 </section>
 

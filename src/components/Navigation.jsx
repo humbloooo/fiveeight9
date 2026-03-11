@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Bell } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Bell, Eye } from 'lucide-react';
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
 
@@ -11,6 +11,8 @@ const Navigation = () => {
   const [showToast, setShowToast] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
   const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
+  const [scrollProgress, setScrollProgress] = useState(0); // (102) Liquid Gold Progress
+  const [nightOwl, setNightOwl] = useState(false); // (305) Night-Owl Reading Mode
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -18,6 +20,13 @@ const Navigation = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
+      
+      // Calculate progress percentage
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+      setScrollProgress(scrolled);
+      
+      // Update CTA
       if (scrollY < 600) setCtaText('BOOK A VIEWING');
       else if (scrollY < 1800) setCtaText('EXPLORE ROOMS');
       else setCtaText('RESERVE NOW');
@@ -48,6 +57,11 @@ const Navigation = () => {
     }
   }, [theme]);
 
+  // Night-Owl Reading Mode Hook
+  useEffect(() => {
+    document.body.classList.toggle('night-owl-active', nightOwl);
+  }, [nightOwl]);
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
@@ -70,8 +84,12 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="nav-cluster">
-      {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
+    <>
+      <div className="scroll-progress-container">
+        <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
+      </div>
+      <nav className="nav-cluster">
+        {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
 
       <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => window.location.href = '/'}>
         <img src={logo} alt="Five Eight 9" style={{ height: '35px', width: 'auto' }} />
@@ -120,6 +138,9 @@ const Navigation = () => {
       <div className="nav-actions desktop-only">
         {!isLoggedIn ? (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <button onClick={() => setNightOwl(!nightOwl)} className="icon-btn" title="Night-Owl Reading Mode">
+                <Eye size={18} color={nightOwl ? 'var(--gold)' : 'currentColor'} />
+            </button>
             <a href="/login" className="nav-link" style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <LogIn size={14} /> STUDENT LOG
             </a>
@@ -129,6 +150,9 @@ const Navigation = () => {
           </div>
         ) : (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <button onClick={() => setNightOwl(!nightOwl)} className="icon-btn" title="Night-Owl Reading Mode">
+                <Eye size={18} color={nightOwl ? 'var(--gold)' : 'currentColor'} />
+            </button>
             {userRole === 'admin' && (
               <button onClick={toggleTheme} className="icon-btn" title="Toggle Theme">
                 {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
@@ -306,6 +330,7 @@ const Navigation = () => {
         }
       `}</style>
     </nav>
+    </>
   );
 };
 

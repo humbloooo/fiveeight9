@@ -1,6 +1,14 @@
 import React from 'react';
 
 const RoomCard = ({ title, price, subtitle, nsfas, image }) => {
+    const getOptimizedUrl = (url) => {
+        if (!url) return '';
+        if (url.includes('res.cloudinary.com') && !url.includes('f_auto')) {
+            return url.replace('/upload/', '/upload/f_auto,q_auto/');
+        }
+        return url;
+    };
+
     return (
         <div className="room-card glass-panel hover-lift" style={{
             textAlign: 'left',
@@ -21,7 +29,7 @@ const RoomCard = ({ title, price, subtitle, nsfas, image }) => {
                     overflow: 'hidden',
                     position: 'relative'
                 }}>
-                    <img src={image || 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=800'}
+                    <img src={getOptimizedUrl(image || 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=800')}
                         alt={title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
                         className="room-img" />
