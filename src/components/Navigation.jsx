@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Bell, Eye } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun } from 'lucide-react';
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
 
