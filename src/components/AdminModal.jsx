@@ -23,10 +23,23 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 },
                 emergencyContacts: { reception: '', security: '', emergency: '', email: '' },
                 displayOptions: { showRoomPrices: true },
-                media: { backgroundId: '', heroId: '' }
+                media: { backgroundId: '', heroId: '' },
+                homeStats: { 
+                    count: '231', 
+                    label: 'Luxury Lofts', 
+                    subCount: '15%', 
+                    subLabel: 'Sharing Options' 
+                },
+                resFull: false
             });
         } else if (editingItem) {
-            setFormData(editingItem);
+            setFormData({
+                ...editingItem,
+                detailedDesc: editingItem.detailedDesc || '',
+                media: Array.isArray(editingItem.media) ? editingItem.media : [],
+                homeStats: editingItem.homeStats || { count: '', label: '', subCount: '', subLabel: '' },
+                resFull: editingItem.resFull || false
+            });
         } else {
             setFormData({
                 title: '',
@@ -160,6 +173,44 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 </div>
             </section>
 
+            {/* Hero Stats */}
+            <section>
+                <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <ImageIcon size={16} /> HERO STATS & AVAILABILITY
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Main Stat (e.g. 231)</label>
+                        <input className="admin-input" value={formData.homeStats?.count || ''} onChange={(e) => handleNestedChange('homeStats.count', e.target.value)} />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Main Label (e.g. Single Rooms)</label>
+                        <input className="admin-input" value={formData.homeStats?.label || ''} onChange={(e) => handleNestedChange('homeStats.label', e.target.value)} />
+                    </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Sub Stat (e.g. 15%)</label>
+                        <input className="admin-input" value={formData.homeStats?.subCount || ''} onChange={(e) => handleNestedChange('homeStats.subCount', e.target.value)} />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Sub Label (e.g. Sharing)</label>
+                        <input className="admin-input" value={formData.homeStats?.subLabel || ''} onChange={(e) => handleNestedChange('homeStats.subLabel', e.target.value)} />
+                    </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255,100,100,0.05)', padding: '1rem', borderRadius: '12px' }}>
+                    <span style={{ fontSize: '0.85rem', color: formData.resFull ? '#ff4d4d' : 'var(--text-primary)' }}>
+                        <strong>MARK RESIDENCE AS FULL?</strong> (Displays "Sold Out" banner)
+                    </span>
+                    <input
+                        type="checkbox"
+                        checked={formData.resFull}
+                        onChange={(e) => handleNestedChange('resFull', e.target.checked)}
+                        style={{ width: '22px', height: '22px', cursor: 'pointer' }}
+                    />
+                </div>
+            </section>
+
             {/* Imagery IDs */}
             <section>
                 <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -193,7 +244,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Description/Subtitle</label>
+                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Short Description</label>
                 <div style={{ background: '#fff', color: '#000', borderRadius: '8px', overflow: 'hidden' }}>
                     <ReactQuill 
                         theme="snow" 
@@ -212,17 +263,39 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                                 ['clean']
                             ]
                         }}
-                        style={{ height: '200px', paddingBottom: '40px' }}
+                        style={{ height: '120px', paddingBottom: '40px' }}
                     />
                 </div>
             </div>
 
+            {type === 'amenities' && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Detailed Modal Description (Appears on "View More")</label>
+                    <div style={{ background: '#fff', color: '#000', borderRadius: '8px', overflow: 'hidden' }}>
+                        <ReactQuill 
+                            theme="snow" 
+                            value={formData.detailedDesc || ''} 
+                            onChange={(content) => setFormData(prev => ({ ...prev, detailedDesc: content }))}
+                            style={{ height: '180px', paddingBottom: '40px' }}
+                        />
+                    </div>
+                </div>
+            )}
+
             {type === 'rooms' && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                     <div>
-                        <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Price</label>
-                        <input name="price" value={formData.price} onChange={handleChange} className="admin-input" />
+                        <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.3rem', fontSize: '0.7rem' }}>Price (e.g. R4,400 p/m)</label>
+                        <input className="admin-input" value={formData.price || ''} onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))} />
                     </div>
+                    <div>
+                        <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.3rem', fontSize: '0.7rem' }}>Category (Single, Sharing, etc.)</label>
+                        <input className="admin-input" value={formData.category || 'Single Room'} onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))} />
+                    </div>
+                </div>
+            )}
+            {type === 'rooms' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                     <div>
                         <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Floor</label>
                         <select name="floor" value={formData.floor} onChange={handleChange} className="admin-input">
@@ -233,7 +306,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             )}
 
             <div style={{ marginBottom: '2rem' }}>
-                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Media Asset</label>
+                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{type === 'amenities' ? 'Main Icon Image' : 'Media Asset'}</label>
                 <div style={{
                     border: '2px dashed rgba(255,255,255,0.1)',
                     padding: '1.5rem',
@@ -247,6 +320,19 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                     <input id="file-input" type="file" style={{ display: 'none' }} onChange={(e) => setFile(e.target.files[0])} />
                 </div>
             </div>
+
+            {type === 'amenities' && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Gallery Image URLs (Comma separated)</label>
+                    <textarea 
+                        className="admin-input" 
+                        value={(formData.media || []).join(', ')} 
+                        onChange={(e) => setFormData(prev => ({ ...prev, media: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                        placeholder="http://img1.com, http://img2.com"
+                        rows={3}
+                    />
+                </div>
+            )}
         </>
     );
 

@@ -16,6 +16,7 @@ const AdminLogin = ({ setToken }) => {
             const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
             setToken(res.data.token);
             localStorage.setItem('adminToken', res.data.token);
+            localStorage.setItem('userRole', res.data.user.role);
         } catch (err) {
             setError(err.response?.data?.message || 'Invalid credentials');
         }

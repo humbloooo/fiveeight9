@@ -14,6 +14,7 @@ const RentCalculator = lazy(() => import('./pages/RentCalculator'));
 const WellnessCenter = lazy(() => import('./pages/WellnessCenter'));
 const EventsCalendar = lazy(() => import('./pages/EventsCalendar'));
 const MaintenanceTicket = lazy(() => import('./pages/MaintenanceTicket'));
+const RoomsPage = lazy(() => import('./pages/RoomsPage'));
 
 const PageFallback = () => (
     <div style={{ padding: '100px 5%', background: 'var(--navy)', minHeight: '100vh' }}>
@@ -36,6 +37,7 @@ const AnimatedRoutes = ({ token, setToken }) => {
           <Route path="/wellness" element={<WellnessCenter />} />
           <Route path="/events" element={<EventsCalendar />} />
           <Route path="/maintenance" element={<MaintenanceTicket />} />
+          <Route path="/rooms" element={<RoomsPage />} />
           <Route
             path="/admin"
             element={!token ? <AdminLogin setToken={setToken} /> : <AdminDashboard token={token} setToken={setToken} />}

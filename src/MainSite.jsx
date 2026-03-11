@@ -21,20 +21,22 @@ const MainSite = () => {
     const [rooms, setRooms] = useState([]);
     const [loadingRooms, setLoadingRooms] = useState(true);
     const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const [showPrices, setShowPrices] = useState(true);
     const [settings, setSettings] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [settingsRes, roomsRes] = await Promise.all([
-                    axios.get(`${API_BASE_URL}/api/settings`),
-                    axios.get(`${API_BASE_URL}/api/rooms`)
+                const [roomsRes, settingsRes] = await Promise.all([
+                    axios.get(`${API_BASE_URL}/api/rooms`),
+                    axios.get(`${API_BASE_URL}/api/settings`)
                 ]);
-                setSettings(settingsRes.data);
                 setRooms(roomsRes.data);
+                setSettings(settingsRes.data);
+                setShowPrices(settingsRes.data.displayOptions?.showRoomPrices ?? true);
+                setLoadingRooms(false);
             } catch (err) {
                 console.error('Error fetching data:', err);
-            } finally {
                 setLoadingRooms(false);
             }
         };
@@ -54,8 +56,6 @@ const MainSite = () => {
 
         return () => observer.disconnect();
     }, []);
-
-    const showPrices = settings?.displayOptions?.showRoomPrices ?? true;
 
     return (
         <motion.div 
@@ -80,43 +80,39 @@ const MainSite = () => {
                     </div>
                     
                     {/* Dynamic Room Counter (Refinement 001) */}
-                    <div className="reveal reveal-delay-1" style={{ display: 'flex', gap: '4rem', marginTop: '3rem' }}>
-                        <div className="stat-item">
-                            <span className="stat-value">231</span>
-                            <span className="stat-label">Luxury Lofts</span>
+                    <div style={{ display: 'flex', gap: '3rem', marginTop: '2.5rem' }} className="reveal reveal-delay-2">
+                            <div className="stat-item">
+                                <span className="stat-number gold-text">{settings?.homeStats?.count || '231'}</span>
+                                <span className="stat-label">{settings?.homeStats?.label || 'LUXURY LOFTS'}</span>
+                            </div>
+                            <div className="stat-item">
+                                <span className="stat-number gold-text">{settings?.homeStats?.subCount || '15%'}</span>
+                                <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING OPTIONS'}</span>
+                            </div>
                         </div>
-                        <div className="stat-item">
-                            <span className="stat-value">15%</span>
-                            <span className="stat-label">Sharing Options</span>
-                        </div>
-                    </div>
 
                     <p style={{ marginTop: '2.5rem', maxWidth: '600px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 20px', lineHeight: '1.8' }}>
                         Providing secure, high-quality, and modern lofts for the next generation of leaders in Thohoyandou.
                     </p>
-                    <div style={{ display: 'flex', gap: '1rem', marginTop: '3rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <button className="cta-button" onClick={() => setIsBookingOpen(true)}>BOOK YOUR SPOT</button>
-                        <button
-                            style={{
-                                background: 'var(--glass)',
-                                border: '1px solid var(--glass-border)',
-                                color: 'var(--text-primary)',
-                                padding: '1rem 2.5rem',
-                                borderRadius: '6px',
-                                fontWeight: 900,
-                                cursor: 'pointer',
-                                transition: 'all 0.4s ease',
-                                fontSize: '0.85rem',
-                                letterSpacing: '1px'
-                            }}
-                            onMouseEnter={(e) => e.target.style.background = 'var(--glass-thick)'}
-                            onMouseLeave={(e) => e.target.style.background = 'var(--glass)'}
-                            onClick={() => document.getElementById('rooms').scrollIntoView({ behavior: 'smooth' })}
-                        >
-                            EXPLORE ROOMS
-                        </button>
-                    </div>
+                    <div className="hero-actions reveal reveal-delay-3" style={{ marginTop: '3.5rem' }}>
+                            <a href="/rooms" className="cta-button">EXPLORE ROOMS</a>
+                            <button className="secondary-button" onClick={() => setIsBookingOpen(true)}>RESERVE A LOFT</button>
+                        </div>
                 </section>
+
+                {/* (NEW) Res Full Banner */}
+                {settings?.resFull && (
+                    <div style={{
+                        position: 'fixed', top: '80px', left: '0', width: '100%', 
+                        background: 'linear-gradient(90deg, #ff4d4d, #f56565)', 
+                        color: 'white', padding: '0.8rem', textAlign: 'center', 
+                        zIndex: 1000, fontWeight: 900, fontSize: '0.8rem', 
+                        letterSpacing: '2px', textTransform: 'uppercase',
+                        boxShadow: '0 4px 15px rgba(255, 77, 77, 0.3)'
+                    }}>
+                        🚨 Important: Residence is currently full for the dynamic academic year 🚨
+                    </div>
+                )}
 
                 {/* Section 2: Rooms */}
                 <section id="rooms" className="section reveal">

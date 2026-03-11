@@ -111,7 +111,7 @@ const Footer = () => {
                         <input type="email" placeholder="Email" style={{
                             background: 'rgba(255,255,255,0.03)',
                             border: '1px solid var(--glass-border)',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             padding: '0.8rem 1rem',
                             borderRadius: '8px',
                             flex: 1,
@@ -148,9 +148,9 @@ const Footer = () => {
                 .footer-link:hover { color: var(--gold); transform: translateX(8px); }
                 .contact-item-footer { display: flex; flex-direction: column; gap: 0.4rem; }
                 .contact-item-footer .label { font-size: 0.75rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-                .contact-item-footer .value { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: 0.5px; }
+                .contact-item-footer .value { color: var(--text-primary); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px; }
                 .social-icon-footer { 
-                    background: var(--glass-deep); border: 1px solid var(--glass-border); color: #fff;
+                    background: var(--glass-deep); border: 1px solid var(--glass-border); color: var(--text-primary);
                     width: 42px; height: 42px; border-radius: 12px; text-decoration: none; transition: var(--transition-premium);
                     display: flex; align-items: center; justify-content: center;
                 }

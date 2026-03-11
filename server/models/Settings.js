@@ -21,7 +21,14 @@ const SettingsSchema = new mongoose.Schema({
     media: {
         backgroundId: { type: String, default: '' },
         heroId: { type: String, default: '' },
-    }
+    },
+    homeStats: {
+        count: { type: String, default: '231' },
+        label: { type: String, default: 'Luxury Lofts' },
+        subCount: { type: String, default: '15%' },
+        subLabel: { type: String, default: 'Sharing Options' }
+    },
+    resFull: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Settings', SettingsSchema);

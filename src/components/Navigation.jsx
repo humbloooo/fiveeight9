@@ -112,7 +112,7 @@ const Navigation = () => {
 
       {/* Desktop Main Links */}
       <div className="nav-links desktop-only">
-        {mainLinks.map((link) => (
+        {mainLinks.filter(link => link.name !== 'Home').map((link) => (
           <a key={link.name} href={link.href} className="nav-link">
             {link.name}
           </a>
@@ -132,21 +132,6 @@ const Navigation = () => {
               ))}
             </div>
           )}
-        </div>
-
-        {/* (301) NSFAS Application Cycle Countdown Badge */}
-        <div style={{
-          background: 'rgba(255, 215, 0, 0.1)',
-          border: '1px solid var(--gold)',
-          color: 'var(--gold)',
-          padding: '0.3rem 0.8rem',
-          borderRadius: '20px',
-          fontSize: '0.65rem',
-          fontWeight: 900,
-          marginLeft: '1rem',
-          letterSpacing: '1px'
-        }}>
-          NSFAS '26 OPEN
         </div>
       </div>
 
@@ -195,8 +180,7 @@ const Navigation = () => {
       <div className={`overlay-menu ${isOpen ? 'active' : ''}`}>
         <div className="overlay-content">
           <div className="overlay-header">
-            <span className="overlay-label">Navigation</span>
-            <X size={32} onClick={toggleMenu} style={{ cursor: 'pointer', color: 'var(--gold)' }} />
+            <span className="overlay-label">Explore Five Eight 9</span>
           </div>
 
           <div className="overlay-grid">
@@ -313,13 +297,14 @@ const Navigation = () => {
 
         .overlay-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--bg-primary); 
-            backdrop-filter: blur(25px);
+            background: rgba(var(--bg-primary-rgb, 5, 10, 26), 0.85); 
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             z-index: 2000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateY(-20px);
+            opacity: 0; pointer-events: none; transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(1.05);
         }
-        .overlay-menu.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .overlay-menu.active { opacity: 1; pointer-events: auto; transform: scale(1); }
         .overlay-content { width: 90%; max-width: 1100px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
         .overlay-content::-webkit-scrollbar { display: none; }
         .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
