@@ -1,44 +1,46 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const Admin = require('../models/Admin');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 
-const createAdmin = async () => {
-    const email = process.argv[2] || 'admin@fiveeight9.co.za';
-    const password = process.argv[3] || 'admin123';
+const User = require('../models/User');
 
-    if (!email || !password) {
-        console.log('Usage: node scripts/createAdmin.js <email> <password>');
-        process.exit(1);
-    }
-
+const createOrUpdateAdmin = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
-        console.log('Connected to MongoDB');
+        console.log('Connected to MongoDB...');
 
-        const existingAdmin = await Admin.findOne({ email });
-        if (existingAdmin) {
-            console.log('Admin with this email already exists.');
-            process.exit(0);
+        const email = 'admin@fiveeight9.co.za';
+        const passwordPlain = 'password123';
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(passwordPlain, salt);
+
+        // Check if user exists
+        let adminUser = await User.findOne({ email });
+
+        if (adminUser) {
+            console.log('Admin user found. Updating password...');
+            adminUser.password = hashedPassword;
+            adminUser.role = 'admin';
+            await adminUser.save();
+            console.log(`Updated credentials for ${email}`);
+        } else {
+            console.log('Admin user not found. Creating new admin...');
+            adminUser = new User({
+                username: 'Administrator',
+                email: email,
+                password: hashedPassword,
+                role: 'admin'
+            });
+            await adminUser.save();
+            console.log(`Created new admin user: ${email}`);
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const newAdmin = new Admin({
-            email,
-            password: hashedPassword,
-            username: email.split('@')[0], // fallback
-            role: 'superadmin'
-        });
-
-        await newAdmin.save();
-        console.log(`Admin created successfully: ${email}`);
+        console.log('Done!');
         process.exit(0);
     } catch (err) {
-        console.error('Error creating admin:', err);
+        console.error('Error:', err);
         process.exit(1);
     }
 };
 
-createAdmin();
+createOrUpdateAdmin();

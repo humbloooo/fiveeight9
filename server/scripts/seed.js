@@ -54,15 +54,15 @@ const seedData = async () => {
 
         // Seed Admin User
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash('password', salt);
+        const hashedPassword = await bcrypt.hash('password123', salt);
         const adminUser = new User({
             username: 'Administrator',
-            email: 'test@admin.com',
+            email: 'admin@fiveeight9.co.za',
             password: hashedPassword,
             role: 'admin'
         });
         await adminUser.save();
-        console.log('Seed: Default admin user added (test@admin.com / password)');
+        console.log('Seed: Default admin user added (admin@fiveeight9.co.za / password123)');
 
         console.log('Database seeded successfully!');
         process.exit(0);
