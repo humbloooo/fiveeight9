@@ -29,7 +29,10 @@ const TenantForum = () => {
     };
 
     useEffect(() => {
-        fetchMessages();
+        const loadMessages = async () => {
+            await fetchMessages();
+        };
+        loadMessages();
         // Polling every 10 seconds for new messages
         const interval = setInterval(fetchMessages, 10000);
         return () => clearInterval(interval);
@@ -41,14 +44,19 @@ const TenantForum = () => {
 
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!input.trim() || !isLoggedIn) return;
+        if (!input.trim()) return;
+        if (!isLoggedIn) {
+            alert('You must have an account to send messages. Please login.');
+            return;
+        }
 
         const optimisticMsg = {
             _id: Date.now().toString(),
             user: userRole === 'admin' ? 'Admin' : 'Resident',
             text: input,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            isAdmin: userRole === 'admin'
+            isAdmin: userRole === 'admin',
+            likes: []
         };
 
         setMessages(prev => [...prev, optimisticMsg]);
@@ -59,6 +67,45 @@ const TenantForum = () => {
             fetchMessages();
         } catch (err) {
             console.error('Failed to send message', err);
+        }
+    };
+
+    const handleLike = async (id) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            alert('You must have an account to like messages.');
+            return;
+        }
+        try {
+            await axios.post(`${API_BASE_URL}/api/forum/messages/${id}/like`, { userId });
+            fetchMessages();
+        } catch (err) {
+            console.error('Failed to like', err);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Delete this message?')) return;
+        try {
+            await axios.delete(`${API_BASE_URL}/api/forum/messages/${id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }
+            });
+            fetchMessages();
+        } catch (err) {
+            console.error('Delete failed', err);
+        }
+    };
+
+    const handleEdit = async (msg) => {
+        const newText = window.prompt('Edit message:', msg.text);
+        if (!newText || newText === msg.text) return;
+        try {
+            await axios.patch(`${API_BASE_URL}/api/forum/messages/${msg._id}`, { text: newText }, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }
+            });
+            fetchMessages();
+        } catch (err) {
+            console.error('Edit failed', err);
         }
     };
 
@@ -108,29 +155,77 @@ const TenantForum = () => {
                                     return (
                                         <div key={msg._id} style={{
                                             alignSelf: isMe ? 'flex-end' : 'flex-start',
-                                            maxWidth: '70%'
-                                        }}>
-                                    <div style={{
+                                            maxWidth: '75%',
                                             display: 'flex',
-                                            alignItems: 'baseline',
-                                            gap: '0.5rem',
-                                            marginBottom: '0.3rem',
-                                            flexDirection: isMe ? 'row-reverse' : 'row'
+                                            flexDirection: 'column',
+                                            alignItems: isMe ? 'flex-end' : 'flex-start'
                                         }}>
-                                            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: msg.isAdmin ? 'var(--gold)' : 'var(--text-primary)' }}>{msg.user}</span>
-                                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{msg.time}</span>
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'baseline',
+                                                gap: '0.5rem',
+                                                marginBottom: '0.3rem',
+                                                flexDirection: isMe ? 'row-reverse' : 'row'
+                                            }}>
+                                                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: msg.isAdmin ? 'var(--gold)' : 'var(--text-primary)' }}>{msg.user}</span>
+                                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{msg.time}</span>
+                                            </div>
+                                            <div style={{
+                                                background: isMe ? 'var(--gold)' : 'rgba(255,255,255,0.05)',
+                                                color: isMe ? '#000' : 'var(--text-primary)',
+                                                padding: '0.8rem 1.2rem',
+                                                borderRadius: isMe ? '18px 2px 18px 18px' : '2px 18px 18px 18px',
+                                                fontSize: '0.9rem',
+                                                border: msg.isAdmin ? '1px solid var(--gold)' : '1px solid var(--glass-border)',
+                                                position: 'relative',
+                                                boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                                            }}>
+                                                {msg.text}
+                                            </div>
+                                            
+                                            <div style={{ 
+                                                display: 'flex', 
+                                                gap: '0.8rem', 
+                                                marginTop: '0.4rem', 
+                                                alignItems: 'center',
+                                                flexDirection: isMe ? 'row-reverse' : 'row'
+                                            }}>
+                                                <button 
+                                                    onClick={() => handleLike(msg._id)}
+                                                    style={{ 
+                                                        background: 'transparent', 
+                                                        border: 'none', 
+                                                        color: (msg.likes || []).includes(localStorage.getItem('userId')) ? 'var(--gold)' : 'var(--text-secondary)',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.75rem',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.3rem',
+                                                        padding: '2px 5px'
+                                                    }}
+                                                >
+                                                    <Shield size={12} fill={(msg.likes || []).includes(localStorage.getItem('userId')) ? 'var(--gold)' : 'none'} />
+                                                    {(msg.likes || []).length}
+                                                </button>
+
+                                                {userRole === 'admin' && (
+                                                    <>
+                                                        <button 
+                                                            onClick={() => handleDelete(msg._id)}
+                                                            style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontSize: '0.7rem' }}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleEdit(msg)}
+                                                            style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', fontSize: '0.7rem' }}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div style={{
-                                            background: isMe ? 'var(--gold)' : 'rgba(255,255,255,0.05)',
-                                            color: isMe ? '#000' : 'white',
-                                            padding: '1rem 1.5rem',
-                                            borderRadius: isMe ? '18px 2px 18px 18px' : '2px 18px 18px 18px',
-                                            fontSize: '0.95rem',
-                                            border: msg.isAdmin ? '1px solid var(--gold)' : 'none'
-                                        }}>
-                                            {msg.text}
-                                        </div>
-                                    </div>
                                 );
                             })}
                             <div ref={messagesEndRef} />

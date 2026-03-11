@@ -20,7 +20,10 @@ const AdminDashboard = ({ token, setToken }) => {
     const fetchData = React.useCallback(async () => {
         setLoading(true);
         try {
-            const endpoint = (activeTab === 'tickets' || activeTab === 'settings') ? `settings` : activeTab;
+            let endpoint = activeTab;
+            if (activeTab === 'tickets' || activeTab === 'settings') endpoint = 'settings';
+            if (activeTab === 'admins') endpoint = 'auth/users';
+            
             const res = await axios.get(`${API_BASE_URL}/api/${endpoint}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -123,10 +126,10 @@ const AdminDashboard = ({ token, setToken }) => {
         
         const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
+        const timestamp = Date.now();
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `${activeTab}_export_${Date.now()}.csv`);
-        // eslint-disable-next-line
+        link.setAttribute('download', `${activeTab}_export_${timestamp}.csv`);
         document.body.appendChild(link);
         link.click();
         link.parentNode.removeChild(link);
@@ -159,10 +162,12 @@ const AdminDashboard = ({ token, setToken }) => {
         { id: 'rooms', name: 'Rooms', icon: <Home size={18} /> },
         { id: 'amenities', name: 'Amenities', icon: <Shield size={18} /> },
         { id: 'cafeteria', name: 'Nari\'s Cafe', icon: <Coffee size={18} /> },
+        { id: 'events', name: 'Events', icon: <Bell size={18} /> },
         { id: 'tickets', name: 'Tickets', icon: <Wrench size={18} /> },
     ];
 
     if (userRole === 'admin') {
+        tabs.push({ id: 'admins', name: 'Admins', icon: <User size={18} /> });
         tabs.push({ id: 'settings', name: 'Settings', icon: <Settings size={18} /> });
     }
 
@@ -172,6 +177,8 @@ const AdminDashboard = ({ token, setToken }) => {
         return (
             (item.name && item.name.toLowerCase().includes(q)) ||
             (item.title && item.title.toLowerCase().includes(q)) ||
+            (item.username && item.username.toLowerCase().includes(q)) ||
+            (item.email && item.email.toLowerCase().includes(q)) ||
             (item.type && item.type.toLowerCase().includes(q))
         );
     }) : [];

@@ -33,6 +33,15 @@ const Amenities = () => {
             case 'droplets': return <Droplets size={18} />;
             case 'zap': return <Zap size={18} />;
             case 'monitor': return <Monitor size={18} />;
+            case 'waves': return <Waves size={18} />;
+            case 'wind': return <Wind size={18} />;
+            case 'smartphone': return <Smartphone size={18} />;
+            case 'moon': return <Moon size={18} />;
+            case 'checkcircle': return <CheckCircle size={18} />;
+            case 'alertcircle': return <AlertCircle size={18} />;
+            case 'clock': return <Clock size={18} />;
+            case 'home': return <Home size={18} />;
+            case 'utensils': return <Utensils size={18} />;
             default: return <Info size={18} />;
         }
     };

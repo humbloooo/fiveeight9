@@ -83,11 +83,11 @@ const MainSite = () => {
                     <div style={{ display: 'flex', gap: '3rem', marginTop: '2.5rem' }} className="reveal reveal-delay-2">
                             <div className="stat-item">
                                 <span className="stat-number gold-text">{settings?.homeStats?.count || '231'}</span>
-                                <span className="stat-label">{settings?.homeStats?.label || 'LUXURY LOFTS'}</span>
+                                <span className="stat-label">{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
                             </div>
                             <div className="stat-item">
-                                <span className="stat-number gold-text">{settings?.homeStats?.subCount || '15'}</span>
-                                <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING OPTIONS'}</span>
+                                <span className="stat-number gold-text">{settings?.homeStats?.subCount || '60'}</span>
+                                <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
                             </div>
                         </div>
 
@@ -115,21 +115,53 @@ const MainSite = () => {
                 )}
 
                 {/* Section 2: Rooms */}
-                <section id="rooms" className="section reveal">
-                    <h2 className="section-title">Room <span>Options</span></h2>
-                    <div className="room-display-grid">
+                <section id="rooms" className="section reveal" style={{ padding: '4rem 0' }}>
+                    <h2 className="section-title" style={{ padding: '0 5%' }}>Room <span>Options</span></h2>
+                    
+                    <div style={{ 
+                        width: '100%', 
+                        overflowX: 'auto', 
+                        padding: '2rem 5%',
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        scrollSnapType: 'x mandatory',
+                        display: 'flex',
+                        gap: '2rem'
+                    }} className="horizontal-scroll-container">
+                        <style>{`
+                            .horizontal-scroll-container::-webkit-scrollbar { display: none; }
+                            .room-card-wrapper {
+                                min-width: clamp(280px, 80vw, 400px);
+                                scroll-snap-align: center;
+                            }
+                        `}</style>
                         {loadingRooms ? (
-                            Array(2).fill(0).map((_, i) => (
-                                <SkeletonLoader key={i} height="450px" borderRadius="24px" className="room-card glass-panel" />
+                            Array(3).fill(0).map((_, i) => (
+                                <div key={i} className="room-card-wrapper">
+                                    <SkeletonLoader height="450px" borderRadius="24px" className="room-card glass-panel" />
+                                </div>
                             ))
                         ) : rooms.length > 0 ? (
                             rooms.map((room, i) => (
-                                <div key={room._id || i} className={`reveal reveal-delay-${(i % 3) + 1}`}>
+                                <div key={room._id || i} className="room-card-wrapper reveal">
                                     <RoomCard {...room} image={room.imageUrl || room.image} price={showPrices ? room.price : ''} />
                                 </div>
                             ))
                         ) : (
                             <p style={{ textAlign: 'center', width: '100%', color: 'var(--text-secondary)' }}>No rooms currently available.</p>
+                        )}
+                        
+                        {/* Jacuzzi Specific Option if not in DB, for Demo/Placeholder */}
+                        {!rooms.some(r => r.title?.toLowerCase().includes('jacuzzi')) && !loadingRooms && (
+                           <div className="room-card-wrapper reveal">
+                                <RoomCard 
+                                    title="Jacuzzi Loft" 
+                                    subtitle="Executive Suite" 
+                                    desc="Premium experience with private Jacuzzi and luxury fittings."
+                                    image="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800"
+                                    price="R 8,500"
+                                />
+                           </div>
                         )}
                     </div>
                 </section>

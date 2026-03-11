@@ -12,7 +12,6 @@ const Navigation = () => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
   const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
   const [scrollProgress, setScrollProgress] = useState(0); // (102) Liquid Gold Progress
-  const [nightOwl, setNightOwl] = useState(false); // (305) Night-Owl Reading Mode
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -70,19 +69,18 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
+    const applyTheme = () => {
+      const currentTheme = localStorage.getItem('theme') || 'system';
+      const isDark = currentTheme === 'dark' || (currentTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.body.classList.toggle('light-mode', !isDark);
+      setTheme(currentTheme);
+    };
 
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.body.classList.toggle('light-mode', systemTheme === 'light');
-    } else {
-      document.body.classList.toggle('light-mode', theme === 'light');
-    }
-  }, [theme]);
+    applyTheme();
+    window.addEventListener('themeChanged', applyTheme);
+    return () => window.removeEventListener('themeChanged', applyTheme);
+  }, []);
 
-  // Night-Owl Reading Mode Hook
-  useEffect(() => {
-    document.body.classList.toggle('night-owl-active', nightOwl);
-  }, [nightOwl]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -121,7 +119,7 @@ const Navigation = () => {
 
       {/* Desktop Main Links */}
       <div className="nav-links desktop-only">
-        {mainLinks.filter(link => link.name !== 'Home').map((link) => (
+        {mainLinks.filter(link => !['Home', 'Rooms'].includes(link.name)).map((link) => (
           <a key={link.name} href={link.href} className="nav-link">
             {link.name}
           </a>
@@ -147,9 +145,6 @@ const Navigation = () => {
       <div className="nav-actions desktop-only">
         {!isLoggedIn ? (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <a href="/login" className="nav-link" style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <LogIn size={14} /> STUDENT LOG
-            </a>
             <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>
               {ctaText}
             </button>
@@ -298,20 +293,19 @@ const Navigation = () => {
         .burger-icon.open span:last-child { transform: rotate(-45deg); bottom: 7px; width: 100%; }
 
         .overlay-menu {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: rgba(0, 0, 0, 0.5); 
-            backdrop-filter: blur(80px);
-            -webkit-backdrop-filter: blur(80px);
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(120px);
+            -webkit-backdrop-filter: blur(120px);
             z-index: 2000; display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: all 0.5s ease;
         }
         .overlay-menu.active { opacity: 1; pointer-events: auto; }
         .overlay-content { 
-            width: 95%; max-width: 1100px; padding: 3rem 2rem; max-height: 90vh; overflow-y: auto; 
+            width: 100%; height: 100%; padding: 10vh 10%; overflow-y: auto; 
             background: var(--burger-bg);
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            transform: scale(0.95) translateY(20px);
+            box-shadow: none;
+            transform: scale(1.1);
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .overlay-menu.active .overlay-content { transform: scale(1) translateY(0); }

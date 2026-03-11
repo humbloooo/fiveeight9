@@ -30,7 +30,8 @@ const seedData = async () => {
         const amenities = [
             { title: 'Uncapped Wi-Fi', description: 'High-speed internet throughout.' },
             { title: '24/7 Security', description: 'Always safe and secure.' },
-            { title: 'Solar Power', description: 'Backup power for loadshedding.' }
+            { title: 'Solar Power', description: 'Backup power for loadshedding.' },
+            { title: 'Jacuzzi', description: 'Relaxing luxury jacuzzi access.' }
         ];
         await Amenity.insertMany(amenities);
         console.log('Seed: Amenities added');
