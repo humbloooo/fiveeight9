@@ -53,10 +53,10 @@ const RoomsPage = () => {
             <div style={{ paddingTop: '140px', paddingBottom: '8rem', maxWidth: '1400px', margin: '0 auto', paddingLeft: '2rem', paddingRight: '2rem' }}>
                 <header className="reveal" style={{ textAlign: 'center', marginBottom: '4rem' }}>
                     <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '-2px' }}>
-                        Explore Our <span className="gold-text">Lofts</span>
+                        Explore The <span className="gold-text">Building</span>
                     </h1>
                     <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem', lineHeight: '1.8' }}>
-                        Find the perfect space for your academic journey. From private singles to social sharing lofts.
+                        Find the perfect space for your academic journey. Explore our rooms, pool, lounges, and other facilities.
                     </p>
                 </header>
 

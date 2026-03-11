@@ -40,7 +40,7 @@ const Navigation = () => {
       
       // Update CTA
       if (scrollY < 600) setCtaText('BOOK A VIEWING');
-      else if (scrollY < 1800) setCtaText('EXPLORE ROOMS');
+      else if (scrollY < 1800) setCtaText('EXPLORE THE BUILDING');
       else setCtaText('RESERVE NOW');
     };
     
@@ -307,8 +307,8 @@ const Navigation = () => {
         .overlay-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background: rgba(0, 0, 0, 0.5); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(80px);
+            -webkit-backdrop-filter: blur(80px);
             z-index: 2000; display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: all 0.5s ease;
         }

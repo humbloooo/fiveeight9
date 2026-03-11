@@ -95,7 +95,7 @@ const MainSite = () => {
                         Providing secure, high-quality, and modern lofts for the next generation of leaders in Thohoyandou.
                     </p>
                     <div className="hero-actions reveal reveal-delay-3" style={{ marginTop: '3.5rem' }}>
-                            <a href="/rooms" className="cta-button">EXPLORE ROOMS</a>
+                            <a href="/rooms" className="cta-button">EXPLORE THE BUILDING</a>
                             <button className="secondary-button" onClick={() => setIsBookingOpen(true)}>RESERVE A LOFT</button>
                         </div>
                 </section>

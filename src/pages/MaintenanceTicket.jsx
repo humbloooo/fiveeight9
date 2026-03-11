@@ -59,7 +59,7 @@ const MaintenanceTicket = () => {
                 <section className="section">
                     <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
                         <h1 className="section-title">Support <span>Tickets</span></h1>
-                        <p style={{ color: 'var(--text-secondary)' }}>Log maintenance issues directly to our technician team.</p>
+                        <p style={{ color: 'var(--text-secondary)' }}>Log maintenance issues directly to our team.</p>
                     </div>
 
                     <div style={{
@@ -101,7 +101,7 @@ const MaintenanceTicket = () => {
                                                 borderRadius: '8px',
                                                 border: '1px solid var(--glass-border)',
                                                 background: ticket.priority === p ? 'var(--gold-glow)' : 'transparent',
-                                                color: ticket.priority === p ? 'var(--gold)' : 'white',
+                                                color: ticket.priority === p ? 'var(--gold)' : 'var(--text-primary)',
                                                 cursor: 'pointer',
                                                 fontSize: '0.8rem',
                                                 fontWeight: 700
@@ -116,7 +116,7 @@ const MaintenanceTicket = () => {
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. G02"
+                                    placeholder="e.g. 3A-01"
                                     className="admin-input"
                                     value={ticket.roomNumber}
                                     onChange={(e) => setTicket({ ...ticket, roomNumber: e.target.value })}
