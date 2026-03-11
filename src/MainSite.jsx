@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Background from './components/Background';
 import Navigation from './components/Navigation';
-import StableLogo from './components/StableLogo';
 import RoomCard from './components/RoomCard';
 import Amenities from './components/Amenities';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import BackToTop from './components/BackToTop';
 import BookingModal from './components/BookingModal';
-import CursorGlow from './components/CursorGlow';
 import SkeletonLoader from './components/SkeletonLoader';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
@@ -65,7 +63,6 @@ const MainSite = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-            <CursorGlow />
             <Background />
             <Navigation />
 

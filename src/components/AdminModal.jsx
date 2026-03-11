@@ -141,9 +141,10 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
                 if (type === 'admins') {
                     endpoint = editingItem ? 'auth/users' : 'auth/register';
-                    if (editingItem && !finalData.password) {
-                        const { password, ...rest } = finalData;
-                        dataToSend = rest;
+                    if (editingItem && !formData.password) {
+                        const dataWithoutPassword = { ...finalData };
+                        delete dataWithoutPassword.password;
+                        dataToSend = dataWithoutPassword;
                     }
                 }
 
