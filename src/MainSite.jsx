@@ -72,8 +72,11 @@ const MainSite = () => {
             <main>
                 {/* Section 1: Hero */}
                 <section id="home" className="section hero-section reveal">
-                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', justifyContent: 'center' }}>
-                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '200px', height: 'auto', animation: 'fadeIn 1s ease' }} />
+                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '120px', height: 'auto', animation: 'fadeIn 1s ease' }} />
+                        <h1 style={{ fontWeight: 900, fontSize: 'clamp(2.5rem, 6vw, 4rem)', letterSpacing: '2px', textAlign: 'center' }}>
+                            Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
+                        </h1>
                     </div>
                     
                     {/* Dynamic Room Counter (Refinement 001) */}

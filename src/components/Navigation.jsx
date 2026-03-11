@@ -3,38 +3,6 @@ import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Bell, Eye } from 
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
 
-const MagneticLink = ({ children, href, className }) => {
-  const ref = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouse = (e) => {
-      const { clientX, clientY } = e;
-      const { height, width, left, top } = ref.current.getBoundingClientRect();
-      const middleX = clientX - (left + width / 2);
-      const middleY = clientY - (top + height / 2);
-      setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
-  };
-
-  const reset = () => {
-      setPosition({ x: 0, y: 0 });
-  };
-
-  return (
-      <motion.a
-          ref={ref}
-          href={href}
-          className={className}
-          onMouseMove={handleMouse}
-          onMouseLeave={reset}
-          animate={{ x: position.x, y: position.y }}
-          transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-          style={{ display: 'inline-block' }}
-      >
-          {children}
-      </motion.a>
-  );
-};
-
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isResidentMenuOpen, setIsResidentMenuOpen] = useState(false);
@@ -81,22 +49,11 @@ const Navigation = () => {
     };
     checkLogin();
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const applyTheme = () => {
-      if (theme === 'system') {
-        const systemTheme = mediaQuery.matches ? 'dark' : 'light';
-        document.body.classList.toggle('light-mode', systemTheme === 'light');
-      } else {
-        document.body.classList.toggle('light-mode', theme === 'light');
-      }
-    };
-
-    applyTheme();
-
     if (theme === 'system') {
-      const handleChange = () => applyTheme();
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.body.classList.toggle('light-mode', systemTheme === 'light');
+    } else {
+      document.body.classList.toggle('light-mode', theme === 'light');
     }
   }, [theme]);
 
@@ -134,8 +91,11 @@ const Navigation = () => {
       <nav className="nav-cluster">
         {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
 
-      <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => window.location.href = '/'}>
-        <img src={logo} alt="Five Eight 9" style={{ height: '28px', width: 'auto' }} />
+      <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }} onClick={() => window.location.href = '/'}>
+        <img src={logo} alt="Five Eight 9" style={{ height: '24px', width: 'auto' }} />
+        <span style={{ fontWeight: 900, fontSize: '1.2rem', letterSpacing: '1px', color: 'var(--text-primary)' }} className="mobile-header-text">
+          Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
+        </span>
       </div>
 
       {/* Desktop Main Links */}
@@ -307,30 +267,37 @@ const Navigation = () => {
         .dropdown-item:hover { color: var(--gold); }
 
         .burger-toggle {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.0));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 2001;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(255,255,255,0.03);
         }
-        .burger-toggle:hover { background: var(--gold); }
-        .burger-icon { width: 20px; height: 14px; position: relative; }
+        .burger-toggle:hover { 
+            background: rgba(255,215,0,0.1); 
+            border-color: var(--gold); 
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255,215,0,0.25);
+        }
+        .burger-icon { width: 22px; height: 16px; position: relative; }
         .burger-icon span { 
             position: absolute; left: 0; width: 100%; height: 2px; 
-            background: var(--text-primary); transition: all 0.3s ease; 
+            background: var(--gold); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            border-radius: 2px;
         }
-        .burger-toggle:hover .burger-icon span { background: var(--navy); }
-        .burger-icon span:first-child { top: 0; }
-        .burger-icon span:last-child { bottom: 0; }
-        .burger-icon.open span:first-child { transform: rotate(45deg); top: 6px; }
-        .burger-icon.open span:last-child { transform: rotate(-45deg); bottom: 6px; }
+        .burger-icon span:first-child { top: 0; width: 70%; left: 30%; }
+        .burger-toggle:hover .burger-icon span:first-child { width: 100%; left: 0; }
+        .burger-icon span:last-child { bottom: 0; width: 100%; }
+        .burger-icon.open span:first-child { transform: rotate(45deg); top: 7px; width: 100%; left: 0; }
+        .burger-icon.open span:last-child { transform: rotate(-45deg); bottom: 7px; width: 100%; }
 
         .overlay-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -378,4 +345,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
