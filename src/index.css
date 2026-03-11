@@ -14,6 +14,7 @@
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-thick: rgba(255, 255, 255, 0.08);
   --nav-bg: rgba(5, 10, 26, 0.65);
+  --burger-bg: rgba(72, 61, 139, 0.95); /* Dark slate blue */
   --transition-premium: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -35,6 +36,7 @@
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-thick: rgba(0, 0, 0, 0.05);
     --nav-bg: rgba(248, 249, 250, 0.85);
+    --burger-bg: rgba(255, 255, 255, 0.95); /* White glass */
     --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     /* Updated */
     --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -57,6 +59,7 @@ body.light-mode {
   --glass-border: rgba(0, 0, 0, 0.08);
   --glass-thick: rgba(0, 0, 0, 0.05);
   --nav-bg: rgba(248, 249, 250, 0.85);
+  --burger-bg: rgba(255, 255, 255, 0.95);
   --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
@@ -223,11 +226,38 @@ body {
 }
 
 /* Components */
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .hero-actions {
+    flex-direction: row;
+  }
+}
+
+.hero-actions .cta-button, 
+.hero-actions .secondary-button {
+  flex: 1;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .cta-button {
   background: var(--gold);
   color: var(--navy);
   border: none;
-  padding: 1rem 2.5rem;
+  padding: 1.2rem 2.5rem;
   border-radius: 6px;
   font-weight: 900;
   cursor: pointer;
@@ -242,6 +272,26 @@ body {
 .cta-button:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 15px 30px var(--gold-glow);
+}
+
+.secondary-button {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--text-primary);
+  padding: 1.2rem 2.5rem;
+  border-radius: 6px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.85rem;
+}
+
+.secondary-button:hover {
+  background: var(--text-primary);
+  color: var(--navy);
+  transform: translateY(-3px) scale(1.02);
 }
 
 /* (010) Haptic Texture Simulation (Tactile Click) */

@@ -53,6 +53,11 @@ const Navigation = () => {
 
   // System Theme Sync & Login Notification
   useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(localStorage.getItem('theme') || 'system');
+    };
+    window.addEventListener('themeChanged', handleThemeChange);
+
     const checkLogin = () => {
       if (localStorage.getItem('justLoggedIn')) {
         setShowToast(true);
@@ -60,6 +65,11 @@ const Navigation = () => {
       }
     };
     checkLogin();
+
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
+  useEffect(() => {
 
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -89,7 +99,6 @@ const Navigation = () => {
 
   const residentLinks = [
     { name: 'Group Chat', href: '/forum' },
-    { name: 'Rent Calc', href: '/calculator' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Events', href: '/events' },
     { name: 'Tickets', href: '/maintenance' },
@@ -297,21 +306,28 @@ const Navigation = () => {
 
         .overlay-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: rgba(var(--bg-primary-rgb, 5, 10, 26), 0.85); 
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 2000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: scale(1.05);
+            opacity: 0; pointer-events: none; transition: all 0.5s ease;
         }
-        .overlay-menu.active { opacity: 1; pointer-events: auto; transform: scale(1); }
-        .overlay-content { width: 90%; max-width: 1100px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+        .overlay-menu.active { opacity: 1; pointer-events: auto; }
+        .overlay-content { 
+            width: 95%; max-width: 1100px; padding: 3rem 2rem; max-height: 90vh; overflow-y: auto; 
+            background: var(--burger-bg);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .overlay-menu.active .overlay-content { transform: scale(1) translateY(0); }
         .overlay-content::-webkit-scrollbar { display: none; }
         .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
-        .overlay-label { font-size: 0.7rem; color: var(--gold); font-weight: 900; text-transform: uppercase; letter-spacing: 4px; }
+        .overlay-label { font-size: 0.8rem; color: var(--gold); font-weight: 900; text-transform: uppercase; letter-spacing: 4px; }
         .overlay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
-        .overlay-section h3 { font-size: 0.8rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; opacity: 0.6; }
-        .overlay-section a { display: block; font-size: clamp(1.3rem, 3.5vw, 1.8rem); font-weight: 900; color: var(--text-primary); text-decoration: none; margin-bottom: 1rem; transition: all 0.3s ease; }
+        .overlay-section h3 { font-size: 0.9rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; font-weight: 900; text-decoration: underline; text-underline-offset: 6px; }
+        .overlay-section a { display: block; font-size: clamp(1.3rem, 3.5vw, 1.8rem); font-weight: 800; color: var(--text-primary); text-decoration: none; margin-bottom: 1.2rem; transition: all 0.3s ease; }
         .overlay-section a:hover { color: var(--gold); transform: translateX(10px); }
 
         .admin-menu-bar { 

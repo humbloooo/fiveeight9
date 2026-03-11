@@ -1,4 +1,6 @@
 import React from 'react';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import Background from '../components/Background';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -33,7 +35,13 @@ const EventsCalendar = () => {
     ];
 
     return (
-        <div className="app-container">
+        <motion.div 
+            className="app-container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+        >
             <Background />
             <Navigation />
             <main style={{ paddingTop: '120px' }}>
@@ -98,7 +106,7 @@ const EventsCalendar = () => {
                 </section>
             </main>
             <Footer />
-        </div>
+        </motion.div>
     );
 };
 

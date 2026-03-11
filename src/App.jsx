@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { AnimatePresence } from 'framer-motion';
 import { ToastProvider } from './context/ToastContext';
 import SkeletonLoader from './components/SkeletonLoader';
+import ThemeModal from './components/ThemeModal';
 
 const MainSite = lazy(() => import('./MainSite'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
@@ -10,7 +11,6 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const Cafeteria = lazy(() => import('./pages/Cafeteria'));
 const Safety = lazy(() => import('./pages/Safety'));
 const TenantForum = lazy(() => import('./pages/TenantForum'));
-const RentCalculator = lazy(() => import('./pages/RentCalculator'));
 const WellnessCenter = lazy(() => import('./pages/WellnessCenter'));
 const EventsCalendar = lazy(() => import('./pages/EventsCalendar'));
 const MaintenanceTicket = lazy(() => import('./pages/MaintenanceTicket'));
@@ -33,7 +33,6 @@ const AnimatedRoutes = ({ token, setToken }) => {
           <Route path="/cafeteria" element={<Cafeteria />} />
           <Route path="/safety" element={<Safety />} />
           <Route path="/forum" element={<TenantForum />} />
-          <Route path="/calculator" element={<RentCalculator />} />
           <Route path="/wellness" element={<WellnessCenter />} />
           <Route path="/events" element={<EventsCalendar />} />
           <Route path="/maintenance" element={<MaintenanceTicket />} />
@@ -54,6 +53,7 @@ function App() {
 
   return (
     <Router>
+      <ThemeModal />
       <ToastProvider>
         <AnimatedRoutes token={token} setToken={setToken} />
       </ToastProvider>

@@ -1,32 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import API_BASE_URL from '../config';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import Background from '../components/Background';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Send, Users, Shield } from 'lucide-react';
 
 const TenantForum = () => {
-    const [messages, setMessages] = useState([
-        { id: 1, user: 'Admin', text: 'Welcome to the Group Chat! Keep it friendly.', time: '09:00 AM', isAdmin: true },
-        { id: 2, user: 'Thabo', text: 'Does anyone know when the bus leaves for campus?', time: '10:15 AM', isAdmin: false },
-        { id: 3, user: 'Sarah', text: 'It leaves every hour on the dot. Next one is at 11:00.', time: '10:17 AM', isAdmin: false },
-    ]);
+    const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(true);
+    const messagesEndRef = useRef(null);
 
-    const handleSend = (e) => {
+    const isLoggedIn = !!localStorage.getItem('adminToken');
+    const userRole = localStorage.getItem('userRole') || 'student';
+
+    const fetchMessages = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/forum/messages`);
+            setMessages(res.data);
+            setLoading(false);
+        } catch (err) {
+            console.error('Failed to fetch messages', err);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchMessages();
+        // Polling every 10 seconds for new messages
+        const interval = setInterval(fetchMessages, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    const handleSend = async (e) => {
         e.preventDefault();
-        if (!input.trim()) return;
-        setMessages([...messages, {
-            id: Date.now(),
-            user: 'You',
+        if (!input.trim() || !isLoggedIn) return;
+
+        const optimisticMsg = {
+            _id: Date.now().toString(),
+            user: userRole === 'admin' ? 'Admin' : 'Resident',
             text: input,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            isAdmin: false
-        }]);
+            isAdmin: userRole === 'admin'
+        };
+
+        setMessages(prev => [...prev, optimisticMsg]);
         setInput('');
+
+        try {
+            await axios.post(`${API_BASE_URL}/api/forum/messages`, optimisticMsg);
+            fetchMessages();
+        } catch (err) {
+            console.error('Failed to send message', err);
+        }
     };
 
     return (
-        <div className="app-container">
+        <motion.div 
+            className="app-container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+        >
             <Background />
             <Navigation />
             <main style={{ paddingTop: '120px' }}>
@@ -56,32 +99,41 @@ const TenantForum = () => {
 
                         {/* Messages */}
                         <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            {messages.map((msg) => (
-                                <div key={msg.id} style={{
-                                    alignSelf: msg.user === 'You' ? 'flex-end' : 'flex-start',
-                                    maxWidth: '70%'
-                                }}>
+                            {loading ? (
+                                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>Loading messages...</div>
+                            ) : messages.length === 0 ? (
+                                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No messages yet. Be the first to say hi!</div>
+                            ) : messages.map((msg) => {
+                                    const isMe = msg.user === (userRole === 'admin' ? 'Admin' : 'Resident') || msg.user === 'You';
+                                    return (
+                                        <div key={msg._id} style={{
+                                            alignSelf: isMe ? 'flex-end' : 'flex-start',
+                                            maxWidth: '70%'
+                                        }}>
                                     <div style={{
-                                        display: 'flex',
-                                        alignItems: 'baseline',
-                                        gap: '0.5rem',
-                                        marginBottom: '0.3rem',
-                                        flexDirection: msg.user === 'You' ? 'row-reverse' : 'row'
-                                    }}>
-                                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: msg.isAdmin ? 'var(--gold)' : 'var(--text-primary)' }}>{msg.user}</span>
-                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{msg.time}</span>
+                                            display: 'flex',
+                                            alignItems: 'baseline',
+                                            gap: '0.5rem',
+                                            marginBottom: '0.3rem',
+                                            flexDirection: isMe ? 'row-reverse' : 'row'
+                                        }}>
+                                            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: msg.isAdmin ? 'var(--gold)' : 'var(--text-primary)' }}>{msg.user}</span>
+                                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{msg.time}</span>
+                                        </div>
+                                        <div style={{
+                                            background: isMe ? 'var(--gold)' : 'rgba(255,255,255,0.05)',
+                                            color: isMe ? '#000' : 'white',
+                                            padding: '1rem 1.5rem',
+                                            borderRadius: isMe ? '18px 2px 18px 18px' : '2px 18px 18px 18px',
+                                            fontSize: '0.95rem',
+                                            border: msg.isAdmin ? '1px solid var(--gold)' : 'none'
+                                        }}>
+                                            {msg.text}
+                                        </div>
                                     </div>
-                                    <div style={{
-                                        background: msg.user === 'You' ? 'var(--gold)' : 'rgba(255,255,255,0.05)',
-                                        color: msg.user === 'You' ? '#000' : 'white',
-                                        padding: '1rem 1.5rem',
-                                        borderRadius: msg.user === 'You' ? '18px 2px 18px 18px' : '2px 18px 18px 18px',
-                                        fontSize: '0.95rem'
-                                    }}>
-                                        {msg.text}
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
+                            <div ref={messagesEndRef} />
                         </div>
 
                         {/* Input Overlay */}
@@ -89,7 +141,8 @@ const TenantForum = () => {
                             <input
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Type your message..."
+                                placeholder={isLoggedIn ? "Type your message..." : "Login to send messages..."}
+                                disabled={!isLoggedIn}
                                 style={{
                                     flex: 1,
                                     background: 'rgba(255,255,255,0.03)',
@@ -97,27 +150,28 @@ const TenantForum = () => {
                                     padding: '1rem 1.5rem',
                                     borderRadius: '12px',
                                     color: 'white',
-                                    outline: 'none'
+                                    outline: 'none',
+                                    opacity: isLoggedIn ? 1 : 0.5
                                 }}
                             />
-                            <button type="submit" style={{
-                                background: 'var(--gold)',
+                            <button type="submit" disabled={!isLoggedIn} style={{
+                                background: isLoggedIn ? 'var(--gold)' : 'rgba(255,255,255,0.1)',
                                 border: 'none',
                                 padding: '1rem',
                                 borderRadius: '12px',
-                                cursor: 'pointer',
+                                cursor: isLoggedIn ? 'pointer' : 'not-allowed',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <Send size={20} color="#000" />
+                                <Send size={20} color={isLoggedIn ? "#000" : "var(--text-secondary)"} />
                             </button>
                         </form>
                     </div>
                 </section>
             </main>
             <Footer />
-        </div>
+        </motion.div>
     );
 };
 
