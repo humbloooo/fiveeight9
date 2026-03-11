@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // Get recent messages
 router.get('/messages', async (req, res) => {
@@ -81,7 +81,5 @@ router.delete('/messages/:id', auth, async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
-
-module.exports = router;
 
 module.exports = router;
