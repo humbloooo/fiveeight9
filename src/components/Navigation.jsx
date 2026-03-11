@@ -16,6 +16,18 @@ const Navigation = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Scroll Lock for Burger Menu
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   // Context CTA Scroll Logic
   useEffect(() => {
     const handleScroll = () => {
@@ -196,17 +208,17 @@ const Navigation = () => {
             </div>
 
             <div className="overlay-section">
-              <h3>Portals</h3>
-              <a href="/admin" onClick={toggleMenu}>Staff Portal</a>
-              <a href="/login" onClick={toggleMenu}>Student Portal</a>
+              <h3>Resident Services</h3>
+              {residentLinks.map(link => (
+                <a key={link.name} href={link.href} onClick={toggleMenu}>{link.name}</a>
+              ))}
             </div>
 
             <div className="overlay-section">
-              <h3>Resident Services</h3>
-              {residentLinks.slice(0, 3).map(link => (
-                <a key={link.name} href={link.href} onClick={toggleMenu}>{link.name}</a>
-              ))}
-              <div style={{ marginTop: '2rem' }}>
+              <h3>Portals & Actions</h3>
+              <a href="/login" onClick={toggleMenu}>Student Portal</a>
+              <a href="/admin" onClick={toggleMenu}>Staff Portal</a>
+              <div style={{ marginTop: '2.5rem' }}>
                 <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
                   {ctaText}
                 </button>
@@ -301,18 +313,20 @@ const Navigation = () => {
 
         .overlay-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: rgba(5, 10, 26, 0.98); backdrop-filter: blur(20px);
+            background: var(--bg-primary); 
+            backdrop-filter: blur(25px);
             z-index: 2000; display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             transform: translateY(-20px);
         }
         .overlay-menu.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .overlay-content { width: 90%; max-width: 1100px; padding: 2rem; }
-        .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; }
+        .overlay-content { width: 90%; max-width: 1100px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+        .overlay-content::-webkit-scrollbar { display: none; }
+        .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
         .overlay-label { font-size: 0.7rem; color: var(--gold); font-weight: 900; text-transform: uppercase; letter-spacing: 4px; }
-        .overlay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
-        .overlay-section h3 { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; opacity: 0.5; }
-        .overlay-section a { display: block; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; color: #fff; text-decoration: none; margin-bottom: 1rem; transition: var(--transition-premium); }
+        .overlay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .overlay-section h3 { font-size: 0.8rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; opacity: 0.6; }
+        .overlay-section a { display: block; font-size: clamp(1.3rem, 3.5vw, 1.8rem); font-weight: 900; color: var(--text-primary); text-decoration: none; margin-bottom: 1rem; transition: all 0.3s ease; }
         .overlay-section a:hover { color: var(--gold); transform: translateX(10px); }
 
         .admin-menu-bar { 

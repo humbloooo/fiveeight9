@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Wifi, Shield, Coffee, Zap, Droplets, Truck, Monitor, Sun } from 'lucide-react';
 
 const Amenities = () => {
+    const [activeAmenity, setActiveAmenity] = useState(null);
+
     const amenityList = [
-        { icon: <Sun size={18} />, title: 'Solar Powered' },
-        { icon: <Wifi size={18} />, title: 'Uncapped Wi-Fi' },
-        { icon: <Shield size={18} />, title: '24/7 Security' },
-        { icon: <Coffee size={18} />, title: 'Nari\'s Cafe' },
-        { icon: <Truck size={18} />, title: 'Hourly Transport' },
-        { icon: <Droplets size={18} />, title: 'Constant Water' },
-        { icon: <Zap size={18} />, title: 'Electric Stoves' },
-        { icon: <Monitor size={18} />, title: 'Study Area' },
+        { icon: <Sun size={18} />, title: 'Solar Powered', desc: 'Continuous power supply through our dedicated solar array.' },
+        { icon: <Wifi size={18} />, title: 'Uncapped Wi-Fi', desc: 'High-speed internet access available throughout the community.' },
+        { icon: <Shield size={18} />, title: '24/7 Security', desc: 'Round-the-clock security personnel and CCTV monitoring.' },
+        { icon: <Coffee size={18} />, title: 'Nari\'s Cafe', desc: 'On-site cafe serving fresh meals, snacks, and premium coffee.' },
+        { icon: <Truck size={18} />, title: 'Hourly Transport', desc: 'Reliable shuttle service to key campus locations.' },
+        { icon: <Droplets size={18} />, title: 'Constant Water', desc: 'Backup water tanks ensuring uninterrupted supply.' },
+        { icon: <Zap size={18} />, title: 'Electric Stoves', desc: 'Modern kitchenettes equipped with electric stoves.' },
+        { icon: <Monitor size={18} />, title: 'Study Area', desc: 'Quiet, dedicated spaces designed for focused academic work.' },
     ];
 
     return (
@@ -38,7 +40,7 @@ const Amenities = () => {
                 textTransform: 'uppercase',
                 boxShadow: '0 5px 15px rgba(197, 160, 89, 0.3)'
             }}>
-                Student Experience
+                Amenities
             </div>
 
             <div style={{
@@ -48,33 +50,57 @@ const Amenities = () => {
                 marginTop: '1rem'
             }}>
                 {amenityList.map((item, i) => (
-                    <div key={i} style={{
+                    <div key={i} 
+                         onClick={() => setActiveAmenity(activeAmenity === i ? null : i)}
+                         style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '1rem',
                         textAlign: 'center',
-                        transition: 'transform 0.3s ease'
+                        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                        cursor: 'pointer',
+                        padding: '1.5rem 1rem',
+                        borderRadius: '24px',
+                        background: activeAmenity === i ? 'var(--glass-thick)' : 'transparent',
+                        border: activeAmenity === i ? '1px solid var(--gold)' : '1px solid transparent'
                     }} className="amenity-mini-item">
                         <div style={{
                             width: '45px',
                             height: '45px',
                             borderRadius: '12px',
-                            background: 'rgba(255,255,255,0.03)',
+                            background: activeAmenity === i ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
                             border: '1px solid var(--glass-border)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: 'var(--gold)',
+                            color: activeAmenity === i ? 'var(--navy)' : 'var(--gold)',
+                            transition: 'all 0.3s ease'
                         }}>
                             {item.icon}
                         </div>
-                        <span style={{
-                            fontSize: '0.8rem',
-                            fontWeight: 700,
-                            color: 'var(--text-primary)',
-                            letterSpacing: '0.5px'
-                        }}>{item.title}</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                            <span style={{
+                                fontSize: '0.8rem',
+                                fontWeight: 700,
+                                color: activeAmenity === i ? 'var(--gold)' : 'var(--text-primary)',
+                                letterSpacing: '0.5px',
+                                transition: 'color 0.3s ease'
+                            }}>{item.title}</span>
+                            
+                            <div style={{
+                                maxHeight: activeAmenity === i ? '120px' : '0',
+                                opacity: activeAmenity === i ? 1 : 0,
+                                overflow: 'hidden',
+                                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                                fontSize: '0.75rem',
+                                color: 'var(--text-secondary)',
+                                lineHeight: '1.5',
+                                marginTop: activeAmenity === i ? '0.5rem' : '0'
+                            }}>
+                                {item.desc}
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>

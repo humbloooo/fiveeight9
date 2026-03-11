@@ -140,7 +140,7 @@ const MainSite = () => {
 
                 {/* Section 3: Amenities */}
                 <section id="amenities" className="section reveal">
-                    <h2 className="section-title">Student <span>Experience</span></h2>
+                    <h2 className="section-title"><span>Amenities</span></h2>
                     <Amenities />
                 </section>
 
