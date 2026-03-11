@@ -27,7 +27,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 homeStats: { 
                     count: '231', 
                     label: 'Luxury Lofts', 
-                    subCount: '15%', 
+                    subCount: '15', 
                     subLabel: 'Sharing Options' 
                 },
                 resFull: false
@@ -178,7 +178,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <ImageIcon size={16} /> HERO STATS & AVAILABILITY
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                     <div>
                         <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Main Stat (e.g. 231)</label>
                         <input className="admin-input" value={formData.homeStats?.count || ''} onChange={(e) => handleNestedChange('homeStats.count', e.target.value)} />
@@ -188,7 +188,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                         <input className="admin-input" value={formData.homeStats?.label || ''} onChange={(e) => handleNestedChange('homeStats.label', e.target.value)} />
                     </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                     <div>
                         <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Sub Stat (e.g. 15%)</label>
                         <input className="admin-input" value={formData.homeStats?.subCount || ''} onChange={(e) => handleNestedChange('homeStats.subCount', e.target.value)} />

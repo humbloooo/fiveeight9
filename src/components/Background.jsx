@@ -40,16 +40,17 @@ const Background = () => {
                     opacity: 0.8;
                 }
 
-                /* Strictly follow system theme */
-                @media (prefers-color-scheme: light) {
-                    .celestial-bg {
-                        display: none;
-                    }
-                    .background-wrapper {
-                        background: radial-gradient(circle at top right, rgba(197, 160, 89, 0.08), transparent 40%),
-                                    radial-gradient(circle at bottom left, rgba(197, 160, 89, 0.05), transparent 40%),
-                                    #f8f9fa;
-                    }
+                /* Strictly follow active theme mode */
+                :global(body.light-mode) .celestial-bg,
+                body.light-mode .celestial-bg {
+                    display: none;
+                }
+                
+                :global(body.light-mode) .background-wrapper,
+                body.light-mode .background-wrapper {
+                    background: radial-gradient(circle at top right, rgba(197, 160, 89, 0.08), transparent 40%),
+                                radial-gradient(circle at bottom left, rgba(197, 160, 89, 0.05), transparent 40%),
+                                #f8f9fa;
                 }
 
                 .stars-container {

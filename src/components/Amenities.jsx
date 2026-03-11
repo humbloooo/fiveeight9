@@ -208,22 +208,7 @@ const Amenities = () => {
             )}
 
             <style>{`
-                .amenity-mini-item:hover {
-                    background: rgba(255,255,255,0.02) !important;
-                }
-                .amenity-mini-item:hover div {
-                    background: var(--gold);
-                    color: var(--navy);
-                    border-color: var(--gold);
-                }
-                /* (104) Icon Morphing / Pulse effect */
-                .amenity-mini-item:hover div svg {
-                    animation: pulseIcon 0.6s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
-                }
-                @keyframes pulseIcon {
-                    0% { transform: scale(1); }
-                    100% { transform: scale(1.18) rotate(5deg); }
-                }
+                /* (104) Icon morphs removed based on feedback for sleek static feel */
             `}</style>
         </div>
     );

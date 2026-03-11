@@ -127,10 +127,10 @@ const Navigation = () => {
           </a>
         ))}
 
-        <div style={{ position: 'relative' }}
+        <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}
           onMouseEnter={() => setIsResidentMenuOpen(true)}
           onMouseLeave={() => setIsResidentMenuOpen(false)}>
-          <button className="nav-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <button className="nav-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '1rem 0' }}>
             Residents <ChevronDown size={14} />
           </button>
 
@@ -147,9 +147,6 @@ const Navigation = () => {
       <div className="nav-actions desktop-only">
         {!isLoggedIn ? (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <button onClick={() => setNightOwl(!nightOwl)} className="icon-btn" title="Night-Owl Reading Mode">
-                <Eye size={18} color={nightOwl ? 'var(--gold)' : 'currentColor'} />
-            </button>
             <a href="/login" className="nav-link" style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <LogIn size={14} /> STUDENT LOG
             </a>
@@ -159,9 +156,6 @@ const Navigation = () => {
           </div>
         ) : (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <button onClick={() => setNightOwl(!nightOwl)} className="icon-btn" title="Night-Owl Reading Mode">
-                <Eye size={18} color={nightOwl ? 'var(--gold)' : 'currentColor'} />
-            </button>
             {userRole === 'admin' && (
               <button onClick={toggleTheme} className="icon-btn" title="Toggle Theme">
                 {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
@@ -247,7 +241,6 @@ const Navigation = () => {
             gap: 0.8rem;
             min-width: 160px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            margin-top: 0.5rem;
             animation: slideDown 0.3s ease;
         }
         .dropdown-menu:after { 

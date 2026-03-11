@@ -255,7 +255,7 @@ const AdminDashboard = ({ token, setToken }) => {
                                 padding: '0.6rem 1rem', 
                                 borderRadius: '8px', 
                                 border: '1px solid var(--glass-border)', 
-                                background: 'rgba(255,255,255,0.05)', 
+                                background: 'var(--glass)', 
                                 color: 'var(--text-primary)',
                                 outline: 'none'
                              }}

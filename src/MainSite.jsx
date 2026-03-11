@@ -86,7 +86,7 @@ const MainSite = () => {
                                 <span className="stat-label">{settings?.homeStats?.label || 'LUXURY LOFTS'}</span>
                             </div>
                             <div className="stat-item">
-                                <span className="stat-number gold-text">{settings?.homeStats?.subCount || '15%'}</span>
+                                <span className="stat-number gold-text">{settings?.homeStats?.subCount || '15'}</span>
                                 <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING OPTIONS'}</span>
                             </div>
                         </div>
