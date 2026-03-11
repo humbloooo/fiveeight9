@@ -102,7 +102,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
                     {Object.entries(formData.socialLinks || {}).map(([platform, data]) => (
                         <div key={platform} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                            <div style={{ width: '100px', fontSize: '0.8rem', color: '#a0aec0', textTransform: 'capitalize' }}>{platform}</div>
+                            <div style={{ width: '100px', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'capitalize' }}>{platform}</div>
                             <input
                                 className="admin-input"
                                 style={{ flex: 1 }}
@@ -130,7 +130,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     {['reception', 'security', 'emergency', 'email'].map(field => (
                         <div key={field}>
-                            <label style={{ display: 'block', fontSize: '0.7rem', color: '#a0aec0', marginBottom: '0.3rem', textTransform: 'capitalize' }}>{field}</label>
+                            <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem', textTransform: 'capitalize' }}>{field}</label>
                             <input
                                 className="admin-input"
                                 value={formData.emergencyContacts?.[field] || ''}
@@ -164,11 +164,11 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
                     <div>
-                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#a0aec0', marginBottom: '0.3rem' }}>Hero Image ID</label>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Hero Image ID</label>
                         <input className="admin-input" value={formData.media?.heroId || ''} onChange={(e) => handleNestedChange('media.heroId', e.target.value)} />
                     </div>
                     <div>
-                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#a0aec0', marginBottom: '0.3rem' }}>Background ID</label>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>Background ID</label>
                         <input className="admin-input" value={formData.media?.backgroundId || ''} onChange={(e) => handleNestedChange('media.backgroundId', e.target.value)} />
                     </div>
                 </div>
@@ -179,7 +179,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
     const renderContentFields = () => (
         <>
             <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#a0aec0', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Title/Name</label>
+                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Title/Name</label>
                 <input
                     name={type === 'cafeteria' ? 'name' : 'title'}
                     value={type === 'cafeteria' ? formData.name : formData.title}
@@ -190,7 +190,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#a0aec0', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Description/Subtitle</label>
+                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Description/Subtitle</label>
                 <textarea
                     name={type === 'rooms' ? 'subtitle' : 'description'}
                     value={type === 'rooms' ? formData.subtitle : formData.description}
@@ -203,11 +203,11 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             {type === 'rooms' && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                     <div>
-                        <label style={{ display: 'block', color: '#a0aec0', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Price</label>
+                        <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Price</label>
                         <input name="price" value={formData.price} onChange={handleChange} className="admin-input" />
                     </div>
                     <div>
-                        <label style={{ display: 'block', color: '#a0aec0', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Floor</label>
+                        <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Floor</label>
                         <select name="floor" value={formData.floor} onChange={handleChange} className="admin-input">
                             {['Basement', 'Ground Floor', '1st Floor', 'Second Floor', '3rd Floor'].map(f => <option key={f} value={f}>{f}</option>)}
                         </select>
@@ -216,7 +216,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             )}
 
             <div style={{ marginBottom: '2rem' }}>
-                <label style={{ display: 'block', color: '#a0aec0', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Media Asset</label>
+                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Media Asset</label>
                 <div style={{
                     border: '2px dashed rgba(255,255,255,0.1)',
                     padding: '1.5rem',
@@ -226,7 +226,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                     background: 'rgba(255,255,255,0.02)'
                 }} onClick={() => document.getElementById('file-input').click()}>
                     <Upload size={24} style={{ color: 'var(--gold)', marginBottom: '0.5rem' }} />
-                    <p style={{ color: '#a0aec0', fontSize: '0.8rem' }}>{file ? file.name : 'Upload from device'}</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{file ? file.name : 'Upload from device'}</p>
                     <input id="file-input" type="file" style={{ display: 'none' }} onChange={(e) => setFile(e.target.files[0])} />
                 </div>
             </div>
@@ -239,7 +239,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '1rem'
         }}>
             <div className="modal-content" style={{
-                background: '#0a1025', width: '100%', maxWidth: type === 'settings' ? '700px' : '550px',
+                background: 'var(--navy)', width: '100%', maxWidth: type === 'settings' ? '700px' : '550px',
                 maxHeight: '90vh', overflowY: 'auto', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)',
                 padding: 'clamp(1.5rem, 5vw, 2.5rem)', position: 'relative'
             }}>
@@ -247,7 +247,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                     <h2 style={{ color: 'var(--gold)', fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', textTransform: 'uppercase' }}>
                         {type === 'settings' ? 'Site Configuration' : (editingItem ? 'Edit' : 'Add New') + ' ' + type.slice(0, -1)}
                     </h2>
-                    <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X size={24} /></button>
+                    <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}><X size={24} /></button>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -265,7 +265,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 </form>
             </div>
             <style>{`
-                .admin-input { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; outline: none; transition: all 0.3s ease; }
+                .admin-input { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); border-radius: 8px; outline: none; transition: all 0.3s ease; }
                 .admin-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.08); }
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                 .spin { animation: spin 1s linear infinite; }

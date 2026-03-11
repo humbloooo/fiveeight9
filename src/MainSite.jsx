@@ -62,7 +62,7 @@ const MainSite = () => {
                 {/* Section 1: Hero */}
                 <section id="home" className="section hero-section reveal">
                     <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', justifyContent: 'center' }}>
-                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '400px', height: 'auto', animation: 'fadeIn 1s ease' }} />
+                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '280px', height: 'auto', animation: 'fadeIn 1s ease' }} />
                     </div>
                     
                     {/* Dynamic Room Counter (Refinement 001) */}
@@ -95,7 +95,7 @@ const MainSite = () => {
                                 fontSize: '0.85rem',
                                 letterSpacing: '1px'
                             }}
-                            onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.08)'}
+                            onMouseEnter={(e) => e.target.style.background = 'var(--glass-thick)'}
                             onMouseLeave={(e) => e.target.style.background = 'var(--glass)'}
                             onClick={() => document.getElementById('rooms').scrollIntoView({ behavior: 'smooth' })}
                         >

@@ -66,7 +66,7 @@ const AdminLogin = ({ setToken }) => {
                             padding: '1rem',
                             background: 'rgba(255,255,255,0.03)',
                             border: '1px solid var(--glass-border)',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             borderRadius: '12px',
                             outline: 'none'
                         }}
@@ -85,7 +85,7 @@ const AdminLogin = ({ setToken }) => {
                             padding: '1rem',
                             background: 'rgba(255,255,255,0.03)',
                             border: '1px solid var(--glass-border)',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             borderRadius: '12px',
                             outline: 'none'
                         }}

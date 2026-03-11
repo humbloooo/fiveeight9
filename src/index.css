@@ -206,7 +206,7 @@ body {
 /* Components */
 .cta-button {
   background: var(--gold);
-  color: #000;
+  color: var(--navy);
   border: none;
   padding: 1rem 2.5rem;
   border-radius: 6px;
@@ -284,7 +284,7 @@ body {
 
 .amenity-item:hover .amenity-icon {
   background: var(--gold);
-  color: #000;
+  color: var(--navy);
   transform: rotate(10deg);
 }
 
@@ -356,7 +356,7 @@ body {
   }
 
   .section {
-    padding: 5rem 1.5rem;
+    padding: 3.5rem 1rem;
   }
 
   .section-title {

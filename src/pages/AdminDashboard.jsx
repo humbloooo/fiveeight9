@@ -112,8 +112,8 @@ const AdminDashboard = ({ token, setToken }) => {
         <div className="admin-dashboard-root" style={{
             display: 'flex',
             minHeight: '100vh',
-            background: '#050a1a',
-            color: 'white',
+            background: 'var(--navy)',
+            color: 'var(--text-primary)',
             position: 'relative'
         }}>
             {/* Sidebar Overlay for Mobile */}
@@ -133,8 +133,8 @@ const AdminDashboard = ({ token, setToken }) => {
             {/* Sidebar */}
             <div className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`} style={{
                 width: '260px',
-                background: 'rgba(5, 10, 26, 0.98)',
-                borderRight: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--nav-bg)',
+                borderRight: '1px solid var(--glass-border)',
                 padding: '2rem 1rem',
                 display: 'flex',
                 flexDirection: 'column',
@@ -144,13 +144,13 @@ const AdminDashboard = ({ token, setToken }) => {
                 zIndex: 1500,
                 transition: 'transform 0.3s ease'
             }}>
-                <h2 style={{ color: '#C5A059', marginBottom: '3rem', fontSize: '1.2rem', padding: '0 1rem', fontWeight: 900 }}>Admin Console</h2>
+                <h2 style={{ color: 'var(--gold)', marginBottom: '3rem', fontSize: '1.2rem', padding: '0 1rem', fontWeight: 900 }}>Admin Console</h2>
                 <nav style={{ flex: 1 }}>
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => { setActiveTab(tab.id); setIsSidebarOpen(false); }}
-                            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: activeTab === tab.id ? 'rgba(197, 160, 89, 0.1)' : 'transparent', border: 'none', color: activeTab === tab.id ? '#C5A059' : '#a0aec0', borderRadius: '8px', cursor: 'pointer', marginBottom: '0.5rem', textAlign: 'left', transition: 'all 0.3s ease', fontWeight: activeTab === tab.id ? 'bold' : 'normal' }}
+                            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: activeTab === tab.id ? 'var(--gold-glow)' : 'transparent', border: 'none', color: activeTab === tab.id ? 'var(--gold)' : 'var(--text-secondary)', borderRadius: '8px', cursor: 'pointer', marginBottom: '0.5rem', textAlign: 'left', transition: 'all 0.3s ease', fontWeight: activeTab === tab.id ? 'bold' : 'normal' }}
                         >
                             {tab.icon} {tab.name}
                         </button>
@@ -168,17 +168,17 @@ const AdminDashboard = ({ token, setToken }) => {
                         <button
                             className="sidebar-toggle-btn"
                             onClick={() => setIsSidebarOpen(true)}
-                            style={{ background: 'transparent', border: 'none', color: 'white', display: 'none', cursor: 'pointer' }}
+                            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', display: 'none', cursor: 'pointer' }}
                         >
                             <Menu size={24} />
                         </button>
                         <div>
                             <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', textTransform: 'capitalize', marginBottom: '0.2rem' }}>{activeTab}</h1>
-                            <p style={{ color: '#a0aec0', fontSize: '0.9rem' }} className="hide-on-mobile">Manage your website content dynamically.</p>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} className="hide-on-mobile">Manage your website content dynamically.</p>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button onClick={fetchData} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer' }}>
+                        <button onClick={fetchData} style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer' }}>
                             <RefreshCw size={18} className={loading ? 'spin' : ''} />
                         </button>
                         <button
@@ -199,7 +199,7 @@ const AdminDashboard = ({ token, setToken }) => {
                 )}
 
                 {loading ? (
-                    <div style={{ color: '#C5A059' }}>Loading data...</div>
+                    <div style={{ color: 'var(--gold)' }}>Loading data...</div>
                 ) : (
                     <div className="admin-list-grid" style={{ display: (activeTab === 'settings' || (Array.isArray(data) && data.length === 0)) ? 'block' : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                         {activeTab === 'settings' ? (
@@ -207,7 +207,7 @@ const AdminDashboard = ({ token, setToken }) => {
                                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
                                     <Settings size={48} style={{ color: 'var(--gold)', marginBottom: '1.5rem' }} />
                                     <h2 style={{ marginBottom: '1rem' }}>Universal Site Settings</h2>
-                                    <p style={{ color: '#a0aec0', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
                                         Manage social links, emergency contacts, and global visibility toggles across the entire platform.
                                     </p>
                                     <button className="cta-button" onClick={() => { setEditingItem(data); setIsModalOpen(true); }}>
@@ -217,7 +217,7 @@ const AdminDashboard = ({ token, setToken }) => {
                                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
                                     <Shield size={48} style={{ color: '#48bb78', marginBottom: '1.5rem' }} />
                                     <h2 style={{ marginBottom: '1rem' }}>Core Data Backup</h2>
-                                    <p style={{ color: '#a0aec0', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
                                         Export a complete JSON snapshot of the database (Rooms, Amenities, Settings) securely.
                                     </p>
                                     <button 
@@ -234,14 +234,14 @@ const AdminDashboard = ({ token, setToken }) => {
                             data.map((item) => (
                                 <div key={item._id} style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                                        <h3 style={{ color: '#C5A059', fontSize: '1rem' }}>{item.title || item.name || item.key}</h3>
+                                        <h3 style={{ color: 'var(--gold)', fontSize: '1rem' }}>{item.title || item.name || item.key}</h3>
                                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                            <button onClick={() => { setEditingItem(item); setIsModalOpen(true); }} style={{ background: 'transparent', border: 'none', color: '#a0aec0', cursor: 'pointer' }}><Edit size={16} /></button>
+                                            <button onClick={() => { setEditingItem(item); setIsModalOpen(true); }} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}><Edit size={16} /></button>
                                             <button onClick={() => handleDelete(item._id)} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer' }}><Trash size={16} /></button>
                                         </div>
                                     </div>
                                     {item.imageUrl && <img src={item.imageUrl} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} alt="" />}
-                                    <p style={{ color: '#a0aec0', fontSize: '0.8rem' }}>{item.subtitle || item.description || (item.category && `Category: ${item.category}`)}</p>
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{item.subtitle || item.description || (item.category && `Category: ${item.category}`)}</p>
                                     {item.price && <div style={{ fontWeight: 'bold', marginTop: '1rem', fontSize: '0.9rem' }}>{item.price}</div>}
                                 </div>
                             ))

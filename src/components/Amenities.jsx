@@ -27,9 +27,8 @@ const Amenities = () => {
                 position: 'absolute',
                 top: 0,
                 left: '50%',
-                transform: 'translateX(-50%)',
                 background: 'var(--gold-gradient)',
-                color: '#000',
+                color: 'var(--navy)',
                 padding: '0.6rem 2rem',
                 fontSize: '0.75rem',
                 fontWeight: 900,
@@ -86,7 +85,7 @@ const Amenities = () => {
                 }
                 .amenity-mini-item:hover div {
                     background: var(--gold);
-                    color: #000;
+                    color: var(--navy);
                     border-color: var(--gold);
                 }
                 /* (104) Icon Morphing / Pulse effect */

@@ -92,7 +92,7 @@ const Navigation = () => {
         {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
 
       <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => window.location.href = '/'}>
-        <img src={logo} alt="Five Eight 9" style={{ height: '35px', width: 'auto' }} />
+        <img src={logo} alt="Five Eight 9" style={{ height: '28px', width: 'auto' }} />
       </div>
 
       {/* Desktop Main Links */}
@@ -283,7 +283,7 @@ const Navigation = () => {
             position: absolute; left: 0; width: 100%; height: 2px; 
             background: var(--text-primary); transition: all 0.3s ease; 
         }
-        .burger-toggle:hover .burger-icon span { background: #000; }
+        .burger-toggle:hover .burger-icon span { background: var(--navy); }
         .burger-icon span:first-child { top: 0; }
         .burger-icon span:last-child { bottom: 0; }
         .burger-icon.open span:first-child { transform: rotate(45deg); top: 6px; }
