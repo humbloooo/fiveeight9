@@ -71,68 +71,50 @@ const Amenities = () => {
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '2.5rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                gap: '2.5rem',
+                width: '100%'
             }}>
                 {loading ? (
                     Array(6).fill(0).map((_, i) => (
-                        <div key={i} style={{ height: '220px', background: 'var(--glass)', borderRadius: '32px', border: '1px solid var(--glass-border)' }}></div>
+                        <div key={i} style={{ height: '240px', background: 'var(--glass)', borderRadius: '32px', border: '1px solid var(--glass-border)' }}></div>
                     ))
                 ) : (
                     amenities.map((item, i) => (
                         <motion.div 
                             key={item._id || i}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: i * 0.1 }}
+                            transition={{ delay: i * 0.05 }}
                             onMouseEnter={() => setHoveredIdx(i)}
                             onMouseLeave={() => setHoveredIdx(null)}
                             onClick={() => setSelectedDetail(item)}
                             style={{
                                 background: 'var(--glass)',
                                 backdropFilter: 'blur(30px)',
-                                padding: '2.5rem',
-                                borderRadius: '32px',
+                                padding: '3rem',
+                                borderRadius: '40px',
                                 border: '1px solid var(--glass-border)',
                                 cursor: 'pointer',
-                                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                                 position: 'relative',
-                                overflow: 'hidden'
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textAlign: 'center'
                             }}
                             whileHover={{ 
-                                y: -10,
+                                y: -15,
                                 borderColor: 'var(--gold)',
-                                background: 'rgba(var(--gold-rgb, 197, 160, 89), 0.05)'
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                boxShadow: '0 30px 60px rgba(0,0,0,0.3)'
                             }}
                         >
-                            {/* Decorative Background Glow */}
-                            <AnimatePresence>
-                                {hoveredIdx === i && (
-                                    <motion.div 
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.8 }}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '-20%',
-                                            right: '-20%',
-                                            width: '200px',
-                                            height: '200px',
-                                            background: 'var(--gold-gradient)',
-                                            filter: 'blur(80px)',
-                                            opacity: 0.1,
-                                            zIndex: 0,
-                                            pointerEvents: 'none'
-                                        }}
-                                    />
-                                )}
-                            </AnimatePresence>
-
                             <div style={{
-                                width: '64px',
-                                height: '64px',
-                                borderRadius: '20px',
+                                width: '70px',
+                                height: '70px',
+                                borderRadius: '22px',
                                 background: hoveredIdx === i ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
                                 border: '1px solid var(--glass-border)',
                                 display: 'flex',
@@ -140,48 +122,27 @@ const Amenities = () => {
                                 justifyContent: 'center',
                                 color: hoveredIdx === i ? 'var(--navy)' : 'var(--gold)',
                                 marginBottom: '2rem',
-                                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                                position: 'relative',
-                                zIndex: 1
+                                transition: 'all 0.4s ease'
                             }}>
                                 {getIcon(item.icon)}
                             </div>
 
-                            <div style={{ position: 'relative', zIndex: 1 }}>
-                                <h3 style={{
-                                    fontSize: '1.4rem',
-                                    fontWeight: 900,
-                                    marginBottom: '1rem',
-                                    color: 'var(--text-primary)',
-                                    letterSpacing: '-0.5px'
-                                }}>{item.title}</h3>
-                                
-                                <p style={{
-                                    fontSize: '0.95rem',
-                                    color: 'var(--text-secondary)',
-                                    lineHeight: '1.6',
-                                    margin: 0
-                                }}>
-                                    {item.desc}
-                                </p>
-
-                                <div style={{ 
-                                    marginTop: '1.5rem', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.5rem',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 900,
-                                    color: 'var(--gold)',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '1px',
-                                    opacity: hoveredIdx === i ? 1 : 0,
-                                    transform: hoveredIdx === i ? 'translateX(0)' : 'translateX(-10px)',
-                                    transition: 'all 0.4s ease'
-                                }}>
-                                    Explore Detail <ArrowRight size={14} />
-                                </div>
-                            </div>
+                            <h3 style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 900,
+                                marginBottom: '1rem',
+                                color: 'var(--text-primary)',
+                                letterSpacing: '-0.5px'
+                            }}>{item.title}</h3>
+                            
+                            <p style={{
+                                fontSize: '0.95rem',
+                                color: 'var(--text-secondary)',
+                                lineHeight: '1.6',
+                                margin: 0
+                            }}>
+                                {item.desc}
+                            </p>
                         </motion.div>
                     ))
                 )}

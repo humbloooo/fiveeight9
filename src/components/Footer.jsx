@@ -79,24 +79,24 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Emergency & Support */}
+                {/* Resident Support */}
                 <div className="reveal" style={{ animationDelay: '0.2s' }}>
                     <h4 className="footer-title">Resident Support</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <div className="contact-item-footer">
-                            <span className="label">Reception & Support</span>
-                            <span className="value">{emergency.reception || '+27 15 589 0000'}</span>
+                            <span className="label" style={{ color: 'var(--gold)' }}>Reception & 24/7 Support</span>
+                            <span className="value" style={{ fontSize: '1.2rem' }}>{emergency.reception || '+27 15 589 0000'}</span>
                         </div>
                         <div className="contact-item-footer">
-                            <span className="label">Security & Emergency</span>
+                            <span className="label" style={{ color: 'var(--gold)' }}>Security & Emergency</span>
                             <span className="value">{emergency.security || '+27 15 589 1111'}</span>
                         </div>
                         <div className="contact-item-footer">
-                            <span className="label">Email Inquiry</span>
+                            <span className="label" style={{ color: 'var(--gold)' }}>Care Email</span>
                             <span className="value">{emergency.email || 'care@fiveeight9.co.za'}</span>
                         </div>
                         <div style={{ marginTop: '0.5rem' }}>
-                            <a href="/maintenance" className="cta-button" style={{ padding: '0.8rem 1.8rem', fontSize: '0.75rem' }}>LOG A TICKET</a>
+                            <a href="/maintenance" className="cta-button" style={{ padding: '0.8rem 1.8rem', fontSize: '0.75rem', display: 'block', textAlign: 'center' }}>LOG A MAINTENANCE TICKET</a>
                         </div>
                     </div>
                 </div>

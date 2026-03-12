@@ -159,17 +159,14 @@ const AdminDashboard = ({ token, setToken }) => {
     };
 
     const tabs = [
-        { id: 'rooms', name: 'Rooms', icon: <Home size={18} /> },
-        { id: 'amenities', name: 'Amenities', icon: <Shield size={18} /> },
+        { id: 'settings', name: 'Site Engine', icon: <Settings size={18} />, adminOnly: true },
+        { id: 'admins', name: 'User Management', icon: <User size={18} />, adminOnly: true },
+        { id: 'rooms', name: 'Room Inventory', icon: <Home size={18} /> },
+        { id: 'amenities', name: 'Facilities', icon: <Shield size={18} /> },
         { id: 'cafeteria', name: 'Nari\'s Cafe', icon: <Coffee size={18} /> },
-        { id: 'events', name: 'Events', icon: <Bell size={18} /> },
-        { id: 'tickets', name: 'Tickets', icon: <Wrench size={18} /> },
-    ];
-
-    if (userRole === 'admin') {
-        tabs.push({ id: 'admins', name: 'Admins', icon: <User size={18} /> });
-        tabs.push({ id: 'settings', name: 'Settings', icon: <Settings size={18} /> });
-    }
+        { id: 'events', name: 'Vibe & Events', icon: <Bell size={18} /> },
+        { id: 'tickets', name: 'Maintenance', icon: <Wrench size={18} /> },
+    ].filter(tab => !tab.adminOnly || userRole === 'admin');
 
     const filteredData = Array.isArray(data) ? data.filter(item => {
         if (!searchQuery) return true;
@@ -368,22 +365,56 @@ const AdminDashboard = ({ token, setToken }) => {
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .spin { animation: spin 1s linear infinite; }
         
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
           .admin-sidebar {
             position: fixed;
             left: 0;
             top: 0;
             transform: translateX(-100%);
+            box-shadow: 20px 0 60px rgba(0,0,0,0.5);
           }
           .admin-sidebar.open {
             transform: translateX(0);
           }
           .sidebar-toggle-btn {
-            display: block !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--glass);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
           }
           .hide-on-mobile {
             display: none !important;
           }
+          .admin-actions-bar {
+            flex-wrap: wrap;
+            gap: 0.5rem !important;
+          }
+          .admin-actions-bar input {
+            width: 100% !important;
+            order: 2;
+          }
+        }
+        
+        .admin-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: 1.5rem;
+        }
+
+        .admin-item-card {
+            background: var(--navy-light);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        .admin-item-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
         }
       `}</style>
         </div>

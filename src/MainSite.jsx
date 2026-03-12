@@ -78,15 +78,15 @@ const MainSite = () => {
                     
                     {/* Dynamic Room Counter (Refinement 001) */}
                     <div style={{ display: 'flex', gap: '3rem', marginTop: '2.5rem' }} className="reveal reveal-delay-2">
-                            <div className="stat-item">
-                                <span className="stat-number gold-text">{settings?.homeStats?.count || '231'}</span>
-                                <span className="stat-label">{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
-                            </div>
-                            <div className="stat-item">
-                                <span className="stat-number gold-text">{settings?.homeStats?.subCount || '60'}</span>
-                                <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
-                            </div>
+                        <div className="stat-item">
+                            <span className="stat-number gold-text">{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
+                            <span className="stat-label">{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
                         </div>
+                        <div className="stat-item">
+                            <span className="stat-number gold-text">{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
+                            <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
+                        </div>
+                    </div>
 
                     <p style={{ marginTop: '2.5rem', maxWidth: '600px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 20px', lineHeight: '1.8' }}>
                         Providing secure, high-quality, and modern lofts for the next generation of leaders in Thohoyandou.

@@ -28,7 +28,8 @@ const SettingsSchema = new mongoose.Schema({
         subCount: { type: String, default: '15%' },
         subLabel: { type: String, default: 'Sharing Options' }
     },
-    resFull: { type: Boolean, default: false }
+    resFull: { type: Boolean, default: false },
+    transportSchedule: { type: String, default: '' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Settings', SettingsSchema);

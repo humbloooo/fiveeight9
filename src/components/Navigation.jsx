@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Phone } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Phone, Truck } from 'lucide-react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 import API_BASE_URL from '../config';
 import Toast from './Toast';
@@ -15,6 +16,65 @@ const Navigation = () => {
   const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
   const [scrollProgress, setScrollProgress] = useState(0); // (102) Liquid Gold Progress
   const [settings, setSettings] = useState(null);
+  const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
+
+  // Consolidated Theme & Scroll Logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+      setScrollProgress(scrolled);
+      
+      if (scrollY < 600) setCtaText('BOOK A VIEWING');
+      else if (scrollY < 1800) setCtaText('EXPLORE THE BUILDING');
+      else setCtaText('RESERVE NOW');
+    };
+
+    const applyTheme = () => {
+      const currentTheme = localStorage.getItem('theme') || 'system';
+      const isDark = currentTheme === 'dark' || (currentTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.body.classList.toggle('light-mode', !isDark);
+      setTheme(currentTheme);
+    };
+
+    const handleOpenTransport = () => setIsTransportModalOpen(true);
+
+    // Initial calls
+    handleScroll();
+    applyTheme();
+
+    // Listeners
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('themeChanged', applyTheme);
+    window.addEventListener('openTransportSchedule', handleOpenTransport);
+
+    // Login check
+    if (localStorage.getItem('justLoggedIn')) {
+      setShowToast(true);
+      localStorage.removeItem('justLoggedIn');
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('themeChanged', applyTheme);
+      window.removeEventListener('openTransportSchedule', handleOpenTransport);
+    };
+  }, []);
+
+  // Fetch settings for emergency contacts and transport schedule
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/settings`);
+        setSettings(res.data);
+      } catch (err) {
+        console.error('Error fetching nav settings:', err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -30,76 +90,11 @@ const Navigation = () => {
     };
   }, [isOpen]);
 
-  // Context CTA Scroll Logic
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      
-      // Calculate progress percentage
-      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
-      setScrollProgress(scrolled);
-      
-      // Update CTA
-      if (scrollY < 600) setCtaText('BOOK A VIEWING');
-      else if (scrollY < 1800) setCtaText('EXPLORE THE BUILDING');
-      else setCtaText('RESERVE NOW');
-    };
-    
-    // Call once to set initial state based on current scroll
-    handleScroll();
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // System Theme Sync & Login Notification
-  useEffect(() => {
-    const handleThemeChange = () => {
-      setTheme(localStorage.getItem('theme') || 'system');
-    };
-    window.addEventListener('themeChanged', handleThemeChange);
-
-    const checkLogin = () => {
-      if (localStorage.getItem('justLoggedIn')) {
-        setShowToast(true);
-        localStorage.removeItem('justLoggedIn');
-      }
-    };
-    checkLogin();
-
-    return () => window.removeEventListener('themeChanged', handleThemeChange);
-  }, []);
-
-  useEffect(() => {
-    const applyTheme = () => {
-      const currentTheme = localStorage.getItem('theme') || 'system';
-      const isDark = currentTheme === 'dark' || (currentTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      document.body.classList.toggle('light-mode', !isDark);
-      setTheme(currentTheme);
-    };
-
-    applyTheme();
-    window.addEventListener('themeChanged', applyTheme);
-
-    const fetchSettings = async () => {
-      try {
-        const res = await axios.get(`${API_BASE_URL}/api/settings`);
-        setSettings(res.data);
-      } catch (err) {
-        console.error('Error fetching nav settings:', err);
-      }
-    };
-    fetchSettings();
-
-    return () => window.removeEventListener('themeChanged', applyTheme);
-  }, []);
-
-
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
+    window.dispatchEvent(new Event('themeChanged'));
   };
 
   const mainLinks = [
@@ -126,7 +121,7 @@ const Navigation = () => {
 
       <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }} onClick={() => window.location.href = '/'}>
         <img src={logo} alt="Five Eight 9" style={{ height: '24px', width: 'auto' }} />
-        <span style={{ fontWeight: 900, fontSize: '1.2rem', letterSpacing: '1px', color: 'var(--text-primary)' }} className="mobile-header-text">
+        <span style={{ fontFamily: "'Homenaje', sans-serif", fontWeight: 900, fontSize: '1.5rem', letterSpacing: '2px', color: 'var(--text-primary)', textTransform: 'uppercase' }} className="mobile-header-text">
           Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
         </span>
       </div>
@@ -156,25 +151,6 @@ const Navigation = () => {
         </div>
       </div>
 
-        {/* Resident Support Number (NEW) */}
-        {settings?.emergencyContacts?.reception && (
-          <div className="support-badge desktop-only" style={{
-            background: 'rgba(197, 160, 89, 0.1)',
-            padding: '0.4rem 1rem',
-            borderRadius: '10px',
-            border: '1px solid var(--glass-border)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            marginLeft: 'auto',
-            marginRight: '2rem'
-          }}>
-            <Phone size={14} style={{ color: 'var(--gold)' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '0.5px' }}>
-              SUPPORT: {settings.emergencyContacts.reception}
-            </span>
-          </div>
-        )}
 
       <div className="nav-actions desktop-only">
         {!isLoggedIn ? (
@@ -200,6 +176,46 @@ const Navigation = () => {
         )}
       </div>
 
+      {isTransportModalOpen && (
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 6000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}
+        >
+          <div onClick={() => setIsTransportModalOpen(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(15px)' }}></div>
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            style={{
+              position: 'relative', background: 'var(--navy)', width: '100%', maxWidth: '500px',
+              padding: '3rem', borderRadius: '32px', border: '1px solid var(--glass-border)',
+              textAlign: 'center'
+            }}
+          >
+            <button onClick={() => setIsTransportModalOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}>
+              <X size={24} />
+            </button>
+            <div style={{ width: '60px', height: '60px', background: 'var(--gold-gradient)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem', color: 'var(--navy)' }}>
+              <Truck size={30} />
+            </div>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '1rem' }}>Transport <span className="gold-text">Schedule</span></h2>
+            <div style={{ 
+              color: 'var(--text-secondary)', 
+              lineHeight: '1.8', 
+              fontSize: '1rem', 
+              whiteSpace: 'pre-wrap',
+              textAlign: 'left',
+              background: 'rgba(255,255,255,0.03)',
+              padding: '1.5rem',
+              borderRadius: '16px',
+              border: '1px solid var(--glass-border)'
+            }}>
+              {settings?.transportSchedule || 'Schedule currently being updated. Please check back soon!'}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* Unified Burger Toggle */}
       <button className="burger-toggle" onClick={toggleMenu} aria-label="Toggle Menu">
         <div className={`burger-icon ${isOpen ? 'open' : ''}`}>
@@ -224,10 +240,23 @@ const Navigation = () => {
             </div>
 
             <div className="overlay-section">
+              <h3>Our Rooms</h3>
+              <div className="stat-item">
+                  <span className="stat-number gold-text">{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
+                  <span className="stat-label">{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
+              </div>
+              <div className="stat-item">
+                  <span className="stat-number gold-text">{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
+                  <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
+              </div>
+            </div>
+
+            <div className="overlay-section">
               <h3>Resident Services</h3>
               {residentLinks.map(link => (
                 <a key={link.name} href={link.href} onClick={toggleMenu}>{link.name}</a>
               ))}
+              <a href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('openTransportSchedule')); toggleMenu(); }}>Transport Schedule</a>
             </div>
 
             <div className="overlay-section">

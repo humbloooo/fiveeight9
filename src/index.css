@@ -2,8 +2,8 @@
 
 :root {
   --navy: #050a1a;
+  --navy-light: #0a1128;
   --gold: #C5A059;
-  /* (103) Non-Linear Cubic Gradient Approximation */
   --gold-gradient: linear-gradient(135deg, #A88647 0%, #C5A059 25%, #E8D1A5 50%, #C5A059 75%, #A88647 100%);
   --gold-glow: rgba(197, 160, 89, 0.4);
   --text-primary: #ffffff;
@@ -13,35 +13,27 @@
   --glass-deep: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-thick: rgba(255, 255, 255, 0.08);
-  --nav-bg: rgba(5, 10, 26, 0.65);
-  --burger-bg: rgba(72, 61, 139, 0.95); /* Dark slate blue */
+  --nav-bg: rgba(5, 10, 26, 0.85);
+  --burger-bg: rgba(5, 10, 26, 0.98);
   --transition-premium: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --navy: #f8f9fa;
-    --navy-light: #e0e0e0;
-    /* Added for light theme */
-    --gold: #9a7634;
-    --gold-dark: #7a5e2a;
-    /* (103) Non-Linear Cubic Gradient Approx (Light Mode) */
-    --gold-gradient: linear-gradient(135deg, #7a5e2a 0%, #9a7634 30%, #c5a059 70%, #9a7634 100%);
-    --gold-glow: rgba(154, 118, 52, 0.1);
-    --text-primary: #1a202c;
-    --text-secondary: #4a5568;
-    --text-muted: #718096;
-    --glass: rgba(255, 255, 255, 0.85);
-    --glass-deep: rgba(255, 255, 255, 0.95);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-thick: rgba(0, 0, 0, 0.05);
-    --nav-bg: rgba(248, 249, 250, 0.85);
-    --burger-bg: rgba(255, 255, 255, 0.95); /* White glass */
-    --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    /* Updated */
-    --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.1);
-    /* Added for light theme */
-  }
+body.light-mode {
+  --navy: #f8f9fa;
+  --navy-light: #eef2f7;
+  --gold: #9a7634;
+  --gold-dark: #7a5e2a;
+  --gold-gradient: linear-gradient(135deg, #7a5e2a 0%, #9a7634 30%, #c5a059 70%, #9a7634 100%);
+  --gold-glow: rgba(154, 118, 52, 0.1);
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --glass: rgba(255, 255, 255, 0.85);
+  --glass-deep: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-thick: rgba(0, 0, 0, 0.05);
+  --nav-bg: rgba(248, 249, 250, 0.85);
+  --burger-bg: rgba(255, 255, 255, 0.98);
 }
 
 body.light-mode {

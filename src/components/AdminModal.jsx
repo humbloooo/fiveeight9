@@ -29,10 +29,11 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 homeStats: { 
                     count: '231', 
                     label: 'Single Rooms', 
-                    subCount: '60', 
+                    subCount: '62', 
                     subLabel: 'Sharing Rooms' 
                 },
-                resFull: false
+                resFull: false,
+                transportSchedule: ''
             });
         } else if (editingItem) {
             setFormData({
@@ -243,6 +244,18 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                         <input className="admin-input" value={formData.homeStats?.subLabel || ''} onChange={(e) => handleNestedChange('homeStats.subLabel', e.target.value)} />
                     </div>
                 </div>
+                <div style={{ marginTop: '1.5rem' }}>
+                    <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Truck size={16} /> TRANSPORT SCHEDULE
+                    </h3>
+                    <textarea 
+                        className="admin-input" 
+                        style={{ minHeight: '120px' }}
+                        value={formData.transportSchedule || ''} 
+                        onChange={(e) => handleNestedChange('transportSchedule', e.target.value)}
+                        placeholder="e.g. Morning: 07:00 - 09:00, Afternoon: 14:00 - 17:00"
+                    />
+                </div>
             </section>
         </div>
     );
@@ -319,22 +332,27 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             {type === 'amenities' && (
                 <div style={{ marginBottom: '1.5rem' }}>
                     <label style={{ display: 'block', marginBottom: '0.5rem' }}>Select Icon</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.5rem' }}>
-                        {['Wifi', 'Shield', 'Zap', 'Coffee', 'Trash', 'Smartphone', 'Moon', 'Sun', 'Waves', 'Wind', 'CheckCircle', 'AlertCircle', 'Clock', 'Home', 'Utensils'].map(icon => (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '0.8rem' }}>
+                        {['Wifi', 'Shield', 'Zap', 'Coffee', 'Trash', 'Smartphone', 'Moon', 'Sun', 'Waves', 'Wind', 'CheckCircle', 'AlertCircle', 'Clock', 'Home', 'Utensils', 'Gym', 'Parking', 'Access', 'Droplets', 'Truck', 'Tv'].map(icon => (
                             <button
                                 key={icon}
                                 type="button"
                                 onClick={() => setFormData(prev => ({ ...prev, icon }))}
                                 style={{
-                                    padding: '0.5rem',
-                                    background: formData.icon === icon ? 'var(--gold)' : 'transparent',
+                                    padding: '0.8rem 0.5rem',
+                                    background: formData.icon === icon ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
                                     border: '1px solid var(--glass-border)',
-                                    borderRadius: '8px',
+                                    borderRadius: '12px',
                                     color: formData.icon === icon ? 'var(--navy)' : 'var(--text-primary)',
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '0.4rem',
+                                    transition: 'all 0.3s ease'
                                 }}
                             >
-                                <span style={{ fontSize: '0.7rem' }}>{icon}</span>
+                                <span style={{ fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase' }}>{icon}</span>
                             </button>
                         ))}
                     </div>
