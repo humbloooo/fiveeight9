@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Phone, Truck } from 'lucide-react';
-import { motion } from 'framer-motion';
 import axios from 'axios';
 import API_BASE_URL from '../config';
 import Toast from './Toast';
@@ -51,7 +50,7 @@ const Navigation = () => {
 
     // Login check
     if (localStorage.getItem('justLoggedIn')) {
-      setShowToast(true);
+      setTimeout(() => setShowToast(true), 0);
       localStorage.removeItem('justLoggedIn');
     }
 
@@ -234,21 +233,9 @@ const Navigation = () => {
           <div className="overlay-grid">
             <div className="overlay-section">
               <h3>Explore</h3>
-              {mainLinks.map(link => (
+              {mainLinks.filter(l => l.name !== 'Rooms').map(link => (
                 <a key={link.name} href={link.href} onClick={toggleMenu}>{link.name}</a>
               ))}
-            </div>
-
-            <div className="overlay-section">
-              <h3>Our Rooms</h3>
-              <div className="stat-item">
-                  <span className="stat-number gold-text">{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
-                  <span className="stat-label">{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
-              </div>
-              <div className="stat-item">
-                  <span className="stat-number gold-text">{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
-                  <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
-              </div>
             </div>
 
             <div className="overlay-section">

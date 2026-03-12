@@ -50,29 +50,29 @@ const Amenities = () => {
     };
 
     return (
-        <section className="reveal" style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: '6rem 5%' }}>
-            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+        <section className="reveal" style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: 'clamp(3rem, 8vw, 6rem) 5%' }}>
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(2.5rem, 5vw, 5rem)' }}>
                 <span style={{ 
                     color: 'var(--gold)', 
                     fontWeight: 900, 
-                    fontSize: '0.8rem', 
+                    fontSize: 'clamp(0.65rem, 1.5vw, 0.8rem)', 
                     letterSpacing: '5px', 
                     textTransform: 'uppercase',
                     display: 'block',
                     marginBottom: '1rem'
                 }}>Premium Facilities</span>
-                <h2 style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 900, marginBottom: '1rem' }}>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 6vw, 4rem)', fontWeight: 900, marginBottom: '1rem' }}>
                     Living <span className="gold-text">Redefined</span>
                 </h2>
-                <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.2rem' }}>
+                <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: 'clamp(0.9rem, 2vw, 1.2rem)' }}>
                     Every detail designed to elevate your lifestyle. Discover what makes us exclusive.
                 </p>
             </div>
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '2.5rem',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+                gap: 'clamp(1.5rem, 3vw, 2.5rem)',
                 width: '100%'
             }}>
                 {loading ? (
@@ -93,8 +93,8 @@ const Amenities = () => {
                             style={{
                                 background: 'var(--glass)',
                                 backdropFilter: 'blur(30px)',
-                                padding: '3rem',
-                                borderRadius: '40px',
+                                padding: 'clamp(1.5rem, 4vw, 3rem)',
+                                borderRadius: '32px',
                                 border: '1px solid var(--glass-border)',
                                 cursor: 'pointer',
                                 transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -105,38 +105,38 @@ const Amenities = () => {
                                 textAlign: 'center'
                             }}
                             whileHover={{ 
-                                y: -15,
+                                y: -10,
                                 borderColor: 'var(--gold)',
                                 background: 'rgba(255, 255, 255, 0.05)',
-                                boxShadow: '0 30px 60px rgba(0,0,0,0.3)'
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
                             }}
                         >
                             <div style={{
-                                width: '70px',
-                                height: '70px',
-                                borderRadius: '22px',
+                                width: 'min(70px, 15vw)',
+                                height: 'min(70px, 15vw)',
+                                borderRadius: '18px',
                                 background: hoveredIdx === i ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
                                 border: '1px solid var(--glass-border)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 color: hoveredIdx === i ? 'var(--navy)' : 'var(--gold)',
-                                marginBottom: '2rem',
+                                marginBottom: '1.5rem',
                                 transition: 'all 0.4s ease'
                             }}>
                                 {getIcon(item.icon)}
                             </div>
 
                             <h3 style={{
-                                fontSize: '1.5rem',
+                                fontSize: 'clamp(1.1rem, 3vw, 1.5rem)',
                                 fontWeight: 900,
-                                marginBottom: '1rem',
+                                marginBottom: '0.8rem',
                                 color: 'var(--text-primary)',
                                 letterSpacing: '-0.5px'
                             }}>{item.title}</h3>
                             
                             <p style={{
-                                fontSize: '0.95rem',
+                                fontSize: 'clamp(0.8rem, 1.5vw, 0.95rem)',
                                 color: 'var(--text-secondary)',
                                 lineHeight: '1.6',
                                 margin: 0
@@ -158,7 +158,7 @@ const Amenities = () => {
                         style={{
                             position: 'fixed', inset: 0, zIndex: 5000, 
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            padding: '2rem'
+                            padding: 'clamp(1rem, 2vw, 2rem)'
                         }}
                     >
                         <div 
@@ -172,46 +172,46 @@ const Amenities = () => {
                             exit={{ y: 50, opacity: 0, scale: 0.95 }}
                             style={{
                                 position: 'relative', background: 'var(--navy)', width: '100%', maxWidth: '900px',
-                                maxHeight: '90vh', overflowY: 'auto', borderRadius: '40px', border: '1px solid var(--glass-border)',
-                                padding: '4rem',
+                                maxHeight: '90vh', overflowY: 'auto', borderRadius: '32px', border: '1px solid var(--glass-border)',
+                                padding: 'clamp(1.5rem, 5vw, 4rem)',
                                 boxShadow: '0 50px 150px rgba(0,0,0,0.8)'
                             }}
                         >
                             <button 
                                 onClick={() => setSelectedDetail(null)}
-                                style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'white', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'white', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}
                             >
-                                <X size={20} />
+                                <X size={18} />
                             </button>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '3rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(1rem, 3vw, 2rem)', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', flexWrap: 'wrap' }}>
                                 <div style={{ 
-                                    width: '80px', height: '80px', borderRadius: '24px', 
+                                    width: 'min(80px, 20vw)', height: 'min(80px, 20vw)', borderRadius: '20px', 
                                     background: 'var(--gold-gradient)', display: 'flex', 
                                     alignItems: 'center', justifyContent: 'center', color: 'var(--navy)'
                                 }}>
                                     {getIcon(selectedDetail.icon)}
                                 </div>
-                                <div>
-                                    <span style={{ color: 'var(--gold)', fontWeight: 900, fontSize: '0.8rem', letterSpacing: '4px', textTransform: 'uppercase' }}>Exclusive Feature</span>
-                                    <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-1px' }}>{selectedDetail.title}</h2>
+                                <div style={{ flex: 1, minWidth: '200px' }}>
+                                    <span style={{ color: 'var(--gold)', fontWeight: 900, fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase' }}>Exclusive Feature</span>
+                                    <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 900, letterSpacing: '-1px' }}>{selectedDetail.title}</h2>
                                 </div>
                             </div>
 
                             <div 
-                                style={{ color: 'var(--text-secondary)', lineHeight: '2', fontSize: '1.2rem', marginBottom: '4rem', fontWeight: 500 }}
+                                style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: 'clamp(0.95rem, 2vw, 1.2rem)', marginBottom: 'clamp(2rem, 5vw, 4rem)', fontWeight: 500 }}
                                 dangerouslySetInnerHTML={{ __html: selectedDetail.detailedDesc || selectedDetail.desc }}
                             />
 
                             {selectedDetail.media && selectedDetail.media.length > 0 && (
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                                     {selectedDetail.media.map((img, idx) => (
                                         <motion.div 
                                             key={idx}
-                                            whileHover={{ scale: 1.03 }}
+                                            whileHover={{ scale: 1.02 }}
                                             transition={{ type: 'spring', stiffness: 300 }}
                                         >
-                                            <img src={img} style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: '24px', border: '1px solid var(--glass-border)' }} alt={selectedDetail.title} />
+                                            <img src={img} style={{ width: '100%', height: 'auto', maxHeight: '400px', objectFit: 'cover', borderRadius: '20px', border: '1px solid var(--glass-border)' }} alt={selectedDetail.title} />
                                         </motion.div>
                                     ))}
                                 </div>

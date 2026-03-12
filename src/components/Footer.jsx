@@ -25,6 +25,9 @@ const Footer = () => {
             }
         };
         fetchSettings();
+
+        window.addEventListener('settingsUpdated', fetchSettings);
+        return () => window.removeEventListener('settingsUpdated', fetchSettings);
     }, []);
 
     const socialLinks = settings?.socialLinks || {};

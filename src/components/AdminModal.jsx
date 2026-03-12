@@ -9,8 +9,12 @@ import { useToast } from '../context/ToastContext';
 const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
     const [formData, setFormData] = useState({});
     const [file, setFile] = useState(null);
+    const [mediaFiles, setMediaFiles] = useState([]); // New state for multiple files
     const [uploading, setUploading] = useState(false);
     const { addToast } = useToast();
+
+    const CLOUD_NAME = 'dpscc5zqw';
+    const UPLOAD_PRESET = 'ml_default';
 
     useEffect(() => {
         if (type === 'settings') {
@@ -125,18 +129,36 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
         if (file) {
             const uploadFormData = new FormData();
             uploadFormData.append('file', file);
-            uploadFormData.append('upload_preset', 'ml_default');
+            uploadFormData.append('upload_preset', UPLOAD_PRESET);
 
             try {
-                const cloudName = 'dpscc5zqw'; 
-                const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, uploadFormData);
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, uploadFormData);
                 finalData.imageUrl = res.data.secure_url;
+                if (finalData.imagePublicId !== undefined) {
+                    finalData.imagePublicId = res.data.public_id;
+                }
             } catch (err) {
                 console.error('Upload error', err);
-                addToast('Image upload failed', 'error');
+                addToast('Main image upload failed', 'error');
                 setUploading(false);
                 return;
             }
+        }
+
+        if (mediaFiles.length > 0) {
+            const uploadedUrls = [];
+            for (const f of mediaFiles) {
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', f);
+                uploadFormData.append('upload_preset', UPLOAD_PRESET);
+                try {
+                    const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, uploadFormData);
+                    uploadedUrls.push(res.data.secure_url);
+                } catch (err) {
+                    console.error('Gallery upload error', err);
+                }
+            }
+            finalData.media = [...(finalData.media || []), ...uploadedUrls];
         }
 
         try {
@@ -404,8 +426,40 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
             <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Main Image</label>
-                <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ color: 'var(--text-primary)' }} />
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    {formData.imageUrl && (
+                        <img src={formData.imageUrl} style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--glass-border)' }} alt="Preview" />
+                    )}
+                    <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ color: 'var(--text-primary)', fontSize: '0.8rem' }} />
+                </div>
             </div>
+
+            {type !== 'admins' && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Gallery Images (Multi-upload)</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                        {(formData.media || []).map((url, idx) => (
+                            <div key={idx} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                                <img src={url} style={{ width: '100%', height: '100%', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--glass-border)' }} alt={`Gallery ${idx}`} />
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData(prev => ({ ...prev, media: prev.media.filter((_, i) => i !== idx) }))}
+                                    style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}
+                                >
+                                    <X size={12} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                    <input 
+                        type="file" 
+                        multiple 
+                        onChange={(e) => setMediaFiles(Array.from(e.target.files))} 
+                        style={{ color: 'var(--text-primary)', fontSize: '0.8rem' }} 
+                    />
+                    {mediaFiles.length > 0 && <div style={{ fontSize: '0.7rem', color: 'var(--gold)', marginTop: '0.5rem' }}>{mediaFiles.length} new files ready for upload</div>}
+                </div>
+            )}
         </>
     );
 
