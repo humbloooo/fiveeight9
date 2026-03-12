@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
-import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle } from 'lucide-react';
+import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle, User, Bell } from 'lucide-react';
 import AdminModal from '../components/AdminModal';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useToast } from '../context/ToastContext';
@@ -126,7 +126,7 @@ const AdminDashboard = ({ token, setToken }) => {
         
         const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
-        const timestamp = Date.now();
+        const timestamp = new Date().getTime();
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', `${activeTab}_export_${timestamp}.csv`);
@@ -243,7 +243,7 @@ const AdminDashboard = ({ token, setToken }) => {
                         <button
                             className="sidebar-toggle-btn"
                             onClick={() => setIsSidebarOpen(true)}
-                            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', display: 'none', cursor: 'pointer' }}
+                            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
                         >
                             <Menu size={24} />
                         </button>

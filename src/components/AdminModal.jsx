@@ -76,7 +76,10 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             } : type === 'admins' ? {
                 username: '',
                 email: '',
-                password: ''
+                password: '',
+                role: 'student',
+                studentNumber: '',
+                idNumber: ''
             } : {
                 title: '',
                 description: '',
@@ -265,7 +268,33 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                         <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Email</label>
                         <input name="email" type="email" value={formData.email || ''} onChange={handleChange} className="admin-input" required />
                     </div>
-                    {!editingItem && (
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Account Role</label>
+                        <select 
+                            name="role" 
+                            value={formData.role || 'student'} 
+                            onChange={handleChange} 
+                            className="admin-input"
+                            style={{ background: 'rgba(255,255,255,0.05)' }}
+                        >
+                            <option value="student">Student/Tenant</option>
+                            <option value="staff">Staff/Staff Member</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    {formData.role === 'student' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                            <div>
+                                <label style={{ fontSize: '0.7rem' }}>Student Number</label>
+                                <input name="studentNumber" value={formData.studentNumber || ''} onChange={handleChange} className="admin-input" required={formData.role === 'student'} />
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '0.7rem' }}>ID Number (Password)</label>
+                                <input name="idNumber" value={formData.idNumber || ''} onChange={handleChange} className="admin-input" required={formData.role === 'student'} />
+                            </div>
+                        </div>
+                    )}
+                    {formData.role !== 'student' && !editingItem && (
                         <div style={{ marginBottom: '1.5rem' }}>
                             <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Password</label>
                             <input name="password" type="password" value={formData.password || ''} onChange={handleChange} className="admin-input" required />

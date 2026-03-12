@@ -32,9 +32,46 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Register new admin (Admin strictly restricted)
+// Student Login
+router.post('/student-login', async (req, res) => {
+    const { studentNumber, idNumber } = req.body;
+
+    try {
+        // Find user by student number
+        const user = await User.findOne({ studentNumber });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Check if ID number matches (acting as password for students)
+        const isMatch = await bcrypt.compare(idNumber, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({ 
+            token, 
+            user: { 
+                username: user.username, 
+                role: user.role,
+                studentNumber: user.studentNumber 
+            } 
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Register new account (Admin only)
 router.post('/register', [auth, requireAdmin], async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, studentNumber, idNumber } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -43,17 +80,21 @@ router.post('/register', [auth, requireAdmin], async (req, res) => {
         }
 
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        // If it's a student, the idNumber is their "password"
+        const passwordToHash = role === 'student' ? idNumber : password;
+        const hashedPassword = await bcrypt.hash(passwordToHash, salt);
 
         user = new User({
             username,
             email,
             password: hashedPassword,
-            role: role || 'admin'
+            role: role || 'student',
+            studentNumber,
+            idNumber
         });
 
         await user.save();
-        res.json({ message: 'Admin created successfully' });
+        res.json({ message: 'Account created successfully', user: { email: user.email, role: user.role } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });

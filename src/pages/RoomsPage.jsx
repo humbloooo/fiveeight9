@@ -1,43 +1,128 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_BASE_URL from '../config';
-// eslint-disable-next-line no-unused-vars
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Background from '../components/Background';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import RoomCard from '../components/RoomCard';
-import { LayoutGrid, Layers, MapPin, Search } from 'lucide-react';
+import { Home, Shield, Truck, Coffee, ArrowRight, Info, Layers } from 'lucide-react';
+
+const GalleryCategory = ({ title, icon: GalleryIcon, items, delay }) => (
+    <motion.div 
+        className="gallery-category reveal"
+        initial={{ opacity: 0, x: 20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay }}
+        style={{ marginBottom: '6rem' }}
+    >
+        <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'baseline',
+            padding: '0 5%',
+            marginBottom: '2rem'
+        }}>
+            <h2 style={{ 
+                fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', 
+                fontWeight: 900, 
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem'
+            }}>
+                <GalleryIcon className="gold-text" size={32} />
+                {title} <span className="gold-text">Gallery</span>
+            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: 700 }}>
+                Scroll <ArrowRight size={14} />
+            </div>
+        </div>
+
+        <div className="horizontal-gallery-scroll" style={{
+            display: 'flex',
+            gap: '2rem',
+            overflowX: 'auto',
+            padding: '1rem 5% 2rem',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            scrollSnapType: 'x mandatory'
+        }}>
+            {items.map((img, i) => (
+                <div key={i} className="gallery-item-wrapper" style={{
+                    minWidth: 'clamp(300px, 80vw, 500px)',
+                    height: 'clamp(350px, 50vh, 500px)',
+                    scrollSnapAlign: 'start',
+                    borderRadius: '30px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    border: '1px solid var(--glass-border)',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+                }}>
+                    <img 
+                        src={img.url} 
+                        alt={img.caption || title} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        loading="lazy"
+                    />
+                    <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                        padding: '2rem',
+                        background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+                        color: 'white'
+                    }}>
+                        <p style={{ fontWeight: 800, fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                            {img.caption || `${title} Space`}
+                        </p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </motion.div>
+);
 
 const RoomsPage = () => {
-    const [rooms, setRooms] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('All');
-    const [searchTerm, setSearchTerm] = useState('');
-
     useEffect(() => {
-        const fetchRooms = async () => {
-            try {
-                const res = await axios.get(`${API_BASE_URL}/api/rooms`);
-                setRooms(res.data);
-                setLoading(false);
-            } catch (err) {
-                console.error('Error fetching rooms:', err);
-                setLoading(false);
-            }
-        };
-        fetchRooms();
         window.scrollTo(0, 0);
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('reveal-visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        return () => observer.disconnect();
     }, []);
 
-    const categories = ['All', ...new Set(rooms.map(room => room.category || 'Single Room'))];
-
-    const filteredRooms = rooms.filter(room => {
-        const matchesFilter = filter === 'All' || (room.category || 'Single Room') === filter;
-        const matchesSearch = room.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             (room.subtitle || '').toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesFilter && matchesSearch;
-    });
+    // Static categorized photos for demo, will be linked to Admin-uploaded data later
+    const galleryData = {
+        building: [
+            { url: 'https://images.unsplash.com/photo-1545324418-f1d3c5b53571?auto=format&fit=crop&q=80&w=800', caption: 'Front Elevation' },
+            { url: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=800', caption: 'Executive Lobby' },
+            { url: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=800', caption: 'Night Architecture' }
+        ],
+        rooms: [
+            { url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800', caption: 'Single Loft Standard' },
+            { url: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=800', caption: 'Deluxe Suite Living' },
+            { url: 'https://images.unsplash.com/photo-1505691938895-1758d7eaa511?auto=format&fit=crop&q=80&w=800', caption: 'Premium Studying Area' }
+        ],
+        amenities: [
+            { url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800', caption: 'Private Jacuzzi' },
+            { url: 'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&q=80&w=800', caption: 'The Hub (Study Lab)' },
+            { url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800', caption: "Nari's Cafe Vibe" }
+        ],
+        security: [
+            { url: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&q=80&w=800', caption: 'Biometric Access Control' },
+            { url: 'https://images.unsplash.com/photo-1590483734724-383b853b2719?auto=format&fit=crop&q=80&w=800', caption: 'Secure Perimeter' }
+        ],
+        transport: [
+            { url: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&q=80&w=800', caption: 'Complimentary Shuttle' },
+            { url: 'https://images.unsplash.com/photo-1562610885-3e284f1ede4b?auto=format&fit=crop&q=80&w=800', caption: 'Convenient Pick-up Points' }
+        ]
+    };
 
     return (
         <motion.div 
@@ -50,108 +135,39 @@ const RoomsPage = () => {
             <Background />
             <Navigation />
 
-            <div style={{ paddingTop: '140px', paddingBottom: '8rem', maxWidth: '1400px', margin: '0 auto', paddingLeft: '2rem', paddingRight: '2rem' }}>
-                <header className="reveal" style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                    <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '-2px' }}>
-                        Explore The <span className="gold-text">Building</span>
+            <div style={{ paddingTop: '160px', paddingBottom: '8rem' }}>
+                <header className="reveal" style={{ textAlign: 'center', marginBottom: '8rem', padding: '0 5%' }}>
+                    <h1 style={{ marginBottom: '1.5rem' }}>
+                        The <span className="gold-text">Building</span>
                     </h1>
-                    <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem', lineHeight: '1.8' }}>
-                        Find the perfect space for your academic journey. Explore our rooms, pool, lounges, and other facilities.
+                    <p style={{ color: 'var(--text-secondary)', maxWidth: '700px', margin: '0 auto', fontSize: '1.2rem', lineHeight: '1.8', fontWeight: 500 }}>
+                        Experience the lifestyle at Five Eight 9. From modern living spaces to luxury amenities, explore the architecture that inspires.
                     </p>
                 </header>
 
-                <div className="filter-bar reveal" style={{ 
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-                    gap: '2rem', marginBottom: '3rem', flexWrap: 'wrap',
-                    background: 'var(--glass)', padding: '1.5rem', borderRadius: '24px',
-                    border: '1px solid var(--glass-border)'
-                }}>
-                    <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-                        {categories.map(cat => (
-                            <button 
-                                key={cat}
-                                onClick={() => setFilter(cat)}
-                                style={{
-                                    padding: '0.6rem 1.5rem',
-                                    borderRadius: '12px',
-                                    border: filter === cat ? '1px solid var(--gold)' : '1px solid var(--glass-border)',
-                                    background: filter === cat ? 'rgba(197, 160, 89, 0.1)' : 'transparent',
-                                    color: filter === cat ? 'var(--gold)' : 'var(--text-secondary)',
-                                    fontWeight: 800,
-                                    fontSize: '0.75rem',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '1px',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s ease'
-                                }}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
+                <GalleryCategory title="Building" icon={Home} items={galleryData.building} delay={0.1} />
+                <GalleryCategory title="Room Layouts" icon={Layers || Info} items={galleryData.rooms} delay={0.2} />
+                <GalleryCategory title="Amenities" icon={Coffee} items={galleryData.amenities} delay={0.3} />
+                <GalleryCategory title="Security" icon={Shield} items={galleryData.security} delay={0.4} />
+                <GalleryCategory title="Transport" icon={Truck} items={galleryData.transport} delay={0.5} />
 
-                    <div style={{ position: 'relative', flex: 1, maxWidth: '350px' }}>
-                        <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} />
-                        <input 
-                            type="text" 
-                            placeholder="Search rooms..." 
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '0.8rem 1rem 0.8rem 3rem',
-                                background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid var(--glass-border)',
-                                borderRadius: '12px',
-                                color: 'white',
-                                outline: 'none'
-                            }}
-                        />
-                    </div>
-                </div>
-
-                <div className="rooms-grid">
-                    {loading ? (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
-                            {Array(4).fill(0).map((_, i) => (
-                                <div key={i} style={{ height: '400px', background: 'var(--glass)', borderRadius: '24px' }}></div>
-                            ))}
-                        </div>
-                    ) : filteredRooms.length > 0 ? (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
-                            {filteredRooms.map((room, i) => (
-                                <motion.div 
-                                    key={room._id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                >
-                                    <RoomCard {...room} image={room.imageUrl} />
-                                </motion.div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div style={{ textAlign: 'center', padding: '5rem', color: 'var(--text-secondary)' }}>
-                            <LayoutGrid size={48} style={{ marginBottom: '1.5rem', opacity: 0.2 }} />
-                            <h3>No lofts matching your criteria.</h3>
-                            <button onClick={() => { setFilter('All'); setSearchTerm(''); }} style={{ color: 'var(--gold)', background: 'transparent', border: 'none', cursor: 'pointer', marginTop: '1rem', fontWeight: 'bold' }}>Clear Filters</button>
-                        </div>
-                    )}
-                </div>
+                <section style={{ textAlign: 'center', padding: '6rem 5%', background: 'var(--glass)', margin: '0 5%', borderRadius: '40px', border: '1px solid var(--glass-border)' }} className="reveal">
+                    <h2 style={{ marginBottom: '2rem', fontWeight: 900 }}>Ready to <span className="gold-text">Join Us?</span></h2>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
+                        Spaces are filling up fast for the new academic year. Secure your spot now and experience student living like never before.
+                    </p>
+                    <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>
+                        Request A Viewing
+                    </button>
+                </section>
             </div>
 
             <Footer />
 
             <style>{`
-                .rooms-grid {
-                    perspective: 1000px;
-                }
-                .gold-text {
-                    background: var(--gold-gradient);
-                    -webkit-background-clip: text;
-                    background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
+                .horizontal-gallery-scroll::-webkit-scrollbar { display: none; }
+                .gallery-item-wrapper:hover img { transform: scale(1.05); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+                .gallery-item-wrapper img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
             `}</style>
         </motion.div>
     );

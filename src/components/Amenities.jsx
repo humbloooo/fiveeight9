@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
-import { Wifi, Shield, Coffee, Zap, Droplets, Truck, Monitor, Sun, Info, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+    Wifi, Shield, Zap, Droplets, Truck, Sun, Info, X, 
+    Smartphone, Utensils, Dumbbell, Car, Lock, Key, Tv
+} from 'lucide-react';
 
 const Amenities = () => {
     const [amenities, setAmenities] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeAmenity, setActiveAmenity] = useState(null);
     const [selectedDetail, setSelectedDetail] = useState(null);
+    const [hoveredIdx, setHoveredIdx] = useState(null);
 
     useEffect(() => {
         const fetchAmenities = async () => {
@@ -24,203 +28,247 @@ const Amenities = () => {
     }, []);
 
     const getIcon = (iconName) => {
+        const props = { size: 24, strokeWidth: 2.5 };
         switch (iconName?.toLowerCase()) {
-            case 'sun': return <Sun size={18} />;
-            case 'wifi': return <Wifi size={18} />;
-            case 'shield': return <Shield size={18} />;
-            case 'coffee': return <Coffee size={18} />;
-            case 'truck': return <Truck size={18} />;
-            case 'droplets': return <Droplets size={18} />;
-            case 'zap': return <Zap size={18} />;
-            case 'monitor': return <Monitor size={18} />;
-            case 'waves': return <Waves size={18} />;
-            case 'wind': return <Wind size={18} />;
-            case 'smartphone': return <Smartphone size={18} />;
-            case 'moon': return <Moon size={18} />;
-            case 'checkcircle': return <CheckCircle size={18} />;
-            case 'alertcircle': return <AlertCircle size={18} />;
-            case 'clock': return <Clock size={18} />;
-            case 'home': return <Home size={18} />;
-            case 'utensils': return <Utensils size={18} />;
-            default: return <Info size={18} />;
+            case 'sun': return <Sun {...props} />;
+            case 'wifi': return <Wifi {...props} />;
+            case 'shield': return <Shield {...props} />;
+            case 'coffee': return <Utensils {...props} />;
+            case 'truck': return <Truck {...props} />;
+            case 'droplets': return <Droplets {...props} />;
+            case 'zap': return <Zap {...props} />;
+            case 'monitor': return <Tv {...props} />;
+            case 'waves': return <Waves {...props} />;
+            case 'wind': return <Wind {...props} />;
+            case 'smartphone': return <Smartphone {...props} />;
+            case 'gym': return <Dumbbell {...props} />;
+            case 'parking': return <Car {...props} />;
+            case 'security': return <Lock {...props} />;
+            case 'access': return <Key {...props} />;
+            default: return <Info {...props} />;
         }
     };
 
     return (
-        <div className="reveal glass-panel" style={{
-            padding: '4rem 2.5rem',
-            width: '100%',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            position: 'relative',
-            overflow: 'hidden',
-            borderRadius: '40px'
-        }}>
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: '50%',
-                background: 'var(--gold-gradient)',
-                color: 'var(--navy)',
-                padding: '0.6rem 2rem',
-                fontSize: '0.75rem',
-                fontWeight: 900,
-                letterSpacing: '3px',
-                borderBottomLeftRadius: '20px',
-                borderBottomRightRadius: '20px',
-                textTransform: 'uppercase',
-                boxShadow: '0 5px 15px rgba(197, 160, 89, 0.3)'
-            }}>
-                Amenities
+        <section className="reveal" style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: '6rem 5%' }}>
+            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+                <span style={{ 
+                    color: 'var(--gold)', 
+                    fontWeight: 900, 
+                    fontSize: '0.8rem', 
+                    letterSpacing: '5px', 
+                    textTransform: 'uppercase',
+                    display: 'block',
+                    marginBottom: '1rem'
+                }}>Premium Facilities</span>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 900, marginBottom: '1rem' }}>
+                    Living <span className="gold-text">Redefined</span>
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.2rem' }}>
+                    Every detail designed to elevate your lifestyle. Discover what makes us exclusive.
+                </p>
             </div>
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: '2rem',
-                marginTop: '1.5rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '2.5rem'
             }}>
                 {loading ? (
-                    Array(8).fill(0).map((_, i) => (
-                        <div key={i} style={{ height: '140px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px' }}></div>
+                    Array(6).fill(0).map((_, i) => (
+                        <div key={i} style={{ height: '220px', background: 'var(--glass)', borderRadius: '32px', border: '1px solid var(--glass-border)' }}></div>
                     ))
                 ) : (
                     amenities.map((item, i) => (
-                        <div key={item._id || i} 
+                        <motion.div 
+                            key={item._id || i}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 }}
+                            onMouseEnter={() => setHoveredIdx(i)}
+                            onMouseLeave={() => setHoveredIdx(null)}
+                            onClick={() => setSelectedDetail(item)}
                             style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                gap: '1rem',
-                                textAlign: 'center',
-                                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                                padding: '1.5rem 1rem',
-                                borderRadius: '24px',
-                                background: activeAmenity === i ? 'rgba(var(--gold-rgb, 197, 160, 89), 0.05)' : 'transparent',
-                                border: '1px solid transparent',
-                                position: 'relative'
-                            }} 
-                            onMouseEnter={() => setActiveAmenity(i)}
-                            onMouseLeave={() => setActiveAmenity(null)}
-                            className="amenity-mini-item"
+                                background: 'var(--glass)',
+                                backdropFilter: 'blur(30px)',
+                                padding: '2.5rem',
+                                borderRadius: '32px',
+                                border: '1px solid var(--glass-border)',
+                                cursor: 'pointer',
+                                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}
+                            whileHover={{ 
+                                y: -10,
+                                borderColor: 'var(--gold)',
+                                background: 'rgba(var(--gold-rgb, 197, 160, 89), 0.05)'
+                            }}
                         >
+                            {/* Decorative Background Glow */}
+                            <AnimatePresence>
+                                {hoveredIdx === i && (
+                                    <motion.div 
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-20%',
+                                            right: '-20%',
+                                            width: '200px',
+                                            height: '200px',
+                                            background: 'var(--gold-gradient)',
+                                            filter: 'blur(80px)',
+                                            opacity: 0.1,
+                                            zIndex: 0,
+                                            pointerEvents: 'none'
+                                        }}
+                                    />
+                                )}
+                            </AnimatePresence>
+
                             <div style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '15px',
-                                background: activeAmenity === i ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
+                                width: '64px',
+                                height: '64px',
+                                borderRadius: '20px',
+                                background: hoveredIdx === i ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
                                 border: '1px solid var(--glass-border)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: activeAmenity === i ? 'var(--navy)' : 'var(--gold)',
-                                transition: 'all 0.3s ease'
+                                color: hoveredIdx === i ? 'var(--navy)' : 'var(--gold)',
+                                marginBottom: '2rem',
+                                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                                position: 'relative',
+                                zIndex: 1
                             }}>
                                 {getIcon(item.icon)}
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <span style={{
-                                    fontSize: '0.85rem',
-                                    fontWeight: 800,
-                                    color: activeAmenity === i ? 'var(--gold)' : 'var(--text-primary)',
-                                    letterSpacing: '0.5px',
-                                    transition: 'color 0.3s ease'
-                                }}>{item.title}</span>
+
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                                <h3 style={{
+                                    fontSize: '1.4rem',
+                                    fontWeight: 900,
+                                    marginBottom: '1rem',
+                                    color: 'var(--text-primary)',
+                                    letterSpacing: '-0.5px'
+                                }}>{item.title}</h3>
                                 
                                 <p style={{
-                                    fontSize: '0.75rem',
+                                    fontSize: '0.95rem',
                                     color: 'var(--text-secondary)',
-                                    lineHeight: '1.5',
-                                    margin: 0,
-                                    opacity: activeAmenity === i ? 1 : 0.7,
-                                    transition: 'opacity 0.3s ease'
+                                    lineHeight: '1.6',
+                                    margin: 0
                                 }}>
                                     {item.desc}
                                 </p>
 
-                                {item.detailedDesc && (
-                                    <button 
-                                        onClick={(e) => { e.stopPropagation(); setSelectedDetail(item); }}
-                                        style={{
-                                            background: 'transparent',
-                                            border: 'none',
-                                            color: 'var(--gold)',
-                                            fontSize: '0.7rem',
-                                            fontWeight: 900,
-                                            marginTop: '0.8rem',
-                                            cursor: 'pointer',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '1px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '0.4rem',
-                                            opacity: activeAmenity === i ? 1 : 0,
-                                            transform: activeAmenity === i ? 'translateY(0)' : 'translateY(5px)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                    >
-                                        View Details <Info size={12} />
-                                    </button>
-                                )}
+                                <div style={{ 
+                                    marginTop: '1.5rem', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.5rem',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 900,
+                                    color: 'var(--gold)',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '1px',
+                                    opacity: hoveredIdx === i ? 1 : 0,
+                                    transform: hoveredIdx === i ? 'translateX(0)' : 'translateX(-10px)',
+                                    transition: 'all 0.4s ease'
+                                }}>
+                                    Explore Detail <ArrowRight size={14} />
+                                </div>
                             </div>
-                        </div>
+                        </motion.div>
                     ))
                 )}
             </div>
 
-            {/* Detailed Modal Overlay */}
-            {selectedDetail && (
-                <div style={{
-                    position: 'fixed', inset: 0, zIndex: 3000, 
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    padding: '2rem'
-                }}>
-                    <div 
-                        onClick={() => setSelectedDetail(null)}
-                        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }}
-                    ></div>
-                    
-                    <div style={{
-                        position: 'relative', background: 'var(--navy)', width: '100%', maxWidth: '800px',
-                        maxHeight: '90vh', overflowY: 'auto', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.1)',
-                        padding: '3rem'
-                    }} className="reveal">
-                        <button 
-                            onClick={() => setSelectedDetail(null)}
-                            style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}
-                        >
-                            <X size={24} />
-                        </button>
-
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
-                            <div style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyCenter: 'center', color: 'var(--navy)' }}>
-                                {getIcon(selectedDetail.icon)}
-                            </div>
-                            <h2 style={{ fontSize: '2rem', fontWeight: 900 }}>{selectedDetail.title}</h2>
-                        </div>
-
+            {/* Premium Detail Modal */}
+            <AnimatePresence>
+                {selectedDetail && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{
+                            position: 'fixed', inset: 0, zIndex: 5000, 
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            padding: '2rem'
+                        }}
+                    >
                         <div 
-                            style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1.05rem', marginBottom: '3rem' }}
-                            dangerouslySetInnerHTML={{ __html: selectedDetail.detailedDesc || selectedDetail.desc }}
-                        />
+                            onClick={() => setSelectedDetail(null)}
+                            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(20px)' }}
+                        ></div>
+                        
+                        <motion.div 
+                            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+                            animate={{ y: 0, opacity: 1, scale: 1 }}
+                            exit={{ y: 50, opacity: 0, scale: 0.95 }}
+                            style={{
+                                position: 'relative', background: 'var(--navy)', width: '100%', maxWidth: '900px',
+                                maxHeight: '90vh', overflowY: 'auto', borderRadius: '40px', border: '1px solid var(--glass-border)',
+                                padding: '4rem',
+                                boxShadow: '0 50px 150px rgba(0,0,0,0.8)'
+                            }}
+                        >
+                            <button 
+                                onClick={() => setSelectedDetail(null)}
+                                style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'white', cursor: 'pointer', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                                <X size={20} />
+                            </button>
 
-                        {selectedDetail.media && selectedDetail.media.length > 0 && (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                                {selectedDetail.media.map((img, idx) => (
-                                    <img key={idx} src={img} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }} alt={selectedDetail.title} />
-                                ))}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '3rem' }}>
+                                <div style={{ 
+                                    width: '80px', height: '80px', borderRadius: '24px', 
+                                    background: 'var(--gold-gradient)', display: 'flex', 
+                                    alignItems: 'center', justifyContent: 'center', color: 'var(--navy)'
+                                }}>
+                                    {getIcon(selectedDetail.icon)}
+                                </div>
+                                <div>
+                                    <span style={{ color: 'var(--gold)', fontWeight: 900, fontSize: '0.8rem', letterSpacing: '4px', textTransform: 'uppercase' }}>Exclusive Feature</span>
+                                    <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-1px' }}>{selectedDetail.title}</h2>
+                                </div>
                             </div>
-                        )}
-                    </div>
-                </div>
-            )}
 
-            <style>{`
-                /* (104) Icon morphs removed based on feedback for sleek static feel */
-            `}</style>
-        </div>
+                            <div 
+                                style={{ color: 'var(--text-secondary)', lineHeight: '2', fontSize: '1.2rem', marginBottom: '4rem', fontWeight: 500 }}
+                                dangerouslySetInnerHTML={{ __html: selectedDetail.detailedDesc || selectedDetail.desc }}
+                            />
+
+                            {selectedDetail.media && selectedDetail.media.length > 0 && (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                                    {selectedDetail.media.map((img, idx) => (
+                                        <motion.div 
+                                            key={idx}
+                                            whileHover={{ scale: 1.03 }}
+                                            transition={{ type: 'spring', stiffness: 300 }}
+                                        >
+                                            <img src={img} style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: '24px', border: '1px solid var(--glass-border)' }} alt={selectedDetail.title} />
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </section>
     );
 };
+
+// Helper for arrow icon as it was missing from original setup
+const ArrowRight = ({ size }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+);
 
 export default Amenities;

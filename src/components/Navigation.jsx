@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Phone } from 'lucide-react';
+import axios from 'axios';
+import API_BASE_URL from '../config';
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
 
@@ -12,6 +14,7 @@ const Navigation = () => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
   const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
   const [scrollProgress, setScrollProgress] = useState(0); // (102) Liquid Gold Progress
+  const [settings, setSettings] = useState(null);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -78,6 +81,17 @@ const Navigation = () => {
 
     applyTheme();
     window.addEventListener('themeChanged', applyTheme);
+
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/settings`);
+        setSettings(res.data);
+      } catch (err) {
+        console.error('Error fetching nav settings:', err);
+      }
+    };
+    fetchSettings();
+
     return () => window.removeEventListener('themeChanged', applyTheme);
   }, []);
 
@@ -142,6 +156,26 @@ const Navigation = () => {
         </div>
       </div>
 
+        {/* Resident Support Number (NEW) */}
+        {settings?.emergencyContacts?.reception && (
+          <div className="support-badge desktop-only" style={{
+            background: 'rgba(197, 160, 89, 0.1)',
+            padding: '0.4rem 1rem',
+            borderRadius: '10px',
+            border: '1px solid var(--glass-border)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+            marginLeft: 'auto',
+            marginRight: '2rem'
+          }}>
+            <Phone size={14} style={{ color: 'var(--gold)' }} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '0.5px' }}>
+              SUPPORT: {settings.emergencyContacts.reception}
+            </span>
+          </div>
+        )}
+
       <div className="nav-actions desktop-only">
         {!isLoggedIn ? (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -197,8 +231,8 @@ const Navigation = () => {
             </div>
 
             <div className="overlay-section">
-              <h3>Portals & Actions</h3>
-              <a href="/login" onClick={toggleMenu}>Student Portal</a>
+              <h3>Portals & Alerts</h3>
+              <a href="/login-student" onClick={toggleMenu}>Student Portal</a>
               <a href="/admin" onClick={toggleMenu}>Staff Portal</a>
               <div style={{ marginTop: '2.5rem' }}>
                 <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
