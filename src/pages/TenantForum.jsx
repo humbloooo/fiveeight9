@@ -122,8 +122,8 @@ const TenantForum = () => {
             <main style={{ paddingTop: '120px' }}>
                 <section className="section" style={{ height: 'calc(100vh - 120px)', justifyContent: 'flex-start' }}>
                     <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                        <h1 className="section-title" style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>Group <span>Chat</span></h1>
-                        <p style={{ color: 'var(--text-secondary)' }}>Connect with your fellow residents at Five Eight 9.</p>
+                        <h1 className="section-title" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '0.5rem' }}>Group <span>Chat</span></h1>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Connect with fellow residents. Keep it friendly!</p>
                     </div>
 
                     <div style={{
@@ -134,14 +134,21 @@ const TenantForum = () => {
                         border: '1px solid var(--glass-border)',
                         display: 'flex',
                         flexDirection: 'column',
-                        height: '600px',
-                        overflow: 'hidden'
+                        height: '550px',
+                        overflow: 'hidden',
+                        margin: '0 auto'
                     }}>
+                        {/* Rules Header - Packs nicely */}
+                        <div style={{ padding: '1rem 1.5rem', background: 'rgba(197, 160, 89, 0.1)', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <Shield size={16} style={{ color: 'var(--gold)' }} />
+                            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '1px' }}>FORUM RULES: Be Respectful • No Spam • Quiet Hours (22:00-06:00)</span>
+                        </div>
+
                         {/* Header */}
-                        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <div style={{ width: '10px', height: '10px', background: '#48bb78', borderRadius: '50%' }}></div>
-                            <span style={{ fontWeight: 600 }}>Active Residents</span>
-                            <Users size={18} style={{ color: 'var(--gold)', marginLeft: 'auto' }} />
+                        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{ width: '8px', height: '8px', background: '#48bb78', borderRadius: '50%' }}></div>
+                            <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Active Residents</span>
+                            <Users size={16} style={{ color: 'var(--gold)', marginLeft: 'auto' }} />
                         </div>
 
                         {/* Messages */}

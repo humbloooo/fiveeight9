@@ -107,7 +107,7 @@ const Navigation = () => {
     { name: 'Group Chat', href: '/forum' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Events', href: '/events' },
-    { name: 'Tickets', href: '/maintenance' },
+    { name: 'Maintenance Ticket', href: '/maintenance' },
   ];
 
   return (

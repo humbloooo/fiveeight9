@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import API_BASE_URL from '../config';
@@ -84,7 +85,7 @@ const StudentLogin = () => {
                         <GraduationCap size={35} color="black" />
                     </div>
 
-                    <h1 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '0.5rem' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '0.5rem', color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
                         Student <span className="gold-text">Portal</span>
                     </h1>
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontWeight: 500 }}>

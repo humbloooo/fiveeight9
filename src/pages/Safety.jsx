@@ -24,10 +24,10 @@ const Safety = () => {
     }, []);
 
     const measures = [
-        { title: 'Biometric Access', icon: <Lock />, desc: 'Strict fingerprint-only entry for residents, ensuring unauthorized persons stay out.' },
-        { title: '24hr Surveillance', icon: <Eye />, desc: 'High-definition CCTV across all communal zones and entry points.' },
-        { title: 'Controlled Entry', icon: <Clock />, desc: 'Secure resident-only entry permitted at all times with strict visitor policies.' },
-        { title: 'On-site Guarding', icon: <Shield />, desc: 'Trained professional security team patrolling the premises 24/7.' },
+        { title: 'PSG Security Guards', icon: <Shield />, desc: 'Manned by professional PSG Security personnel patrolling the premises 24/7.' },
+        { title: 'Armed Response', icon: <Lock />, desc: 'Highly trained armed units available 24/7 with immediate response capabilities.' },
+        { title: 'HD Surveillance', icon: <Eye />, desc: 'Comprehensive CCTV coverage integrated with backup power for zero downtime.' },
+        { title: 'Boundary Defense', icon: <Clock />, desc: 'Reinforced walls with electric fencing, consistently powered by backup systems.' },
     ];
 
     return (
@@ -72,11 +72,12 @@ const Safety = () => {
                     }}>
                         <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'var(--gold)' }}></div>
                         <h3 style={{ color: 'var(--gold)', marginBottom: '1.5rem', fontWeight: 900, fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <CheckCircle size={24} /> Campus Escort Service
+                            <CheckCircle size={24} /> Redundant Security Power
                         </h3>
                         <p style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1rem' }}>
-                            For students studying late at Univen, we provide a secure walking escort service between **8:00 PM and 10:00 PM**.
-                            Our internal security team ensures you arrive safely at your doorstep after your late-night library sessions.
+                            Five Eight 9 is equipped with robust backup power solutions specifically for our security infrastructure. 
+                            Our CCTV cameras and electric fencing remain 100% operational during outages, ensuring that your 
+                            safety is never compromised by external power failures.
                         </p>
                     </div>
                 </section>

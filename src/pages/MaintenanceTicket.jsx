@@ -55,17 +55,17 @@ const MaintenanceTicket = () => {
         >
             <Background />
             <Navigation />
-            <main style={{ paddingTop: '120px' }}>
+            <main style={{ paddingTop: 'clamp(80px, 15vh, 120px)' }}>
                 <section className="section">
-                    <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                        <h1 className="section-title">Support <span>Tickets</span></h1>
-                        <p style={{ color: 'var(--text-secondary)' }}>Log maintenance issues directly to our team.</p>
+                    <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 5vw, 4rem)' }}>
+                        <h1 className="section-title">Maintenance <span>Tickets</span></h1>
+                        <p style={{ color: 'var(--text-secondary)' }}>Log issues directly to our team.</p>
                     </div>
 
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                        gap: '4rem',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+                        gap: 'clamp(1.5rem, 4vw, 4rem)',
                         width: '100%',
                         maxWidth: '1200px'
                     }}>

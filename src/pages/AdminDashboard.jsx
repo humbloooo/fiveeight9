@@ -234,7 +234,15 @@ const AdminDashboard = ({ token, setToken }) => {
             </div>
 
             {/* Main Content */}
-            <div style={{ flex: 1, padding: 'clamp(1rem, 5vw, 3rem)', overflowX: 'hidden' }}>
+            <div style={{ 
+                flex: 1, 
+                padding: 'clamp(1rem, 5vw, 3rem)', 
+                overflowX: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                width: '100%'
+            }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <button
@@ -391,11 +399,12 @@ const AdminDashboard = ({ token, setToken }) => {
           }
           .admin-actions-bar {
             flex-wrap: wrap;
-            gap: 0.5rem !important;
+            gap: 1rem !important;
+            justify-content: center;
           }
-          .admin-actions-bar input {
-            width: 100% !important;
-            order: 2;
+          .admin-dashboard-root > div:last-child {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
           }
         }
         

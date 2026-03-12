@@ -469,6 +469,10 @@ body {
   .amenities-grid {
     grid-template-columns: 1fr;
   }
+
+  .section:last-of-type {
+    padding-bottom: 0;
+  }
 }
 
 /* OLED Noise Texture (Refinement 101) */
