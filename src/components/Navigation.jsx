@@ -119,56 +119,59 @@ const Navigation = () => {
       <nav className="nav-cluster">
         {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
 
-      <div className="nav-logo" onClick={() => window.location.href = '/'}>
-        <img src={logo} alt="Five Eight 9" className="logo-img" />
-        <span className="logo-text mobile-header-text">
-          Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
-        </span>
-      </div>
-
-      {/* Desktop Main Links */}
-      <div className="nav-links desktop-only">
-        {mainLinks.filter(link => !['Home', 'Rooms'].includes(link.name)).map((link) => (
-          <a key={link.name} href={link.href} className="nav-link">
-            {link.name}
-          </a>
-        ))}
-
-        <div className="resident-dropdown-trigger"
-          onMouseEnter={() => setIsResidentMenuOpen(true)}
-          onMouseLeave={() => setIsResidentMenuOpen(false)}>
-          <button className="nav-link nav-dropdown-btn">
-            Residents <ChevronDown size={14} />
-          </button>
-
-          {isResidentMenuOpen && (
-            <div className="dropdown-menu">
-              {residentLinks.map(link => (
-                <a key={link.name} href={link.href} className="dropdown-item">{link.name}</a>
-              ))}
-            </div>
-          )}
+      <div className="nav-container-desktop">
+        <div className="nav-side-left">
+          <div className="nav-logo" onClick={() => window.location.href = '/'}>
+            <img src={logo} alt="Five Eight 9" className="logo-img" />
+            <span className="logo-text">
+              Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
+            </span>
+          </div>
         </div>
-      </div>
 
-
-      <div className="nav-actions desktop-only">
-        {!isLoggedIn ? (
-          <div className="nav-actions">
-            <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>
-              {ctaText}
-            </button>
-          </div>
-        ) : (
-          <div className="nav-actions">
-            <a href="/admin" className="icon-btn" title="Admin Dashboard">
-              <Shield size={18} />
+        {/* Desktop Main Links - Centered */}
+        <div className="nav-links desktop-only">
+          {mainLinks.filter(link => !['Home', 'Rooms'].includes(link.name)).map((link) => (
+            <a key={link.name} href={link.href} className="nav-link">
+              {link.name}
             </a>
-            <div className="user-badge">
-              <User size={14} /> {userRole.toUpperCase()}
-            </div>
+          ))}
+
+          <div className="resident-dropdown-trigger"
+            onMouseEnter={() => setIsResidentMenuOpen(true)}
+            onMouseLeave={() => setIsResidentMenuOpen(false)}>
+            <button className="nav-link nav-dropdown-btn">
+              Residents <ChevronDown size={14} />
+            </button>
+
+            {isResidentMenuOpen && (
+              <div className="dropdown-menu">
+                {residentLinks.map(link => (
+                  <a key={link.name} href={link.href} className="dropdown-item">{link.name}</a>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
+
+        <div className="nav-side-right desktop-only">
+          <div className="nav-actions">
+            {!isLoggedIn ? (
+              <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>
+                {ctaText}
+              </button>
+            ) : (
+              <>
+                <a href="/admin" className="icon-btn" title="Admin Dashboard">
+                  <Shield size={18} />
+                </a>
+                <div className="user-badge">
+                  <User size={14} /> {userRole.toUpperCase()}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
 
       {isTransportModalOpen && (

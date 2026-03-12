@@ -194,7 +194,7 @@ const MainSite = () => {
                         position: 'relative',
                         overflow: 'hidden'
                     }}>
-                        <div style={{ position: 'absolute', top: '-10%;', left: '0', width: '100%', height: '100%', background: 'radial-gradient(circle at center, var(--gold-glow), transparent 70%)', opacity: 0.1, pointerEvents: 'none' }}></div>
+                        <div style={{ position: 'absolute', top: '-10%', left: '0', width: '100%', height: '100%', background: 'radial-gradient(circle at center, var(--gold-glow), transparent 70%)', opacity: 0.1, pointerEvents: 'none' }}></div>
                         <h2 className="section-title" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1.5rem' }}>Ready to <span className="gold-text">Move In?</span></h2>
                         <p style={{ maxWidth: '650px', marginBottom: '3.5rem', color: 'var(--text-secondary)', textAlign: 'center', margin: '0 auto 3.5rem', lineHeight: '1.8', fontSize: '1.1rem' }}>
                             Join a community of high-achieving students in an environment that fosters academic excellence and a vibrant social vibe.

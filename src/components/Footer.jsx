@@ -90,12 +90,18 @@ const Footer = () => {
                             <span className="label" style={{ color: 'var(--gold)' }}>Reception & 24/7 Support</span>
                             <span className="value" style={{ fontSize: '1.2rem' }}>{emergency.reception || '+27 15 589 0000'}</span>
                         </div>
+                        {emergency.emergency && (
+                            <div className="contact-item-footer">
+                                <span className="label" style={{ color: 'var(--gold)' }}>Primary Emergency</span>
+                                <span className="value">{emergency.emergency}</span>
+                            </div>
+                        )}
                         <div className="contact-item-footer">
-                            <span className="label" style={{ color: 'var(--gold)' }}>Security & Emergency</span>
+                            <span className="label" style={{ color: 'var(--gold)' }}>Security & Protection</span>
                             <span className="value">{emergency.security || '+27 15 589 1111'}</span>
                         </div>
                         <div className="contact-item-footer">
-                            <span className="label" style={{ color: 'var(--gold)' }}>Care Email</span>
+                            <span className="label" style={{ color: 'var(--gold)' }}>Support Email</span>
                             <span className="value">{emergency.email || 'care@fiveeight9.co.za'}</span>
                         </div>
                         <div style={{ marginTop: '0.5rem' }}>

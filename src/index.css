@@ -223,9 +223,27 @@ body {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
+.nav-container-desktop {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-side-left, .nav-side-right {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.nav-side-right {
+  justify-content: flex-end;
+}
+
 .nav-links {
   display: flex;
   gap: 2.5rem;
+  justify-content: center;
 }
 
 .nav-link {
@@ -801,6 +819,18 @@ body.night-owl-active::after {
   color: var(--text-primary);
   text-transform: uppercase;
   font-family: var(--font-secondary);
+}
+
+@media (max-width: 1024px) {
+  .nav-container-desktop {
+    justify-content: flex-start;
+  }
+  .nav-side-left {
+    flex: 1;
+  }
+  .nav-side-right {
+    display: none;
+  }
 }
 
 .nav-actions {
