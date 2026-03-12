@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
-import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle, User, Bell } from 'lucide-react';
+import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle, User, Bell, Image as ImageIcon } from 'lucide-react';
 import AdminModal from '../components/AdminModal';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useToast } from '../context/ToastContext';
 
 const AdminDashboard = ({ token, setToken }) => {
-    const [activeTab, setActiveTab] = useState('rooms');
+    const [activeTab, setActiveTab] = useState('home');
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const { addToast } = useToast();
@@ -162,6 +162,7 @@ const AdminDashboard = ({ token, setToken }) => {
     };
 
     const tabs = [
+        { id: 'home', name: 'Dashboard', icon: <Home size={18} /> },
         { id: 'settings', name: 'Site Engine', icon: <Settings size={18} />, adminOnly: true },
         { id: 'admins', name: 'User Management', icon: <User size={18} />, adminOnly: true },
         { id: 'rooms', name: 'Room Inventory', icon: <Home size={18} /> },
@@ -179,6 +180,8 @@ const AdminDashboard = ({ token, setToken }) => {
             (item.title && item.title.toLowerCase().includes(q)) ||
             (item.username && item.username.toLowerCase().includes(q)) ||
             (item.email && item.email.toLowerCase().includes(q)) ||
+            (item.studentNumber && item.studentNumber.toLowerCase().includes(q)) ||
+            (item.roomNumber && item.roomNumber.toLowerCase().includes(q)) ||
             (item.type && item.type.toLowerCase().includes(q))
         );
     }) : [];
@@ -260,7 +263,10 @@ const AdminDashboard = ({ token, setToken }) => {
                         </button>
                     ))}
                 </nav>
-                <button onClick={() => { setToken(null); localStorage.removeItem('adminToken'); }} style={{ marginTop: 'auto', width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontWeight: 'bold' }}>
+                <a href="/" style={{ marginTop: 'auto', textDecoration: 'none', width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', fontWeight: 'bold' }}>
+                    <Home size={18} /> Home Page
+                </a>
+                <button onClick={() => { setToken(null); localStorage.removeItem('adminToken'); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontWeight: 'bold' }}>
                     <LogOut size={18} /> Logout
                 </button>
             </div>
@@ -282,24 +288,26 @@ const AdminDashboard = ({ token, setToken }) => {
                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} className="hide-on-mobile">Manage your website content dynamically.</p>
                     </div>
                     <div className="admin-actions-bar" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                        <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-                            <input 
-                                type="text" 
-                                placeholder={`Search ${activeTab}...`} 
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{ 
-                                    padding: '0.8rem 1rem', 
-                                    borderRadius: '12px', 
-                                    border: '1px solid var(--glass-border)', 
-                                    background: 'var(--glass)', 
-                                    color: 'var(--text-primary)',
-                                    outline: 'none',
-                                    width: '100%',
-                                    fontSize: '0.9rem'
-                                 }}
-                            />
-                        </div>
+                        {activeTab === 'admins' && (
+                            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+                                <input 
+                                    type="text" 
+                                    placeholder={`Search accounts...`} 
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    style={{ 
+                                        padding: '0.8rem 1rem', 
+                                        borderRadius: '12px', 
+                                        border: '1px solid var(--glass-border)', 
+                                        background: 'var(--glass)', 
+                                        color: 'var(--text-primary)',
+                                        width: '100%',
+                                        zIndex: 1
+                                    }} 
+                                />
+                                <Search style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} size={18} />
+                            </div>
+                        )}
                         <div style={{ display: 'flex', gap: '0.8rem' }}>
                             <button onClick={fetchData} style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.8rem', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
                                 <RefreshCw size={18} className={loading ? 'spin' : ''} />
@@ -329,8 +337,29 @@ const AdminDashboard = ({ token, setToken }) => {
                         <SkeletonLoader height="60px" borderRadius="12px" />
                     </div>
                 ) : (
-                    <div className="admin-list-grid" style={{ display: (activeTab === 'settings' || (Array.isArray(data) && data.length === 0)) ? 'block' : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                        {activeTab === 'settings' ? (
+                    <div className="admin-list-grid" style={{ display: (activeTab === 'settings' || activeTab === 'home' || (Array.isArray(data) && data.length === 0)) ? 'block' : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                        {activeTab === 'home' ? (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+                                <div className="admin-item-card" style={{ padding: '2rem', textAlign: 'center' }}>
+                                    <Home size={32} style={{ color: 'var(--gold)', marginBottom: '1rem' }} />
+                                    <h3>Room Inventory</h3>
+                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Manage your lofts and availability.</p>
+                                    <button onClick={() => setActiveTab('rooms')} className="cta-button" style={{ marginTop: '1rem', width: '100%' }}>GO TO INVENTORY</button>
+                                </div>
+                                <div className="admin-item-card" style={{ padding: '2rem', textAlign: 'center' }}>
+                                    <User size={32} style={{ color: 'var(--gold)', marginBottom: '1rem' }} />
+                                    <h3>User Management</h3>
+                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Manage students, staff, and admins.</p>
+                                    <button onClick={() => setActiveTab('admins')} className="cta-button" style={{ marginTop: '1rem', width: '100%' }}>GO TO USERS</button>
+                                </div>
+                                <div className="admin-item-card" style={{ padding: '2rem', textAlign: 'center' }}>
+                                    <Settings size={32} style={{ color: 'var(--gold)', marginBottom: '1rem' }} />
+                                    <h3>System Settings</h3>
+                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Configure site-wide options and media.</p>
+                                    <button onClick={() => setActiveTab('settings')} className="cta-button" style={{ marginTop: '1rem', width: '100%' }}>GO TO SETTINGS</button>
+                                </div>
+                            </div>
+                        ) : activeTab === 'settings' ? (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
                                     <Settings size={48} style={{ color: 'var(--gold)', marginBottom: '1.5rem' }} />
@@ -340,6 +369,17 @@ const AdminDashboard = ({ token, setToken }) => {
                                     </p>
                                     <button className="cta-button" onClick={() => { setEditingItem(data); setIsModalOpen(true); }}>
                                         CONFIGURE SYSTEM
+                                    </button>
+                                </div>
+                                {/* Building Pictures Management */}
+                                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                                    <ImageIcon size={48} style={{ color: 'var(--gold)', marginBottom: '1.5rem' }} />
+                                    <h2 style={{ marginBottom: '1rem' }}>Building Gallery</h2>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem' }}>
+                                        Manage pictures of the building displayed in the Explore Building page.
+                                    </p>
+                                    <button className="cta-button" onClick={() => { setEditingItem({ ...data, isBuildingGallery: true }); setIsModalOpen(true); }}>
+                                        MANAGE GALLERY
                                     </button>
                                 </div>
                                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
@@ -382,6 +422,34 @@ const AdminDashboard = ({ token, setToken }) => {
                                 <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No data available</h3>
                                 <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>Create your first {activeTab} item to see it listed here.</p>
                             </div>
+                        ) : activeTab === 'admins' ? (
+                            filteredData.map((user) => (
+                                <div key={user._id} className="admin-item-card" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        <div>
+                                            <h3 style={{ color: 'var(--gold)', margin: 0 }}>{user.username}</h3>
+                                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{user.email}</p>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <button onClick={() => { setEditingItem(user); setIsModalOpen(true); }} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}><Edit size={16} /></button>
+                                            <button onClick={() => handleDelete(user._id)} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer' }}><Trash size={16} /></button>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.5rem', borderRadius: '8px' }}>
+                                            <span style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>Role</span>
+                                            <span style={{ fontSize: '0.8rem', fontWeight: 900, color: user.role === 'admin' ? 'var(--gold)' : 'var(--text-primary)' }}>{user.role}</span>
+                                        </div>
+                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.5rem', borderRadius: '8px' }}>
+                                            <span style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>Student ID</span>
+                                            <span style={{ fontSize: '0.8rem' }}>{user.studentNumber || 'N/A'}</span>
+                                        </div>
+                                    </div>
+                                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.5rem' }}>
+                                        Joined: {new Date(user.createdAt).toLocaleDateString()}
+                                    </div>
+                                </div>
+                            ))
                         ) : (
                             filteredData.map((item) => (
                                 <div key={item._id} style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>

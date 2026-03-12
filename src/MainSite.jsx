@@ -68,10 +68,18 @@ const MainSite = () => {
 
             <main>
                 {/* Section 1: Hero */}
-                <section id="home" className="section hero-section reveal">
-                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '120px', height: 'auto', animation: 'fadeIn 1s ease' }} />
-                        <h1 style={{ fontWeight: 900, fontSize: 'clamp(2.5rem, 6vw, 4rem)', letterSpacing: '2px', textAlign: 'center' }}>
+                <section id="home" className="section hero-section reveal" style={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingTop: '100px', // Extra padding to avoid header overlap
+                    marginTop: 0
+                }}>
+                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '140px', height: 'auto', animation: 'fadeIn 1.2s ease' }} />
+                        <h1 style={{ fontWeight: 900, fontSize: 'clamp(2.5rem, 8vw, 5rem)', letterSpacing: '4px', textAlign: 'center', textTransform: 'uppercase', lineHeight: 1.1 }}>
                             Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
                         </h1>
                     </div>
@@ -138,27 +146,33 @@ const MainSite = () => {
                                     <SkeletonLoader height="450px" borderRadius="24px" className="room-card glass-panel" />
                                 </div>
                             ))
-                        ) : rooms.length > 0 ? (
-                            rooms.map((room, i) => (
-                                <div key={room._id || i} className="room-card-wrapper reveal">
-                                    <RoomCard {...room} image={room.imageUrl || room.image} price={showPrices ? room.price : ''} />
-                                </div>
-                            ))
                         ) : (
-                            <p style={{ textAlign: 'center', width: '100%', color: 'var(--text-secondary)' }}>No rooms currently available.</p>
-                        )}
-                        
-                        {/* Jacuzzi Specific Option if not in DB, for Demo/Placeholder */}
-                        {!rooms.some(r => r.title?.toLowerCase().includes('jacuzzi')) && !loadingRooms && (
-                           <div className="room-card-wrapper reveal">
-                                <RoomCard 
-                                    title="Jacuzzi Loft" 
-                                    subtitle="Executive Suite" 
-                                    desc="Premium experience with private Jacuzzi and luxury fittings."
-                                    image="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800"
-                                    price="R 8,500"
-                                />
-                           </div>
+                            <>
+                                {/* Featured Building Pictures */}
+                                {settings?.buildingPictures?.filter(pic => pic.showOnHome).map((pic, i) => (
+                                    <div key={`building-${i}`} className="room-card-wrapper reveal">
+                                        <RoomCard 
+                                            title="Building View" 
+                                            subtitle="Gallery" 
+                                            desc={pic.caption || "A glimpse into Five Eight 9's premium environment."}
+                                            image={pic.url}
+                                            price=""
+                                        />
+                                    </div>
+                                ))}
+
+                                {/* Featured Rooms */}
+                                {rooms.filter(room => room.showOnHome).map((room, i) => (
+                                    <div key={room._id || i} className="room-card-wrapper reveal">
+                                        <RoomCard {...room} image={room.imageUrl || room.image} price={showPrices ? room.price : ''} />
+                                    </div>
+                                ))}
+
+                                {/* Fallback if nothing is featured */}
+                                {rooms.filter(room => room.showOnHome).length === 0 && (!settings?.buildingPictures || settings.buildingPictures.filter(pic => pic.showOnHome).length === 0) && (
+                                    <p style={{ textAlign: 'center', width: '100%', color: 'var(--text-secondary)' }}>No featured content available.</p>
+                                )}
+                            </>
                         )}
                     </div>
                 </section>

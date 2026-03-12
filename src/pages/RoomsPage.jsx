@@ -86,20 +86,25 @@ const GalleryCategory = ({ title, icon: GalleryIcon, items, delay }) => (
 );
 
 const RoomsPage = () => {
-    const [rooms, setRooms] = React.useState([]);
+    const [rooms, setRooms] = useState([]);
+    const [settings, setSettings] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
         
-        const fetchRooms = async () => {
+        const fetchData = async () => {
             try {
-                const res = await axios.get(`${API_BASE_URL}/api/rooms`);
-                setRooms(res.data);
+                const [roomsRes, settingsRes] = await Promise.all([
+                    axios.get(`${API_BASE_URL}/api/rooms`),
+                    axios.get(`${API_BASE_URL}/api/settings`)
+                ]);
+                setRooms(roomsRes.data);
+                setSettings(settingsRes.data);
             } catch (err) {
-                console.error('Failed to fetch rooms', err);
+                console.error('Failed to fetch dynamic data', err);
             }
         };
-        fetchRooms();
+        fetchData();
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -119,11 +124,13 @@ const RoomsPage = () => {
     })).filter(r => r.url);
 
     const galleryData = {
-        building: [
-            { url: 'https://images.unsplash.com/photo-1545324418-f1d3c5b53571?auto=format&fit=crop&q=80&w=800', caption: 'Front Elevation' },
-            { url: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=800', caption: 'Executive Lobby' },
-            { url: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=800', caption: 'Night Architecture' }
-        ],
+        building: settings?.buildingPictures?.length > 0 
+            ? settings.buildingPictures 
+            : [
+                { url: 'https://images.unsplash.com/photo-1545324418-f1d3c5b53571?auto=format&fit=crop&q=80&w=800', caption: 'Front Elevation' },
+                { url: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=800', caption: 'Executive Lobby' },
+                { url: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=800', caption: 'Night Architecture' }
+            ],
         rooms: [
             ...apiRooms,
             { url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800', caption: 'Single Loft Standard' },

@@ -65,19 +65,26 @@ const MaintenanceTicket = () => {
                     <div style={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-                        gap: 'clamp(1.5rem, 4vw, 4rem)',
+                        gap: 'clamp(2rem, 5vw, 4rem)',
                         width: '100%',
-                        maxWidth: '1200px'
+                        maxWidth: '1100px',
+                        margin: '0 auto'
                     }}>
                         {/* Form */}
-                        <form onSubmit={handleSubmit} style={{ background: 'var(--glass)', padding: '3rem', borderRadius: '24px', border: '1px solid var(--glass-border)' }}>
-                            <div style={{ marginBottom: '2rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Issue Category</label>
+                        <form onSubmit={handleSubmit} style={{ 
+                            background: 'var(--glass)', 
+                            padding: 'clamp(1.5rem, 5vw, 3rem)', 
+                            borderRadius: '30px', 
+                            border: '1px solid var(--glass-border)',
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                        }}>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.6rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Issue Category</label>
                                 <select
                                     className="admin-input"
                                     value={ticket.issueType}
                                     onChange={(e) => setTicket({ ...ticket, issueType: e.target.value })}
-                                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', padding: '1rem', borderRadius: '12px' }}
+                                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'white', padding: '0.9rem 1.2rem', borderRadius: '14px', fontSize: '0.95rem' }}
                                 >
                                     <option>Plumbing</option>
                                     <option>Electrical</option>
@@ -87,9 +94,9 @@ const MaintenanceTicket = () => {
                                 </select>
                             </div>
 
-                            <div style={{ marginBottom: '2rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Priority</label>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.6rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Priority Intensity</label>
+                                <div style={{ display: 'flex', gap: '0.6rem' }}>
                                     {['Low', 'Medium', 'High'].map(p => (
                                         <button
                                             key={p}
@@ -97,46 +104,64 @@ const MaintenanceTicket = () => {
                                             onClick={() => setTicket({ ...ticket, priority: p })}
                                             style={{
                                                 flex: 1,
-                                                padding: '0.8rem',
-                                                borderRadius: '8px',
+                                                padding: '0.8rem 0.5rem',
+                                                borderRadius: '12px',
                                                 border: '1px solid var(--glass-border)',
-                                                background: ticket.priority === p ? 'var(--gold-glow)' : 'transparent',
-                                                color: ticket.priority === p ? 'var(--gold)' : 'var(--text-primary)',
+                                                background: ticket.priority === p ? 'var(--gold-gradient)' : 'rgba(255,255,255,0.02)',
+                                                color: ticket.priority === p ? 'var(--navy)' : 'var(--text-primary)',
                                                 cursor: 'pointer',
-                                                fontSize: '0.8rem',
-                                                fontWeight: 700
+                                                fontSize: '0.75rem',
+                                                fontWeight: 800,
+                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.5px'
                                             }}
                                         >{p}</button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div style={{ marginBottom: '2rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Room Number</label>
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.6rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Room / Area Number</label>
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. 3A-01"
+                                    placeholder="e.g. 302-B"
                                     className="admin-input"
                                     value={ticket.roomNumber}
                                     onChange={(e) => setTicket({ ...ticket, roomNumber: e.target.value })}
-                                    style={{ width: '100%', background: 'rgba(255,255,2).05)', border: '1px solid var(--glass-border)', color: 'white', padding: '1rem', borderRadius: '12px' }}
+                                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'white', padding: '0.9rem 1.2rem', borderRadius: '14px', fontSize: '0.95rem' }}
                                 />
                             </div>
 
-                            <div style={{ marginBottom: '2.5rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Problem Description</label>
+                            <div style={{ marginBottom: '2rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.6rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Describe the Damage</label>
                                 <textarea
                                     required
                                     rows="4"
-                                    placeholder="Describe the issue in detail..."
-                                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', padding: '1rem', borderRadius: '12px', resize: 'none' }}
+                                    placeholder="Be as specific as possible to help our team..."
+                                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'white', padding: '1rem 1.2rem', borderRadius: '14px', resize: 'none', lineHeight: '1.6', fontSize: '0.95rem' }}
                                     value={ticket.description}
                                     onChange={(e) => setTicket({ ...ticket, description: e.target.value })}
                                 ></textarea>
                             </div>
 
-                            <button type="submit" className="cta-button" style={{ width: '100%', padding: '1.2rem' }}>SUBMIT TICKET</button>
+                            <button type="submit" className="cta-button" style={{ 
+                                width: '100%', 
+                                padding: '1.1rem', 
+                                border: 'none', 
+                                borderRadius: '14px', 
+                                fontWeight: 900, 
+                                fontSize: '1rem', 
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.8rem'
+                            }}>
+                                <Wrench size={20} />
+                                DEPLOY TECHNICIAN
+                            </button>
                         </form>
 
                         {/* Info Panel */}

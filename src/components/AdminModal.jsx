@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { X, Upload, Save, Loader, Globe, Phone, AlertCircle, Image as ImageIcon, Eye, EyeOff, Shield, Wifi, Zap, Coffee, Trash, Smartphone, Moon, Sun, Waves, Wind, CheckCircle, Clock, Home, Utensils, Truck } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import API_BASE_URL from '../config';
 import { useToast } from '../context/ToastContext';
+
+// Destructure the ones we use explicitly in the UI logic outside the icon grid
+const { X, Upload, Save, Loader, Globe, Phone, AlertCircle, Image: ImageIcon, Eye, EyeOff, Shield, Wifi, Zap, Coffee, Trash, Smartphone, Moon, Sun, Wind, CheckCircle, Clock, Home, Utensils, Truck, Tv, Plus, Search, RefreshCw, Edit, Camera, MapPin, Key, Lock, User, Users, Bell, Settings, Info, Heart, Star, Sparkles, Smile, MessageSquare, ShieldCheck, Dumbbell, Car, Library, GraduationCap, Building, Building2 } = LucideIcons;
 
 const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
     const [formData, setFormData] = useState({});
@@ -61,6 +64,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 floor: 'Ground Floor',
                 nsfas: true,
                 available: true,
+                showOnHome: false,
                 inStock: true,
                 media: []
             } : type === 'events' ? {
@@ -74,6 +78,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 name: '',
                 description: '',
                 category: 'Lunch',
+                price: 0,
                 inStock: true,
                 media: []
             } : type === 'amenities' ? {
@@ -87,6 +92,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 password: '',
                 role: 'student',
                 studentNumber: '',
+                roomNumber: '',
                 idNumber: ''
             } : {
                 title: '',
@@ -181,32 +187,35 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
         try {
             if (type === 'settings') {
-                await onSubmit(finalData);
-                window.dispatchEvent(new CustomEvent('settingsUpdated'));
+                if (finalData.isBuildingGallery) {
+                    delete finalData.isBuildingGallery;
+                    await onSubmit(finalData);
+                } else {
+                    await onSubmit(finalData);
+                    window.dispatchEvent(new CustomEvent('settingsUpdated'));
+                }
             } else {
                 let endpoint = type;
                 let dataToSend = finalData;
-
-                if (type === 'admins') {
-                    endpoint = editingItem ? 'auth/users' : 'auth/register';
-                    if (editingItem && !formData.password) {
-                        const dataWithoutPassword = { ...finalData };
-                        delete dataWithoutPassword.password;
-                        dataToSend = dataWithoutPassword;
-                    }
-                }
 
                 const config = {
                     headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }
                 };
 
-                if (editingItem) {
-                    await axios.patch(`${API_BASE_URL}/api/${endpoint}/${editingItem._id}`, dataToSend, config);
-                    addToast('Update successful', 'success');
+                if (type === 'admins') {
+                    if (editingItem) {
+                        await axios.patch(`${API_BASE_URL}/api/auth/users/${editingItem._id}`, dataToSend, config);
+                    } else {
+                        await axios.post(`${API_BASE_URL}/api/auth/register`, dataToSend, config);
+                    }
                 } else {
-                    await axios.post(`${API_BASE_URL}/api/${endpoint}`, dataToSend, config);
-                    addToast('Creation successful', 'success');
+                    if (editingItem) {
+                        await axios.patch(`${API_BASE_URL}/api/${endpoint}/${editingItem._id}`, dataToSend, config);
+                    } else {
+                        await axios.post(`${API_BASE_URL}/api/${endpoint}`, dataToSend, config);
+                    }
                 }
+                addToast(editingItem ? 'Update successful' : 'Creation successful', 'success');
             }
             onClose();
         } catch (error) {
@@ -332,6 +341,68 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
         </div>
     );
 
+    const renderGalleryFields = () => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h3 style={{ color: 'var(--gold)', fontSize: '1rem' }}>Building Gallery</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1rem' }}>
+                {(formData.buildingPictures || []).map((pic, idx) => (
+                    <div key={idx} style={{ position: 'relative' }}>
+                        <img src={pic.url} style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '12px', border: pic.showOnHome ? '2px solid var(--gold)' : '1px solid var(--glass-border)' }} alt="" />
+                        <div style={{ position: 'absolute', top: '5px', left: '5px', display: 'flex', gap: '5px' }}>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const newPics = [...formData.buildingPictures];
+                                    newPics[idx].showOnHome = !newPics[idx].showOnHome;
+                                    setFormData({ ...formData, buildingPictures: newPics });
+                                }}
+                                style={{ background: pic.showOnHome ? 'var(--gold)' : 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '4px', padding: '2px', cursor: 'pointer', color: pic.showOnHome ? 'var(--navy)' : 'white' }}
+                                title="Show on Home Page"
+                            >
+                                <Home size={12} />
+                            </button>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, buildingPictures: prev.buildingPictures.filter((_, i) => i !== idx) }))}
+                            style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer' }}
+                        >
+                            <X size={12} />
+                        </button>
+                    </div>
+                ))}
+            </div>
+            <div style={{ marginTop: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Add New Pictures</label>
+                <input 
+                    type="file" 
+                    multiple 
+                    onChange={async (e) => {
+                        const files = Array.from(e.target.files);
+                        setUploading(true);
+                        try {
+                            const uploaded = [];
+                            for (const f of files) {
+                                const signRes = await axios.post(`${API_BASE_URL}/api/upload/sign`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } });
+                                const signData = signRes.data;
+                                const uploadFormData = new FormData();
+                                uploadFormData.append('file', f);
+                                uploadFormData.append('api_key', signData.api_key);
+                                uploadFormData.append('timestamp', signData.timestamp);
+                                uploadFormData.append('signature', signData.signature);
+                                uploadFormData.append('folder', signData.folder);
+                                const res = await axios.post(`https://api.cloudinary.com/v1_1/${signData.cloud_name}/image/upload`, uploadFormData);
+                                uploaded.push({ url: res.data.secure_url, caption: '' });
+                            }
+                            setFormData(prev => ({ ...prev, buildingPictures: [...(prev.buildingPictures || []), ...uploaded] }));
+                        } catch (err) { console.error(err); addToast('Gallery upload failed', 'error'); }
+                        finally { setUploading(false); }
+                    }} 
+                />
+            </div>
+        </div>
+    );
+
     const renderContentFields = () => (
         <>
             <div style={{ marginBottom: '1.5rem' }}>
@@ -382,6 +453,21 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 </>
             )}
 
+            {type === 'cafeteria' && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Price (R)</label>
+                    <input
+                        name="price"
+                        type="number"
+                        step="0.01"
+                        value={formData.price || 0}
+                        onChange={handleChange}
+                        className="admin-input"
+                        placeholder="0.00"
+                    />
+                </div>
+            )}
+
             {type === 'rooms' && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                     <div>
@@ -404,6 +490,10 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                         <input type="checkbox" name="nsfas" checked={formData.nsfas} onChange={handleChange} />
                         <label style={{ fontSize: '0.8rem' }}>NSFAS Accredited</label>
                     </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <input type="checkbox" name="showOnHome" checked={formData.showOnHome} onChange={handleChange} />
+                        <label style={{ fontSize: '0.8rem', color: 'var(--gold)' }}>Feature on Home Page</label>
+                    </div>
                 </div>
             )}
 
@@ -423,29 +513,58 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             {type === 'amenities' && (
                 <div style={{ marginBottom: '1.5rem' }}>
                     <label style={{ display: 'block', marginBottom: '0.5rem' }}>Select Icon</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '0.8rem' }}>
-                        {['Wifi', 'Shield', 'Zap', 'Coffee', 'Trash', 'Smartphone', 'Moon', 'Sun', 'Waves', 'Wind', 'CheckCircle', 'AlertCircle', 'Clock', 'Home', 'Utensils', 'Gym', 'Parking', 'Access', 'Droplets', 'Truck', 'Tv'].map(icon => (
-                            <button
-                                key={icon}
-                                type="button"
-                                onClick={() => setFormData(prev => ({ ...prev, icon }))}
-                                style={{
-                                    padding: '0.8rem 0.5rem',
-                                    background: formData.icon === icon ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
-                                    border: '1px solid var(--glass-border)',
-                                    borderRadius: '12px',
-                                    color: formData.icon === icon ? 'var(--navy)' : 'var(--text-primary)',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: '0.4rem',
-                                    transition: 'all 0.3s ease'
-                                }}
-                            >
-                                <span style={{ fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase' }}>{icon}</span>
-                            </button>
-                        ))}
+                    <div style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', 
+                        gap: '0.8rem',
+                        maxHeight: '300px',
+                        overflowY: 'auto',
+                        padding: '0.5rem',
+                        background: 'rgba(0,0,0,0.2)',
+                        borderRadius: '12px',
+                        border: '1px solid var(--glass-border)'
+                    }}>
+                        {[
+                            'Wifi', 'Shield', 'Zap', 'Coffee', 'Trash', 'Smartphone', 'Moon', 'Sun', 'Wind', 'CheckCircle', 
+                            'AlertCircle', 'Clock', 'Home', 'Utensils', 'Dumbbell', 'Car', 'Accessibility', 'Droplets', 'Truck', 'Tv',
+                            'Waves', 'Camera', 'MapPin', 'Key', 'Lock', 'User', 'Users', 'Bell', 'Info', 'Heart', 'Star', 
+                            'Sparkles', 'Smile', 'ShieldCheck', 'ShieldAlert', 'Radio', 'Search', 'Settings', 
+                            'Music', 'Video', 'Mail', 'HelpCircle', 'Activity', 'Airplay', 'Anchor', 'Aperture', 'Archive', 
+                            'Award', 'BarChart', 'Battery', 'Bluetooth', 'Book', 'Bookmark', 'Box', 'Briefcase', 'Calendar', 
+                            'Cast', 'Clipboard', 'Cloud', 'Code', 'Compass', 'Copy', 'CreditCard', 'Database', 'Download', 
+                            'Edit', 'Facebook', 'FastForward', 'Feather', 'File', 'Film', 'Filter', 'Flag', 
+                            'Folder', 'Framer', 'Gift', 'HardDrive', 'Hash', 'Headphones', 'Layers', 'Layout', 'LifeBuoy', 
+                            'Link', 'List', 'Map', 'Maximize', 'Mic', 'Minimize', 'Monitor', 'Mountain', 'Navigation', 
+                            'Package', 'Pause', 'PenTool', 'Percent', 'Play', 'Power', 'Printer', 'Quote', 'Repeat', 
+                            'Save', 'Send', 'Server', 'Share', 'ShoppingBag', 'ShoppingCart', 'Shuffle', 'Sidebar', 'Slack', 
+                            'Speaker', 'Square', 'Sunrise', 'Sunset', 'Tablet', 'Target', 'Terminal', 'ThumbsUp', 'Triangle', 
+                            'Umbrella', 'Unlock', 'UserPlus', 'Volume', 'Watch', 'ZoomIn'
+                        ].map(iconName => {
+                            const IconComponent = LucideIcons[iconName] || LucideIcons.HelpCircle;
+                            return (
+                                <button
+                                    key={iconName}
+                                    type="button"
+                                    onClick={() => setFormData(prev => ({ ...prev, icon: iconName }))}
+                                    style={{
+                                        padding: '1rem 0.5rem',
+                                        background: formData.icon === iconName ? 'var(--gold)' : 'rgba(255,255,255,0.03)',
+                                        border: '1px solid var(--glass-border)',
+                                        borderRadius: '12px',
+                                        color: formData.icon === iconName ? 'var(--navy)' : 'var(--text-primary)',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '0.6rem',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                >
+                                    <IconComponent size={20} />
+                                    <span style={{ fontSize: '0.55rem', fontWeight: 900, textTransform: 'uppercase', opacity: 0.7 }}>{iconName}</span>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             )}
@@ -513,9 +632,9 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 <button onClick={onClose} style={{ position: 'absolute', right: '1.5rem', top: '1.5rem', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
                     <X size={24} />
                 </button>
-                <h2 style={{ color: 'var(--gold)', marginBottom: '2rem' }}>{editingItem ? 'Edit' : 'Add'} {type}</h2>
+                <h2 style={{ color: 'var(--gold)', marginBottom: '2rem' }}>{editingItem ? 'Edit' : 'Add'} {type === 'admins' ? 'User' : type}</h2>
                 <form onSubmit={handleSubmit}>
-                    {type === 'settings' ? renderSettingsFields() : renderContentFields()}
+                    {type === 'settings' ? (editingItem?.isBuildingGallery ? renderGalleryFields() : renderSettingsFields()) : renderContentFields()}
                     <button type="submit" disabled={uploading} className="cta-button" style={{ width: '100%', marginTop: '1.5rem' }}>
                         {uploading ? <Loader className="spin" /> : <Save />} {editingItem ? 'Save Changes' : 'Create'}
                     </button>

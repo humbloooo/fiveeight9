@@ -121,4 +121,33 @@ router.delete('/users/:id', [auth, requireAdmin], async (req, res) => {
     }
 });
 
+// Update user (Admin only)
+router.patch('/users/:id', [auth, requireAdmin], async (req, res) => {
+    const { username, email, role, studentNumber, idNumber } = req.body;
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        if (username) user.username = username;
+        if (email) user.email = email;
+        if (role) user.role = role;
+        if (studentNumber) user.studentNumber = studentNumber;
+        
+        // If ID number is provided, we need to re-hash it as it acts as password for students
+        if (idNumber) {
+            user.idNumber = idNumber;
+            if (user.role === 'student') {
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(idNumber, salt);
+            }
+        }
+
+        await user.save();
+        res.json({ message: 'User updated successfully', user: { email: user.email, role: user.role } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 module.exports = router;

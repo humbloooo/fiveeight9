@@ -30,7 +30,12 @@ const SettingsSchema = new mongoose.Schema({
         subLabel: { type: String, default: 'Sharing Options' }
     },
     resFull: { type: Boolean, default: false },
-    transportSchedule: { type: String, default: '' }
+    transportSchedule: { type: String, default: '' },
+    buildingPictures: [{
+        url: { type: String, required: true },
+        caption: { type: String, default: '' },
+        showOnHome: { type: Boolean, default: false }
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Settings', SettingsSchema);

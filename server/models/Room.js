@@ -12,6 +12,7 @@ const RoomSchema = new mongoose.Schema({
         default: 'Ground Floor'
     },
     available: { type: Boolean, default: true },
+    showOnHome: { type: Boolean, default: false },
     imageUrl: { type: String },
     imagePublicId: { type: String }
 }, { timestamps: true });
