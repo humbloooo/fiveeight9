@@ -126,13 +126,25 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
         let finalData = { ...formData };
 
-        if (file) {
-            const uploadFormData = new FormData();
-            uploadFormData.append('file', file);
-            uploadFormData.append('upload_preset', UPLOAD_PRESET);
+        const getSignature = async () => {
+            const config = {
+                headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }
+            };
+            const res = await axios.post(`${API_BASE_URL}/api/upload/sign`, {}, config);
+            return res.data;
+        };
 
+        if (file) {
             try {
-                const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, uploadFormData);
+                const signData = await getSignature();
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', file);
+                uploadFormData.append('api_key', signData.api_key);
+                uploadFormData.append('timestamp', signData.timestamp);
+                uploadFormData.append('signature', signData.signature);
+                uploadFormData.append('folder', signData.folder);
+
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${signData.cloud_name}/image/upload`, uploadFormData);
                 finalData.imageUrl = res.data.secure_url;
                 if (finalData.imagePublicId !== undefined) {
                     finalData.imagePublicId = res.data.public_id;
@@ -146,19 +158,25 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
         }
 
         if (mediaFiles.length > 0) {
-            const uploadedUrls = [];
-            for (const f of mediaFiles) {
-                const uploadFormData = new FormData();
-                uploadFormData.append('file', f);
-                uploadFormData.append('upload_preset', UPLOAD_PRESET);
-                try {
-                    const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, uploadFormData);
+            try {
+                const uploadedUrls = [];
+                for (const f of mediaFiles) {
+                    const signData = await getSignature();
+                    const uploadFormData = new FormData();
+                    uploadFormData.append('file', f);
+                    uploadFormData.append('api_key', signData.api_key);
+                    uploadFormData.append('timestamp', signData.timestamp);
+                    uploadFormData.append('signature', signData.signature);
+                    uploadFormData.append('folder', signData.folder);
+
+                    const res = await axios.post(`https://api.cloudinary.com/v1_1/${signData.cloud_name}/image/upload`, uploadFormData);
                     uploadedUrls.push(res.data.secure_url);
-                } catch (err) {
-                    console.error('Gallery upload error', err);
                 }
+                finalData.media = [...(finalData.media || []), ...uploadedUrls];
+            } catch (err) {
+                console.error('Gallery upload error', err);
+                addToast('Gallery upload failed', 'error');
             }
-            finalData.media = [...(finalData.media || []), ...uploadedUrls];
         }
 
         try {

@@ -202,6 +202,33 @@ const AdminDashboard = ({ token, setToken }) => {
                 />
             )}
 
+            {/* Mobile Header Bar */}
+            <div className="admin-mobile-header" style={{
+                display: 'none',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '70px',
+                background: 'var(--nav-bg)',
+                backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid var(--glass-border)',
+                padding: '0 1rem',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                zIndex: 1300
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer' }}
+                    >
+                        <Menu size={24} />
+                    </button>
+                    <h2 style={{ fontSize: '1.2rem', color: 'var(--gold)', fontWeight: 900, margin: 0 }}>Admin</h2>
+                </div>
+            </div>
+
             {/* Sidebar */}
             <div className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`} style={{
                 width: '260px',
@@ -211,10 +238,12 @@ const AdminDashboard = ({ token, setToken }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100vh',
-                position: 'sticky',
+                position: 'fixed',
+                left: 0,
                 top: 0,
-                zIndex: 1500,
-                transition: 'transform 0.3s ease'
+                zIndex: 2000,
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: isSidebarOpen ? '10px 0 50px rgba(0,0,0,0.5)' : 'none'
             }}>
                 <h2 style={{ color: 'var(--gold)', marginBottom: '3rem', fontSize: '1.2rem', padding: '0 1rem', fontWeight: 900 }}>Admin Console</h2>
                 <nav style={{ flex: 1 }}>
@@ -234,60 +263,58 @@ const AdminDashboard = ({ token, setToken }) => {
             </div>
 
             {/* Main Content */}
-            <div style={{ 
+            <div className="admin-main-content" style={{ 
                 flex: 1, 
-                padding: 'clamp(1rem, 5vw, 3rem)', 
+                padding: 'clamp(1.5rem, 5vw, 3rem)',
+                paddingLeft: 'calc(260px + clamp(1.5rem, 5vw, 3rem))',
                 overflowX: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'stretch',
-                width: '100%'
+                width: '100%',
+                transition: 'padding 0.3s ease'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <button
-                            className="sidebar-toggle-btn"
-                            onClick={() => setIsSidebarOpen(true)}
-                            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
-                        >
-                            <Menu size={24} />
-                        </button>
-                        <div>
-                            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', textTransform: 'capitalize', marginBottom: '0.2rem' }}>{activeTab}</h1>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} className="hide-on-mobile">Manage your website content dynamically.</p>
-                        </div>
+                <div className="admin-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.5rem' }}>
+                    <div>
+                        <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', textTransform: 'capitalize', marginBottom: '0.2rem', fontWeight: 900 }}>{activeTab}</h1>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} className="hide-on-mobile">Manage your website content dynamically.</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <input 
-                            type="text" 
-                            placeholder={`Search ${activeTab}...`} 
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{ 
-                                padding: '0.6rem 1rem', 
-                                borderRadius: '8px', 
-                                border: '1px solid var(--glass-border)', 
-                                background: 'var(--glass)', 
-                                color: 'var(--text-primary)',
-                                outline: 'none'
-                             }}
-                        />
-                        <button onClick={fetchData} style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer' }}>
-                            <RefreshCw size={18} className={loading ? 'spin' : ''} />
-                        </button>
-                        <button 
-                            onClick={handleExportCSV}
-                            style={{ background: 'rgba(72, 187, 120, 0.1)', border: '1px solid #48bb78', color: '#48bb78', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 'bold' }}
-                        >
-                            CSV
-                        </button>
-                        <button
-                            onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-                            className="cta-button"
-                            style={{ fontSize: '0.8rem', padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                        >
-                            <Plus size={16} /> Add
-                        </button>
+                    <div className="admin-actions-bar" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+                            <input 
+                                type="text" 
+                                placeholder={`Search ${activeTab}...`} 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ 
+                                    padding: '0.8rem 1rem', 
+                                    borderRadius: '12px', 
+                                    border: '1px solid var(--glass-border)', 
+                                    background: 'var(--glass)', 
+                                    color: 'var(--text-primary)',
+                                    outline: 'none',
+                                    width: '100%',
+                                    fontSize: '0.9rem'
+                                 }}
+                            />
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.8rem' }}>
+                            <button onClick={fetchData} style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.8rem', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
+                                <RefreshCw size={18} className={loading ? 'spin' : ''} />
+                            </button>
+                            <button 
+                                onClick={handleExportCSV}
+                                style={{ background: 'rgba(72, 187, 120, 0.1)', border: '1px solid #48bb78', color: '#48bb78', padding: '0.8rem 1.2rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold' }}
+                            >
+                                <span className="hide-on-mobile">Export</span> CSV
+                            </button>
+                            <button
+                                onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
+                                className="cta-button"
+                                style={{ fontSize: '0.85rem', padding: '0.8rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: '12px' }}
+                            >
+                                <Plus size={18} /> <span className="hide-on-mobile">Add Item</span><span className="show-on-mobile" style={{ display: 'none' }}>Add</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -370,62 +397,62 @@ const AdminDashboard = ({ token, setToken }) => {
             />
 
             <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spin { animation: spin 1s linear infinite; }
-        
-        @media (max-width: 1024px) {
-          .admin-sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            transform: translateX(-100%);
-            box-shadow: 20px 0 60px rgba(0,0,0,0.5);
-          }
-          .admin-sidebar.open {
-            transform: translateX(0);
-          }
-          .sidebar-toggle-btn {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            background: var(--glass);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-          }
-          .hide-on-mobile {
-            display: none !important;
-          }
-          .admin-actions-bar {
-            flex-wrap: wrap;
-            gap: 1rem !important;
-            justify-content: center;
-          }
-          .admin-dashboard-root > div:last-child {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-          }
-        }
-        
-        .admin-list-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
-            gap: 1.5rem;
-        }
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                .spin { animation: spin 1s linear infinite; }
+                
+                @media (max-width: 1024px) {
+                    .admin-sidebar {
+                        transform: translateX(-100%);
+                    }
+                    .admin-sidebar.open {
+                        transform: translateX(0);
+                    }
+                    .admin-main-content {
+                        padding-left: 1rem !important;
+                        padding-right: 1rem !important;
+                        padding-top: 100px !important;
+                    }
+                    .admin-mobile-header {
+                        display: flex !important;
+                    }
+                    .sidebar-toggle-btn {
+                        display: none !important;
+                    }
+                    .hide-on-mobile {
+                        display: none !important;
+                    }
+                    .show-on-mobile {
+                        display: inline-block !important;
+                    }
+                    .admin-actions-bar {
+                        width: 100%;
+                        justify-content: space-between;
+                    }
+                    .admin-header-row {
+                        flex-direction: column;
+                        align-items: flex-start !important;
+                        gap: 1rem !important;
+                    }
+                }
 
-        .admin-item-card {
-            background: var(--navy-light);
-            padding: 1.5rem;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
-        }
-        .admin-item-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
-        }
-      `}</style>
+                .admin-list-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+                    gap: 1.5rem;
+                }
+
+                .admin-item-card {
+                    background: var(--navy-light);
+                    padding: 1.5rem;
+                    border-radius: 20px;
+                    border: 1px solid var(--glass-border);
+                    transition: all 0.3s ease;
+                }
+                .admin-item-card:hover {
+                    border-color: var(--gold);
+                    transform: translateY(-5px);
+                }
+            `}</style>
         </div>
     );
 };

@@ -45,6 +45,7 @@ app.use('/api/cafeteria', require('./routes/cafeteria'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/backup', require('./routes/backup'));
 app.use('/api/forum', require('./routes/forum'));
+app.use('/api/upload', require('./routes/upload'));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../dist')));
