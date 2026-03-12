@@ -1,19 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, useScroll, useTransform } from 'framer-motion';
+import axios from 'axios';
+import API_BASE_URL from '../config';
 
 const Background = () => {
     const { scrollY } = useScroll();
     const yBg = useTransform(scrollY, [0, 3000], [0, 300]);
+    const [showStars, setShowStars] = useState(true);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get(`${API_BASE_URL}/api/settings`);
+                if (res.data?.displayOptions?.showStars !== undefined) {
+                    setShowStars(res.data.displayOptions.showStars);
+                }
+            } catch (err) {
+                console.error("Failed to fetch settings for background", err);
+            }
+        };
+        fetchSettings();
+
+        window.addEventListener('settingsUpdated', fetchSettings);
+        return () => window.removeEventListener('settingsUpdated', fetchSettings);
+    }, []);
 
     return (
         <div className="background-wrapper">
             <motion.div className="celestial-bg" style={{ y: yBg }}>
-                <div className="stars-container">
-                    <div className="stars-layer s1"></div>
-                    <div className="stars-layer s2"></div>
-                    <div className="stars-layer s3"></div>
-                </div>
+                {showStars && (
+                    <div className="stars-container">
+                        <div className="stars-layer s1"></div>
+                        <div className="stars-layer s2"></div>
+                        <div className="stars-layer s3"></div>
+                    </div>
+                )}
             </motion.div>
 
             <style>{`

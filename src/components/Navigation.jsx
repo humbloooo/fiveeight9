@@ -121,7 +121,7 @@ const Navigation = () => {
 
       <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }} onClick={() => window.location.href = '/'}>
         <img src={logo} alt="Five Eight 9" style={{ height: '24px', width: 'auto' }} />
-        <span style={{ fontFamily: "'Homenaje', sans-serif", fontWeight: 900, fontSize: '1.5rem', letterSpacing: '2px', color: 'var(--text-primary)', textTransform: 'uppercase' }} className="mobile-header-text">
+        <span style={{ fontWeight: 900, fontSize: '1.5rem', letterSpacing: '2px', color: 'var(--text-primary)', textTransform: 'uppercase' }} className="mobile-header-text">
           Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
         </span>
       </div>

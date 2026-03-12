@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { X, Upload, Save, Loader, Globe, Phone, AlertCircle, Image as ImageIcon, Eye, EyeOff, Shield, Wifi, Zap, Coffee, Trash, Smartphone, Moon, Sun, Waves, Wind, CheckCircle, Clock, Home, Utensils } from 'lucide-react';
+import { X, Upload, Save, Loader, Globe, Phone, AlertCircle, Image as ImageIcon, Eye, EyeOff, Shield, Wifi, Zap, Coffee, Trash, Smartphone, Moon, Sun, Waves, Wind, CheckCircle, Clock, Home, Utensils, Truck } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import API_BASE_URL from '../config';
@@ -24,7 +24,10 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                     linkedin: { link: '', visible: false },
                 },
                 emergencyContacts: { reception: '', security: '', emergency: '', email: '' },
-                displayOptions: { showRoomPrices: true },
+                displayOptions: { 
+                    showRoomPrices: true,
+                    showStars: true 
+                },
                 media: { backgroundId: '', heroId: '' },
                 homeStats: { 
                     count: '231', 
@@ -139,6 +142,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
         try {
             if (type === 'settings') {
                 await onSubmit(finalData);
+                window.dispatchEvent(new CustomEvent('settingsUpdated'));
             } else {
                 let endpoint = type;
                 let dataToSend = finalData;
@@ -217,6 +221,34 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                             />
                         </div>
                     ))}
+                </div>
+            </section>
+
+            <section>
+                <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Sun size={16} /> DISPLAY OPTIONS
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px' }}>
+                        <div style={{ fontSize: '0.85rem' }}>Show Room Prices</div>
+                        <button
+                            type="button"
+                            onClick={() => handleNestedChange('displayOptions.showRoomPrices', !formData.displayOptions?.showRoomPrices)}
+                            style={{ background: 'transparent', border: 'none', color: formData.displayOptions?.showRoomPrices ? 'var(--gold)' : '#444', cursor: 'pointer' }}
+                        >
+                            {formData.displayOptions?.showRoomPrices ? <Eye size={20} /> : <EyeOff size={20} />}
+                        </button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>Fading Stars Effect (Dark Mode)</div>
+                        <button
+                            type="button"
+                            onClick={() => handleNestedChange('displayOptions.showStars', !formData.displayOptions?.showStars)}
+                            style={{ background: 'transparent', border: 'none', color: formData.displayOptions?.showStars ? 'var(--gold)' : '#444', cursor: 'pointer' }}
+                        >
+                            {formData.displayOptions?.showStars ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+                    </div>
                 </div>
             </section>
 

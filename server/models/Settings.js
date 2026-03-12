@@ -17,6 +17,7 @@ const SettingsSchema = new mongoose.Schema({
     },
     displayOptions: {
         showRoomPrices: { type: Boolean, default: true },
+        showStars: { type: Boolean, default: true },
     },
     media: {
         backgroundId: { type: String, default: '' },
