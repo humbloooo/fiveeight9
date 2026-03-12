@@ -4,6 +4,7 @@ import axios from 'axios';
 import API_BASE_URL from '../config';
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
+import { motion } from 'framer-motion';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,9 +119,9 @@ const Navigation = () => {
       <nav className="nav-cluster">
         {showToast && <Toast message={`Welcome back, ${userRole}!`} type="info" onClose={() => setShowToast(false)} />}
 
-      <div className="nav-logo" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }} onClick={() => window.location.href = '/'}>
-        <img src={logo} alt="Five Eight 9" style={{ height: '24px', width: 'auto' }} />
-        <span style={{ fontWeight: 900, fontSize: '1.5rem', letterSpacing: '2px', color: 'var(--text-primary)', textTransform: 'uppercase' }} className="mobile-header-text">
+      <div className="nav-logo" onClick={() => window.location.href = '/'}>
+        <img src={logo} alt="Five Eight 9" className="logo-img" />
+        <span className="logo-text mobile-header-text">
           Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
         </span>
       </div>
@@ -133,10 +134,10 @@ const Navigation = () => {
           </a>
         ))}
 
-        <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}
+        <div className="resident-dropdown-trigger"
           onMouseEnter={() => setIsResidentMenuOpen(true)}
           onMouseLeave={() => setIsResidentMenuOpen(false)}>
-          <button className="nav-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '1rem 0' }}>
+          <button className="nav-link nav-dropdown-btn">
             Residents <ChevronDown size={14} />
           </button>
 
@@ -153,18 +154,13 @@ const Navigation = () => {
 
       <div className="nav-actions desktop-only">
         {!isLoggedIn ? (
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="nav-actions">
             <button className="cta-button" onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}>
               {ctaText}
             </button>
           </div>
         ) : (
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            {userRole === 'admin' && (
-              <button onClick={toggleTheme} className="icon-btn" title="Toggle Theme">
-                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-              </button>
-            )}
+          <div className="nav-actions">
             <a href="/admin" className="icon-btn" title="Admin Dashboard">
               <Shield size={18} />
             </a>
@@ -179,36 +175,22 @@ const Navigation = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 6000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}
+            className="modal-overlay"
         >
-          <div onClick={() => setIsTransportModalOpen(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(15px)' }}></div>
+          <div onClick={() => setIsTransportModalOpen(false)} className="modal-backdrop"></div>
           <motion.div 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            style={{
-              position: 'relative', background: 'var(--navy)', width: '100%', maxWidth: '500px',
-              padding: '3rem', borderRadius: '32px', border: '1px solid var(--glass-border)',
-              textAlign: 'center'
-            }}
+            className="modal-content"
           >
-            <button onClick={() => setIsTransportModalOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}>
+            <button onClick={() => setIsTransportModalOpen(false)} className="modal-close">
               <X size={24} />
             </button>
-            <div style={{ width: '60px', height: '60px', background: 'var(--gold-gradient)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem', color: 'var(--navy)' }}>
+            <div className="modal-icon-wrapper">
               <Truck size={30} />
             </div>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '1rem' }}>Transport <span className="gold-text">Schedule</span></h2>
-            <div style={{ 
-              color: 'var(--text-secondary)', 
-              lineHeight: '1.8', 
-              fontSize: '1rem', 
-              whiteSpace: 'pre-wrap',
-              textAlign: 'left',
-              background: 'rgba(255,255,255,0.03)',
-              padding: '1.5rem',
-              borderRadius: '16px',
-              border: '1px solid var(--glass-border)'
-            }}>
+            <h2 className="modal-title">Transport <span className="gold-text">Schedule</span></h2>
+            <div className="modal-info-box">
               {settings?.transportSchedule || 'Schedule currently being updated. Please check back soon!'}
             </div>
           </motion.div>
@@ -250,148 +232,30 @@ const Navigation = () => {
               <h3>Portals & Alerts</h3>
               <a href="/login-student" onClick={toggleMenu}>Student Portal</a>
               <a href="/admin" onClick={toggleMenu}>Staff Portal</a>
-              <div style={{ marginTop: '2.5rem' }}>
-                <button className="cta-button" style={{ width: '100%', padding: '1.2rem' }} onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
+              <div className="overlay-cta-wrapper">
+                <button className="cta-button full-width" onClick={() => { toggleMenu(); window.dispatchEvent(new CustomEvent('openBooking')); }}>
                   {ctaText}
                 </button>
               </div>
             </div>
           </div>
 
-          {isLoggedIn && userRole === 'admin' && (
-            <div className="admin-menu-bar">
-              <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>Admin Controls:</span>
-              <button onClick={toggleTheme} className="admin-ctrl-btn">
-                {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />} Switch Theme
+            <div className="admin-menu-bar mode-toggle-bar">
+              <button onClick={toggleTheme} className="admin-ctrl-btn flex-1">
+                {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />} 
+                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </button>
             </div>
-          )}
+            
+            {isLoggedIn && userRole === 'admin' && (
+              <div className="admin-menu-bar staff-access-bar">
+                <span className="staff-label">Staff Access:</span>
+                <a href="/admin" className="admin-ctrl-btn no-deco">Dashboard</a>
+              </div>
+            )}
         </div>
       </div>
-
-      <style>{`
-        .desktop-only { display: flex; align-items: center; }
-        
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--nav-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            min-width: 160px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            animation: slideDown 0.3s ease;
-        }
-        .dropdown-menu:after { 
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: 20px;
-            width: 10px;
-            height: 10px;
-            background: var(--nav-bg);
-            border-left: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border);
-            transform: rotate(45deg);
-        }
-        .dropdown-item {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        .dropdown-item:hover { color: var(--gold); }
-
-        .burger-toggle {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.0));
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2001;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(255,255,255,0.03);
-        }
-        .burger-toggle:hover { 
-            background: rgba(255,215,0,0.1); 
-            border-color: var(--gold); 
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255,215,0,0.25);
-        }
-        .burger-icon { width: 22px; height: 16px; position: relative; }
-        .burger-icon span { 
-            position: absolute; left: 0; width: 100%; height: 2px; 
-            background: var(--gold); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-            border-radius: 2px;
-        }
-        .burger-icon span:first-child { top: 0; width: 70%; left: 30%; }
-        .burger-toggle:hover .burger-icon span:first-child { width: 100%; left: 0; }
-        .burger-icon span:last-child { bottom: 0; width: 100%; }
-        .burger-icon.open span:first-child { transform: rotate(45deg); top: 7px; width: 100%; left: 0; }
-        .burger-icon.open span:last-child { transform: rotate(-45deg); bottom: 7px; width: 100%; }
-
-        .overlay-menu {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(120px);
-            -webkit-backdrop-filter: blur(120px);
-            z-index: 2000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: all 0.5s ease;
-        }
-        .overlay-menu.active { opacity: 1; pointer-events: auto; }
-        .overlay-content { 
-            width: 100%; height: 100%; padding: 10vh 10%; overflow-y: auto; 
-            background: var(--burger-bg);
-            box-shadow: none;
-            transform: scale(1.1);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .overlay-menu.active .overlay-content { transform: scale(1) translateY(0); }
-        .overlay-content::-webkit-scrollbar { display: none; }
-        .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
-        .overlay-label { font-size: 0.8rem; color: var(--gold); font-weight: 900; text-transform: uppercase; letter-spacing: 4px; }
-        .overlay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
-        .overlay-section h3 { font-size: 0.9rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; font-weight: 900; text-decoration: underline; text-underline-offset: 6px; }
-        .overlay-section a { display: block; font-size: clamp(1.3rem, 3.5vw, 1.8rem); font-weight: 800; color: var(--text-primary); text-decoration: none; margin-bottom: 1.2rem; transition: all 0.3s ease; }
-        .overlay-section a:hover { color: var(--gold); transform: translateX(10px); }
-
-        .admin-menu-bar { 
-            margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);
-            display: flex; align-items: center; gap: 2rem;
-        }
-        .admin-ctrl-btn {
-            background: var(--glass); border: 1px solid var(--glass-border); color: #fff;
-            padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; fontWeight: 700;
-            display: flex; alignItems: center; gap: 0.5rem; cursor: pointer; transition: all 0.3s ease;
-        }
-        .admin-ctrl-btn:hover { background: var(--gold); color: #000; }
-
-        .icon-btn { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-primary); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
-        .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
-        .user-badge { background: var(--gold); color: #000; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 900; font-size: 0.65rem; display: flex; align-items: center; gap: 0.4rem; }
-
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 1024px) {
-            .desktop-only { display: none; }
-            .overlay-content { width: 85%; }
-            .overlay-section a { font-size: 1.6rem; }
-            .overlay-grid { gap: 2rem; }
-        }
-      `}</style>
-    </nav>
+      </nav>
     </>
   );
 };

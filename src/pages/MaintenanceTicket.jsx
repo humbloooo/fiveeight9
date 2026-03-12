@@ -55,7 +55,7 @@ const MaintenanceTicket = () => {
         >
             <Background />
             <Navigation />
-            <main style={{ paddingTop: 'clamp(80px, 15vh, 120px)' }}>
+            <main className="standard-page-layout">
                 <section className="section">
                     <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 5vw, 4rem)' }}>
                         <h1 className="section-title">Maintenance <span>Tickets</span></h1>

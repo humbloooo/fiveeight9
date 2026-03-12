@@ -379,13 +379,32 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                             </div>
                         </div>
                     )}
-                    {formData.role !== 'student' && !editingItem && (
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Password</label>
-                            <input name="password" type="password" value={formData.password || ''} onChange={handleChange} className="admin-input" required />
-                        </div>
-                    )}
                 </>
+            )}
+
+            {type === 'rooms' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div>
+                        <label style={{ fontSize: '0.7rem' }}>Price</label>
+                        <input name="price" value={formData.price || ''} onChange={handleChange} className="admin-input" placeholder="R4,400 p/m" />
+                    </div>
+                    <div>
+                        <label style={{ fontSize: '0.7rem' }}>Category</label>
+                        <select name="category" value={formData.category || 'Single Room'} onChange={handleChange} className="admin-input" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                            <option>Single Room</option>
+                            <option>Sharing Room</option>
+                            <option>Executive Suite</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style={{ fontSize: '0.7rem' }}>Floor</label>
+                        <input name="floor" value={formData.floor || ''} onChange={handleChange} className="admin-input" placeholder="Ground Floor" />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <input type="checkbox" name="nsfas" checked={formData.nsfas} onChange={handleChange} />
+                        <label style={{ fontSize: '0.8rem' }}>NSFAS Accredited</label>
+                    </div>
+                </div>
             )}
 
             {type === 'events' && (

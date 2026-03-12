@@ -30,7 +30,7 @@ const WellnessCenter = () => {
         >
             <Background />
             <Navigation />
-            <main style={{ paddingTop: '120px' }}>
+            <main className="standard-page-layout">
                 <section className="section">
                     <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
                         <h1 className="section-title">Wellness <span>Resource Center</span></h1>

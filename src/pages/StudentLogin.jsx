@@ -49,13 +49,7 @@ const StudentLogin = () => {
             <Background />
             <Navigation />
 
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '160px 5% 100px',
-                minHeight: '100vh'
-            }}>
+            <main className="standard-page-layout" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 200px)' }}>
                 <motion.div 
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -85,7 +79,7 @@ const StudentLogin = () => {
                         <GraduationCap size={35} color="black" />
                     </div>
 
-                    <h1 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '0.5rem', color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '0.5rem', color: 'var(--text-primary)', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
                         Student <span className="gold-text">Portal</span>
                     </h1>
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontWeight: 500 }}>
@@ -186,7 +180,7 @@ const StudentLogin = () => {
                         </button>
                     </form>
                 </motion.div>
-            </div>
+            </main>
 
             <Footer />
         </motion.div>

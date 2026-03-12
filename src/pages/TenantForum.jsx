@@ -119,8 +119,8 @@ const TenantForum = () => {
         >
             <Background />
             <Navigation />
-            <main style={{ paddingTop: '120px' }}>
-                <section className="section" style={{ height: 'calc(100vh - 120px)', justifyContent: 'flex-start' }}>
+            <main className="standard-page-layout">
+                <section className="section" style={{ flex: 1, paddingBottom: '2rem' }}>
                     <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                         <h1 className="section-title" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '0.5rem' }}>Group <span>Chat</span></h1>
                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Connect with fellow residents. Keep it friendly!</p>
@@ -138,10 +138,21 @@ const TenantForum = () => {
                         overflow: 'hidden',
                         margin: '0 auto'
                     }}>
-                        {/* Rules Header - Packs nicely */}
-                        <div style={{ padding: '1rem 1.5rem', background: 'rgba(197, 160, 89, 0.1)', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <Shield size={16} style={{ color: 'var(--gold)' }} />
-                            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '1px' }}>FORUM RULES: Be Respectful • No Spam • Quiet Hours (22:00-06:00)</span>
+                        <div style={{ padding: '1.2rem 1.5rem', background: 'rgba(197, 160, 89, 0.08)', borderBottom: '1px solid var(--glass-border)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.8rem' }}>
+                                <Shield size={14} style={{ color: 'var(--gold)' }} />
+                                <span style={{ fontSize: '0.75rem', fontWeight: 900, color: 'var(--gold)', letterSpacing: '2px', textTransform: 'uppercase' }}>Community Rules & Safety</span>
+                            </div>
+                            <ul style={{ 
+                                display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                                gap: '0.5rem 1.5rem', listStyle: 'none', padding: 0, margin: 0,
+                                fontSize: '0.75rem', color: 'var(--text-secondary)'
+                            }}>
+                                <li>• Respect others' privacy & space</li>
+                                <li>• No spamming or unauthorized ads</li>
+                                <li>• Quiet Hours: 22:00 - 06:00</li>
+                                <li>• Report suspicious activity to PSG</li>
+                            </ul>
                         </div>
 
                         {/* Header */}

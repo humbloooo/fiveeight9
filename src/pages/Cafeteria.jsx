@@ -40,7 +40,7 @@ const Cafeteria = () => {
         >
             <Background />
             <Navigation />
-            <main style={{ paddingTop: '120px' }}>
+            <main className="standard-page-layout">
                 <section className="section">
                     <h1 className="section-title reveal-text">Nari's <span>Cafe</span></h1>
                     <p className="reveal-text" style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '4rem', maxWidth: '600px' }}>

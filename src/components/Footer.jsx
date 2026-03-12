@@ -36,7 +36,7 @@ const Footer = () => {
     return (
         <footer style={{
             background: 'var(--navy)',
-            padding: '8rem 2rem 4rem',
+            padding: 'clamp(3rem, 10vw, 8rem) 2rem 4rem',
             borderTop: '1px solid var(--glass-border)',
             position: 'relative',
             overflow: 'hidden'

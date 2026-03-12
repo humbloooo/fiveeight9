@@ -74,7 +74,10 @@ const AdminDashboard = ({ token, setToken }) => {
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure?')) return;
         try {
-            await axios.delete(`${API_BASE_URL}/api/${activeTab}/${id}`, {
+            let endpoint = activeTab;
+            if (activeTab === 'admins') endpoint = 'auth/users';
+            
+            await axios.delete(`${API_BASE_URL}/api/${endpoint}/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             addToast('Deleted successfully', 'success');
@@ -367,7 +370,18 @@ const AdminDashboard = ({ token, setToken }) => {
                                 </div>
                             </div>
                         ) : filteredData.length === 0 ? (
-                            <div style={{ color: 'var(--text-secondary)' }}>No items found in this category.</div>
+                            <div style={{ 
+                                gridColumn: '1 / -1', 
+                                padding: '4rem 2rem', 
+                                textAlign: 'center', 
+                                background: 'rgba(255,255,255,0.02)', 
+                                borderRadius: '24px', 
+                                border: '1px dashed var(--glass-border)' 
+                            }}>
+                                <div style={{ opacity: 0.3, marginBottom: '1rem' }}><Plus size={48} style={{ margin: '0 auto' }} /></div>
+                                <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No data available</h3>
+                                <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>Create your first {activeTab} item to see it listed here.</p>
+                            </div>
                         ) : (
                             filteredData.map((item) => (
                                 <div key={item._id} style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>

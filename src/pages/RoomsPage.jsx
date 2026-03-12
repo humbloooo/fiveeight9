@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import API_BASE_URL from '../config';
 import Background from '../components/Background';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -84,9 +86,21 @@ const GalleryCategory = ({ title, icon: GalleryIcon, items, delay }) => (
 );
 
 const RoomsPage = () => {
+    const [rooms, setRooms] = React.useState([]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
         
+        const fetchRooms = async () => {
+            try {
+                const res = await axios.get(`${API_BASE_URL}/api/rooms`);
+                setRooms(res.data);
+            } catch (err) {
+                console.error('Failed to fetch rooms', err);
+            }
+        };
+        fetchRooms();
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('reveal-visible');
@@ -97,7 +111,13 @@ const RoomsPage = () => {
         return () => observer.disconnect();
     }, []);
 
-    // Static categorized photos for demo, will be linked to Admin-uploaded data later
+    // Merge API rooms into gallery categories
+    const apiRooms = rooms.map(r => ({
+        url: r.imageUrl || (r.media && r.media[0]),
+        caption: r.title || r.name,
+        category: r.category || 'Single Room'
+    })).filter(r => r.url);
+
     const galleryData = {
         building: [
             { url: 'https://images.unsplash.com/photo-1545324418-f1d3c5b53571?auto=format&fit=crop&q=80&w=800', caption: 'Front Elevation' },
@@ -105,6 +125,7 @@ const RoomsPage = () => {
             { url: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=800', caption: 'Night Architecture' }
         ],
         rooms: [
+            ...apiRooms,
             { url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800', caption: 'Single Loft Standard' },
             { url: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=800', caption: 'Deluxe Suite Living' },
             { url: 'https://images.unsplash.com/photo-1505691938895-1758d7eaa511?auto=format&fit=crop&q=80&w=800', caption: 'Premium Studying Area' }
