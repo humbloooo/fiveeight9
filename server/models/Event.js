@@ -7,7 +7,10 @@ const EventSchema = new mongoose.Schema({
     location: { type: String },
     description: { type: String },
     category: { type: String, default: 'General' },
-    imageUrl: { type: String }
+    imageUrl: { type: String },
+    imagePublicId: { type: String },
+    media: [{ type: String }]  // Gallery images
 }, { timestamps: true });
 
 module.exports = mongoose.model('Event', EventSchema);
+

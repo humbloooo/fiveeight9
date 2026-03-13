@@ -27,7 +27,11 @@ router.post('/', [auth, requireAdmin], async (req, res) => {
 // Admin: Update room
 router.patch('/:id', [auth, requireAdmin], async (req, res) => {
     try {
-        const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedRoom = await Room.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true, runValidators: true }
+        );
         res.json(updatedRoom);
     } catch (err) {
         res.status(400).json({ message: err.message });

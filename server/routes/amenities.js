@@ -26,7 +26,11 @@ router.post('/', [auth, requireAdmin], async (req, res) => {
 
 router.patch('/:id', [auth, requireAdmin], async (req, res) => {
     try {
-        const updated = await Amenity.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updated = await Amenity.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true, runValidators: true }
+        );
         res.json(updated);
     } catch (err) {
         res.status(400).json({ message: err.message });

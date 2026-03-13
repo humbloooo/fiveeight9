@@ -33,7 +33,7 @@ router.patch('/:id', [auth, requireAdmin], async (req, res) => {
         const event = await Event.findByIdAndUpdate(
             req.params.id,
             { $set: req.body },
-            { new: true }
+            { new: true, runValidators: true }
         );
         res.json(event);
     } catch (err) {
