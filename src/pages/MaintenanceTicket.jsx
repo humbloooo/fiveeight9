@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import Background from '../components/Background';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Wrench, AlertTriangle, CheckCircle, Clock, Info } from 'lucide-react';
+import API_BASE_URL from '../config';
+import { useToast } from '../context/ToastContext';
 
 const MaintenanceTicket = () => {
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const { addToast } = useToast();
     const [ticket, setTicket] = useState({
         issueType: 'Plumbing',
         priority: 'Medium',
@@ -15,10 +20,17 @@ const MaintenanceTicket = () => {
         description: ''
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(true);
-        // In production, this would send to the backend
+        setSubmitting(true);
+        try {
+            await axios.post(`${API_BASE_URL}/api/tickets`, ticket);
+            setSubmitted(true);
+        } catch (err) {
+            addToast(`Failed to submit ticket: ${err.response?.data?.message || err.message}`, 'error');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     if (submitted) {
@@ -146,21 +158,22 @@ const MaintenanceTicket = () => {
                                 ></textarea>
                             </div>
 
-                            <button type="submit" className="cta-button" style={{ 
+                            <button type="submit" disabled={submitting} className="cta-button" style={{ 
                                 width: '100%', 
                                 padding: '1.1rem', 
                                 border: 'none', 
                                 borderRadius: '14px', 
                                 fontWeight: 900, 
                                 fontSize: '1rem', 
-                                cursor: 'pointer',
+                                cursor: submitting ? 'not-allowed' : 'pointer',
+                                opacity: submitting ? 0.7 : 1,
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '0.8rem'
                             }}>
                                 <Wrench size={20} />
-                                DEPLOY TECHNICIAN
+                                {submitting ? 'SUBMITTING...' : 'DEPLOY TECHNICIAN'}
                             </button>
                         </form>
 

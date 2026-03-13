@@ -22,7 +22,7 @@ const AdminDashboard = ({ token, setToken }) => {
         setLoading(true);
         try {
             let endpoint = activeTab;
-            if (activeTab === 'tickets' || activeTab === 'settings') endpoint = 'settings';
+            if (activeTab === 'settings') endpoint = 'settings';
             if (activeTab === 'admins') endpoint = 'auth/users';
             
             const res = await axios.get(`${API_BASE_URL}/api/${endpoint}`, {

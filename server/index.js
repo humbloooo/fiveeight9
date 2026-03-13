@@ -43,6 +43,7 @@ app.use('/api/rooms', require('./routes/rooms'));
 app.use('/api/amenities', require('./routes/amenities'));
 app.use('/api/cafeteria', require('./routes/cafeteria'));
 app.use('/api/events', require('./routes/events'));
+app.use('/api/tickets', require('./routes/tickets'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/backup', require('./routes/backup'));
 app.use('/api/forum', require('./routes/forum'));
