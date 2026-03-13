@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
-import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle, User, Bell, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit, Trash, LogOut, Coffee, Home, Settings, Shield, RefreshCw, Menu, Wrench, AlertCircle, User, Bell, Search, Image as ImageIcon } from 'lucide-react';
 import AdminModal from '../components/AdminModal';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useToast } from '../context/ToastContext';
@@ -14,6 +14,7 @@ const AdminDashboard = ({ token, setToken }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
     const [searchQuery, setSearchQuery] = useState('');
     const userRole = localStorage.getItem('userRole') || 'student';
 
@@ -38,6 +39,21 @@ const AdminDashboard = ({ token, setToken }) => {
         }
         setLoading(false);
     }, [activeTab, token, setToken]);
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+        window.dispatchEvent(new Event('themeChanged'));
+    };
+
+    useEffect(() => {
+        const handleThemeUpdate = () => {
+            setTheme(localStorage.getItem('theme') || 'system');
+        };
+        window.addEventListener('themeChanged', handleThemeUpdate);
+        return () => window.removeEventListener('themeChanged', handleThemeUpdate);
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -263,12 +279,45 @@ const AdminDashboard = ({ token, setToken }) => {
                         </button>
                     ))}
                 </nav>
-                <a href="/" style={{ marginTop: 'auto', textDecoration: 'none', width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', fontWeight: 'bold' }}>
-                    <Home size={18} /> Home Page
-                </a>
-                <button onClick={() => { setToken(null); localStorage.removeItem('adminToken'); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontWeight: 'bold' }}>
-                    <LogOut size={18} /> Logout
-                </button>
+                <div style={{ marginTop: 'auto', padding: '1rem', borderTop: '1px solid var(--glass-border)' }}>
+                    <a href="/" style={{ textDecoration: 'none', width: '100%', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', color: 'var(--gold)', cursor: 'pointer', fontWeight: 'bold' }}>
+                        <Home size={18} /> Home Page
+                    </a>
+                    <button onClick={toggleTheme} className="admin-theme-toggle" style={{
+                        width: '100%',
+                        padding: '1rem',
+                        borderRadius: '12px',
+                        background: 'var(--glass)',
+                        border: '1px solid var(--glass-border)',
+                        color: 'var(--text-primary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        marginBottom: '0.5rem'
+                    }}>
+                        {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+                        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                    </button>
+                    <button 
+                        onClick={() => { setToken(null); localStorage.removeItem('adminToken'); }}
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '1rem',
+                            padding: '1rem',
+                            color: '#ff4d4d',
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        <LogOut size={18} /> Logout
+                    </button>
+                </div>
             </div>
 
             {/* Main Content */}
@@ -289,14 +338,14 @@ const AdminDashboard = ({ token, setToken }) => {
                     </div>
                     <div className="admin-actions-bar" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                         {activeTab === 'admins' && (
-                            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+                            <div className="search-container" style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
                                 <input 
                                     type="text" 
-                                    placeholder={`Search accounts...`} 
+                                    placeholder="Search by name, room, student ID..." 
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     style={{ 
-                                        padding: '0.8rem 1rem', 
+                                        padding: '0.8rem 3rem 0.8rem 1.2rem', 
                                         borderRadius: '12px', 
                                         border: '1px solid var(--glass-border)', 
                                         background: 'var(--glass)', 
@@ -446,7 +495,7 @@ const AdminDashboard = ({ token, setToken }) => {
                                         </div>
                                     </div>
                                     <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.5rem' }}>
-                                        Joined: {new Date(user.createdAt).toLocaleDateString()}
+                                        Joined: {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                                     </div>
                                 </div>
                             ))

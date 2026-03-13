@@ -43,7 +43,14 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                     subLabel: 'Sharing Rooms' 
                 },
                 resFull: false,
-                transportSchedule: ''
+                transportSchedule: '',
+                address: '@589 Luxury Student Lofts, Thohoyandou, 0950',
+                wifiPasswords: { res: '589@2025', univen: 'Loftus25@!' },
+                transport: {
+                    baseSchedule: Array.from({ length: 15 }, (_, i) => ({ time: `${6 + i}:00`, active: false })),
+                    exceptions: [],
+                    currentStatus: { location: 'At Residence', estimatedArrival: 'N/A', message: '' }
+                }
             });
         } else if (editingItem) {
             setFormData({
@@ -303,39 +310,111 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
 
             <section>
                 <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Home size={16} /> HERO STATS & AVAILABILITY
+                    <MapPin size={16} /> RESIDENCE DETAILS
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                    <div>
-                        <label style={{ fontSize: '0.7rem' }}>Count</label>
-                        <input className="admin-input" value={formData.homeStats?.count || ''} onChange={(e) => handleNestedChange('homeStats.count', e.target.value)} />
-                    </div>
-                    <div>
-                        <label style={{ fontSize: '0.7rem' }}>Label</label>
-                        <input className="admin-input" value={formData.homeStats?.label || ''} onChange={(e) => handleNestedChange('homeStats.label', e.target.value)} />
-                    </div>
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Residential Address</label>
+                    <input 
+                        className="admin-input" 
+                        value={formData.address || ''} 
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })} 
+                        placeholder="e.g. @589 Luxury Student Lofts, Thohoyandou, 0950"
+                    />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                        <label style={{ fontSize: '0.7rem' }}>Sub Count</label>
-                        <input className="admin-input" value={formData.homeStats?.subCount || ''} onChange={(e) => handleNestedChange('homeStats.subCount', e.target.value)} />
+                        <label style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Wifi: Five Eight 9 Res</label>
+                        <input 
+                            className="admin-input" 
+                            value={formData.wifiPasswords?.res || ''} 
+                            onChange={(e) => handleNestedChange('wifiPasswords.res', e.target.value)} 
+                        />
                     </div>
                     <div>
-                        <label style={{ fontSize: '0.7rem' }}>Sub Label</label>
-                        <input className="admin-input" value={formData.homeStats?.subLabel || ''} onChange={(e) => handleNestedChange('homeStats.subLabel', e.target.value)} />
+                        <label style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Wifi: Univen Wifi(s)</label>
+                        <input 
+                            className="admin-input" 
+                            value={formData.wifiPasswords?.univen || ''} 
+                            onChange={(e) => handleNestedChange('wifiPasswords.univen', e.target.value)} 
+                        />
                     </div>
                 </div>
-                <div style={{ marginTop: '1.5rem' }}>
-                    <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Truck size={16} /> TRANSPORT SCHEDULE
-                    </h3>
-                    <textarea 
-                        className="admin-input" 
-                        style={{ minHeight: '120px' }}
-                        value={formData.transportSchedule || ''} 
-                        onChange={(e) => handleNestedChange('transportSchedule', e.target.value)}
-                        placeholder="e.g. Morning: 07:00 - 09:00, Afternoon: 14:00 - 17:00"
-                    />
+            </section>
+
+            <section>
+                <h3 style={{ color: 'var(--gold)', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Truck size={16} /> SMART TRANSPORT SYSTEM
+                </h3>
+                
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)', marginBottom: '1.5rem' }}>
+                    <h4 style={{ fontSize: '0.8rem', marginBottom: '0.8rem', color: 'var(--gold)' }}>Live Status</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div>
+                            <label style={{ fontSize: '0.6rem' }}>Current Location</label>
+                            <input className="admin-input" value={formData.transport?.currentStatus?.location || ''} onChange={(e) => handleNestedChange('transport.currentStatus.location', e.target.value)} />
+                        </div>
+                        <div>
+                            <label style={{ fontSize: '0.6rem' }}>Est. Arrival</label>
+                            <input className="admin-input" value={formData.transport?.currentStatus?.estimatedArrival || ''} onChange={(e) => handleNestedChange('transport.currentStatus.estimatedArrival', e.target.value)} />
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <h4 style={{ fontSize: '0.8rem', marginBottom: '0.8rem' }}>Recurring Schedule (6am - 8pm)</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '0.5rem' }}>
+                        {(formData.transport?.baseSchedule || []).map((slot, idx) => (
+                            <button
+                                key={idx}
+                                type="button"
+                                onClick={() => {
+                                    const newSchedule = [...formData.transport.baseSchedule];
+                                    newSchedule[idx].active = !newSchedule[idx].active;
+                                    handleNestedChange('transport.baseSchedule', newSchedule);
+                                }}
+                                style={{
+                                    padding: '0.5rem',
+                                    borderRadius: '8px',
+                                    fontSize: '0.7rem',
+                                    background: slot.active ? 'var(--gold)' : 'rgba(255,255,255,0.05)',
+                                    color: slot.active ? 'var(--navy)' : 'var(--text-primary)',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {slot.time}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style={{ fontSize: '0.8rem', marginBottom: '0.8rem' }}>Daily Exceptions</h4>
+                    {(formData.transport?.exceptions || []).map((ex, idx) => (
+                        <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                            <input className="admin-input" style={{ fontSize: '0.7rem' }} type="date" value={ex.date} onChange={(e) => {
+                                const newEx = [...formData.transport.exceptions];
+                                newEx[idx].date = e.target.value;
+                                handleNestedChange('transport.exceptions', newEx);
+                            }} />
+                            <input className="admin-input" style={{ fontSize: '0.7rem' }} placeholder="Time" value={ex.time} onChange={(e) => {
+                                const newEx = [...formData.transport.exceptions];
+                                newEx[idx].time = e.target.value;
+                                handleNestedChange('transport.exceptions', newEx);
+                            }} />
+                            <input className="admin-input" style={{ fontSize: '0.7rem' }} placeholder="Note" value={ex.note} onChange={(e) => {
+                                const newEx = [...formData.transport.exceptions];
+                                newEx[idx].note = e.target.value;
+                                handleNestedChange('transport.exceptions', newEx);
+                            }} />
+                            <button type="button" onClick={() => {
+                                handleNestedChange('transport.exceptions', formData.transport.exceptions.filter((_, i) => i !== idx));
+                            }} style={{ background: 'transparent', border: 'none', color: '#ff4d4d' }}><Trash size={14} /></button>
+                        </div>
+                    ))}
+                    <button type="button" className="cta-button" style={{ fontSize: '0.7rem', padding: '0.5rem 1rem' }} onClick={() => {
+                        handleNestedChange('transport.exceptions', [...(formData.transport?.exceptions || []), { date: '', time: '', note: '' }]);
+                    }}>+ ADD EXCEPTION</button>
                 </div>
             </section>
         </div>
@@ -439,10 +518,14 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                         </select>
                     </div>
                     {formData.role === 'student' && (
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                             <div>
                                 <label style={{ fontSize: '0.7rem' }}>Student Number</label>
                                 <input name="studentNumber" value={formData.studentNumber || ''} onChange={handleChange} className="admin-input" required={formData.role === 'student'} />
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '0.7rem' }}>Room Number</label>
+                                <input name="roomNumber" value={formData.roomNumber || ''} onChange={handleChange} className="admin-input" />
                             </div>
                             <div>
                                 <label style={{ fontSize: '0.7rem' }}>ID Number (Password)</label>

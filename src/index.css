@@ -130,6 +130,9 @@ body.light-mode {
   --burger-bg: rgba(255, 255, 255, 0.95);
   --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.1);
+  --glass: rgba(0, 0, 0, 0.03);
+  --glass-deep: rgba(0, 0, 0, 0.05);
+  --glass-border: rgba(0, 0, 0, 0.1);
 }
 
 /* Custom Scrollbar */
@@ -1077,6 +1080,26 @@ body.night-owl-active::after {
 .admin-ctrl-btn:hover { background: var(--gold); color: var(--navy); }
 
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+.theme-toggle-mini {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--gold);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-mini:hover {
+  background: var(--gold);
+  color: black;
+  transform: scale(1.1);
+}
 
 @media (max-width: 1024px) {
   .desktop-only { display: none; }

@@ -9,14 +9,24 @@ import BackToTop from './components/BackToTop';
 import BookingModal from './components/BookingModal';
 import SkeletonLoader from './components/SkeletonLoader';
 // eslint-disable-next-line no-unused-vars
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import logo from './assets/brand/logo.png';
+import { MapPin, Wifi, Truck, Copy, Check } from 'lucide-react';
 
 import axios from 'axios';
 import API_BASE_URL from './config';
 
 const MainSite = () => {
     const [rooms, setRooms] = useState([]);
+    const [isLoggedIn] = useState(!!localStorage.getItem('studentToken'));
+
+    const [copiedField, setCopiedField] = useState(null);
+
+    const handleCopy = (text, field) => {
+        navigator.clipboard.writeText(text);
+        setCopiedField(field);
+        setTimeout(() => setCopiedField(null), 2000);
+    };
     const [loadingRooms, setLoadingRooms] = useState(true);
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [showPrices, setShowPrices] = useState(true);
@@ -173,6 +183,122 @@ const MainSite = () => {
                                     <p style={{ textAlign: 'center', width: '100%', color: 'var(--text-secondary)' }}>No featured content available.</p>
                                 )}
                             </>
+                        )}
+                    </div>
+                </section>
+
+                {/* Resident Quick Info Panel */}
+                <AnimatePresence>
+                    {isLoggedIn && settings && (
+                        <motion.section 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="section" 
+                            style={{ paddingTop: '2rem', paddingBottom: '0' }}
+                        >
+                            <div className="glass-panel" style={{ padding: '2rem', borderRadius: '32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', border: '1px solid var(--gold-glow)' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                    <h3 style={{ fontSize: '0.8rem', color: 'var(--gold)', letterSpacing: '1px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <MapPin size={14} /> RESIDENCE ADDRESS
+                                    </h3>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
+                                        <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{settings.address || '@589 Luxury Student Lofts, Thohoyandou'}</span>
+                                        <button onClick={() => handleCopy(settings.address, 'address')} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer' }}>
+                                            {copiedField === 'address' ? <Check size={16} /> : <Copy size={16} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                    <h3 style={{ fontSize: '0.8rem', color: 'var(--gold)', letterSpacing: '1px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Wifi size={14} /> WIFI PASSWORDS
+                                    </h3>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.8rem', borderRadius: '16px', border: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                <span style={{ fontSize: '0.6rem', opacity: 0.5 }}>RES</span>
+                                                <span style={{ fontSize: '0.8rem' }}>{settings.wifiPasswords?.res}</span>
+                                            </div>
+                                            <button onClick={() => handleCopy(settings.wifiPasswords?.res, 'res')} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer' }}>
+                                                {copiedField === 'res' ? <Check size={14} /> : <Copy size={14} />}
+                                            </button>
+                                        </div>
+                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.8rem', borderRadius: '16px', border: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                <span style={{ fontSize: '0.6rem', opacity: 0.5 }}>UNIVEN</span>
+                                                <span style={{ fontSize: '0.8rem' }}>{settings.wifiPasswords?.univen}</span>
+                                            </div>
+                                            <button onClick={() => handleCopy(settings.wifiPasswords?.univen, 'univen')} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer' }}>
+                                                {copiedField === 'univen' ? <Check size={14} /> : <Copy size={14} />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                    <h3 style={{ fontSize: '0.8rem', color: 'var(--gold)', letterSpacing: '1px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Truck size={14} /> LIVE TRANSPORT
+                                    </h3>
+                                    <div style={{ background: 'var(--gold-gradient)', padding: '1rem', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'black' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span style={{ fontSize: '0.8rem', fontWeight: 900 }}>{settings.transport?.currentStatus?.location || 'Status Unavailable'}</span>
+                                            <span style={{ fontSize: '0.7rem', fontWeight: 600, opacity: 0.7 }}>ETA: {settings.transport?.currentStatus?.estimatedArrival || 'N/A'}</span>
+                                        </div>
+                                        <Truck size={24} style={{ opacity: 0.8 }} />
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.section>
+                    )}
+                </AnimatePresence>
+
+                {/* Section 2.5: Detailed Transport Schedule */}
+                <section id="transport" className="section reveal">
+                    <h2 className="section-title"><span>Transport</span> Schedule</h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                        <div className="glass-panel" style={{ padding: '2.5rem', borderRadius: '40px' }}>
+                            <h3 style={{ fontSize: '1.2rem', color: 'var(--gold)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                                <Truck size={20} /> Recurring Daily Bus
+                            </h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))', gap: '0.8rem' }}>
+                                {settings?.transport?.baseSchedule?.filter(s => s.active).map((slot, i) => (
+                                    <div key={i} style={{ 
+                                        padding: '0.8rem', 
+                                        background: 'rgba(255,255,255,0.03)', 
+                                        borderRadius: '12px', 
+                                        textAlign: 'center', 
+                                        fontSize: '0.8rem', 
+                                        border: '1px solid var(--glass-border)',
+                                        color: 'var(--text-primary)',
+                                        fontWeight: 700
+                                    }}>
+                                        {slot.time}
+                                    </div>
+                                ))}
+                            </div>
+                            <p style={{ marginTop: '1.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                                * Schedule runs Monday to Friday during academic sessions.
+                            </p>
+                        </div>
+
+                        {settings?.transport?.exceptions?.length > 0 && (
+                            <div className="glass-panel" style={{ padding: '2.5rem', borderRadius: '40px', border: '1px solid rgba(255, 71, 87, 0.2)' }}>
+                                <h3 style={{ fontSize: '1.2rem', color: '#ff4757', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                                    <Truck size={20} /> Schedule Exceptions
+                                </h3>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {settings.transport.exceptions.map((ex, i) => (
+                                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255, 71, 87, 0.05)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255, 71, 87, 0.1)' }}>
+                                            <div>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>{new Date(ex.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} @ {ex.time}</div>
+                                                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>{ex.note}</div>
+                                            </div>
+                                            <div style={{ fontSize: '0.6rem', background: '#ff4757', color: 'white', padding: '0.2rem 0.6rem', borderRadius: '20px', fontWeight: 900 }}>ALERT</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                     </div>
                 </section>

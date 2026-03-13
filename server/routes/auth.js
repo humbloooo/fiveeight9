@@ -71,7 +71,7 @@ router.post('/student-login', async (req, res) => {
 
 // Register new account (Admin only)
 router.post('/register', [auth, requireAdmin], async (req, res) => {
-    const { username, email, password, role, studentNumber, idNumber } = req.body;
+    const { username, email, password, role, studentNumber, idNumber, roomNumber } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -90,7 +90,8 @@ router.post('/register', [auth, requireAdmin], async (req, res) => {
             password: hashedPassword,
             role: role || 'student',
             studentNumber,
-            idNumber
+            idNumber,
+            roomNumber
         });
 
         await user.save();
@@ -123,7 +124,7 @@ router.delete('/users/:id', [auth, requireAdmin], async (req, res) => {
 
 // Update user (Admin only)
 router.patch('/users/:id', [auth, requireAdmin], async (req, res) => {
-    const { username, email, role, studentNumber, idNumber } = req.body;
+    const { username, email, role, studentNumber, idNumber, roomNumber } = req.body;
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -132,6 +133,7 @@ router.patch('/users/:id', [auth, requireAdmin], async (req, res) => {
         if (email) user.email = email;
         if (role) user.role = role;
         if (studentNumber) user.studentNumber = studentNumber;
+        if (roomNumber) user.roomNumber = roomNumber;
         
         // If ID number is provided, we need to re-hash it as it acts as password for students
         if (idNumber) {

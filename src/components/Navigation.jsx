@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, LogIn, Shield, Moon, Sun, Phone, Truck } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogIn, LogOut, Shield, Moon, Sun, Phone, Truck } from 'lucide-react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
 import Toast from './Toast';
@@ -9,8 +9,8 @@ import { motion } from 'framer-motion';
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isResidentMenuOpen, setIsResidentMenuOpen] = useState(false);
-  const [isLoggedIn] = useState(!!localStorage.getItem('adminToken'));
-  const [userRole] = useState(localStorage.getItem('userRole') || 'student'); // 'student' or 'admin'
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Initialize as false, will be set by useEffect
+  const [userRole, setUserRole] = useState('student'); // Initialize with a default, will be set by useEffect
   const [showToast, setShowToast] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
   const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
@@ -74,6 +74,16 @@ const Navigation = () => {
     };
     fetchSettings();
   }, []);
+
+  useEffect(() => {
+    const adminToken = localStorage.getItem('adminToken');
+    const studentToken = localStorage.getItem('studentToken');
+    const role = localStorage.getItem('userRole');
+    if (adminToken || studentToken) {
+      setIsLoggedIn(true);
+      setUserRole(role || (studentToken ? 'student' : 'staff'));
+    }
+  }, [setIsLoggedIn, setUserRole]);
 
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -213,6 +223,9 @@ const Navigation = () => {
         <div className="overlay-content">
           <div className="overlay-header">
             <span className="overlay-label">Explore Five Eight 9</span>
+            <button onClick={toggleTheme} className="theme-toggle-mini">
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
           </div>
 
           <div className="overlay-grid">
@@ -241,14 +254,34 @@ const Navigation = () => {
                 </button>
               </div>
             </div>
+
+            {isLoggedIn && (
+              <div className="overlay-section" style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '2rem' }}>
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('studentToken');
+                    localStorage.removeItem('userRole');
+                    window.location.href = '/';
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#ff4d4d',
+                    fontSize: '1.2rem',
+                    fontWeight: '800',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.8rem'
+                  }}
+                >
+                  <LogOut size={20} /> LOGOUT
+                </button>
+              </div>
+            )}
           </div>
 
-            <div className="admin-menu-bar mode-toggle-bar">
-              <button onClick={toggleTheme} className="admin-ctrl-btn flex-1">
-                {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />} 
-                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-              </button>
-            </div>
             
             {isLoggedIn && userRole === 'admin' && (
               <div className="admin-menu-bar staff-access-bar">

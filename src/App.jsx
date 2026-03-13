@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { ToastProvider } from './context/ToastContext';
@@ -52,6 +52,18 @@ const AnimatedRoutes = ({ token, setToken }) => {
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('adminToken'));
+
+  useEffect(() => {
+    const applyTheme = () => {
+      const currentTheme = localStorage.getItem('theme') || 'system';
+      const isDark = currentTheme === 'dark' || (currentTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.body.classList.toggle('light-mode', !isDark);
+    };
+
+    applyTheme();
+    window.addEventListener('themeChanged', applyTheme);
+    return () => window.removeEventListener('themeChanged', applyTheme);
+  }, []);
 
   return (
     <Router>
