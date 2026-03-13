@@ -20,6 +20,10 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
     const UPLOAD_PRESET = 'ml_default';
 
     useEffect(() => {
+        // Always reset file state when modal opens to avoid stale file uploads
+        setFile(null);
+        setMediaFiles([]);
+
         if (type === 'settings') {
             setFormData(editingItem || {
                 socialLinks: {
@@ -164,7 +168,8 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 }
             } catch (err) {
                 console.error('Upload error', err);
-                addToast('Main image upload failed', 'error');
+                const reason = err.response?.data?.message || err.message || 'Unknown error';
+                addToast(`Image upload failed: ${reason}`, 'error');
                 setUploading(false);
                 return;
             }
@@ -188,7 +193,8 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 finalData.media = [...(finalData.media || []), ...uploadedUrls];
             } catch (err) {
                 console.error('Gallery upload error', err);
-                addToast('Gallery upload failed', 'error');
+                const reason = err.response?.data?.message || err.message || 'Unknown error';
+                addToast(`Gallery upload failed: ${reason}`, 'error');
             }
         }
 
@@ -227,7 +233,8 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             onClose();
         } catch (error) {
             console.error('Submission error', error);
-            addToast(`Submission failed: ${error.response?.data?.message || error.message}`, 'error');
+            const errMsg = error.response?.data?.message || error.response?.data || error.message || 'Unknown error';
+            addToast(`Save failed: ${errMsg}`, 'error');
         } finally {
             setUploading(false);
         }
