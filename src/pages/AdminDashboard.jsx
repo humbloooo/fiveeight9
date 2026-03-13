@@ -91,6 +91,11 @@ const AdminDashboard = ({ token, setToken }) => {
         if (!window.confirm('Are you sure?')) return;
         try {
             let endpoint = activeTab;
+            // tickets tab is read-only (maintenance requests), settings has its own UI
+            if (activeTab === 'tickets') {
+                addToast('Maintenance tickets cannot be deleted from here.', 'info');
+                return;
+            }
             if (activeTab === 'admins') endpoint = 'auth/users';
             
             await axios.delete(`${API_BASE_URL}/api/${endpoint}/${id}`, {
@@ -361,19 +366,23 @@ const AdminDashboard = ({ token, setToken }) => {
                             <button onClick={fetchData} style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.8rem', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
                                 <RefreshCw size={18} className={loading ? 'spin' : ''} />
                             </button>
-                            <button 
-                                onClick={handleExportCSV}
-                                style={{ background: 'rgba(72, 187, 120, 0.1)', border: '1px solid #48bb78', color: '#48bb78', padding: '0.8rem 1.2rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold' }}
-                            >
-                                <span className="hide-on-mobile">Export</span> CSV
-                            </button>
-                            <button
-                                onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-                                className="cta-button"
-                                style={{ fontSize: '0.85rem', padding: '0.8rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: '12px' }}
-                            >
-                                <Plus size={18} /> <span className="hide-on-mobile">Add Item</span><span className="show-on-mobile" style={{ display: 'none' }}>Add</span>
-                            </button>
+                            {activeTab !== 'settings' && activeTab !== 'tickets' && (
+                                <button 
+                                    onClick={handleExportCSV}
+                                    style={{ background: 'rgba(72, 187, 120, 0.1)', border: '1px solid #48bb78', color: '#48bb78', padding: '0.8rem 1.2rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold' }}
+                                >
+                                    <span className="hide-on-mobile">Export</span> CSV
+                                </button>
+                            )}
+                            {activeTab !== 'settings' && activeTab !== 'tickets' && (
+                                <button
+                                    onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
+                                    className="cta-button"
+                                    style={{ fontSize: '0.85rem', padding: '0.8rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: '12px' }}
+                                >
+                                    <Plus size={18} /> <span className="hide-on-mobile">Add Item</span><span className="show-on-mobile" style={{ display: 'none' }}>Add</span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

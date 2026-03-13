@@ -4,17 +4,20 @@ import axios from 'axios';
 import API_BASE_URL from '../config';
 import Toast from './Toast';
 import logo from '../assets/brand/logo.png';
-import { motion } from 'framer-motion';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isResidentMenuOpen, setIsResidentMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Initialize as false, will be set by useEffect
-  const [userRole, setUserRole] = useState('student'); // Initialize with a default, will be set by useEffect
+  // Init login state directly from localStorage to avoid cascading setState in effect
+  const adminToken = localStorage.getItem('adminToken');
+  const studentToken = localStorage.getItem('studentToken');
+  const savedRole = localStorage.getItem('userRole');
+  const [isLoggedIn, setIsLoggedIn] = useState(!!(adminToken || studentToken));
+  const [userRole, setUserRole] = useState(savedRole || (studentToken ? 'student' : 'staff'));
   const [showToast, setShowToast] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'system');
-  const [ctaText, setCtaText] = useState('BOOK A VIEWING'); // (002) Context-Aware CTA
-  const [scrollProgress, setScrollProgress] = useState(0); // (102) Liquid Gold Progress
+  const [ctaText, setCtaText] = useState('BOOK A VIEWING');
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [settings, setSettings] = useState(null);
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
 
@@ -75,15 +78,18 @@ const Navigation = () => {
     fetchSettings();
   }, []);
 
+  // Refresh login state if tokens change (e.g. after login in another tab)
   useEffect(() => {
-    const adminToken = localStorage.getItem('adminToken');
-    const studentToken = localStorage.getItem('studentToken');
-    const role = localStorage.getItem('userRole');
-    if (adminToken || studentToken) {
-      setIsLoggedIn(true);
-      setUserRole(role || (studentToken ? 'student' : 'staff'));
-    }
-  }, [setIsLoggedIn, setUserRole]);
+    const onStorage = () => {
+      const at = localStorage.getItem('adminToken');
+      const st = localStorage.getItem('studentToken');
+      const r  = localStorage.getItem('userRole');
+      setIsLoggedIn(!!(at || st));
+      setUserRole(r || (st ? 'student' : 'staff'));
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -204,7 +210,37 @@ const Navigation = () => {
             </div>
             <h2 className="modal-title">Transport <span className="gold-text">Schedule</span></h2>
             <div className="modal-info-box">
-              {settings?.transportSchedule || 'Schedule currently being updated. Please check back soon!'}
+              {settings?.transport?.currentStatus?.message && (
+                <p style={{ marginBottom: '1rem', color: 'var(--gold)', fontWeight: 700 }}>
+                  📍 {settings.transport.currentStatus.message}
+                </p>
+              )}
+              {settings?.transport?.currentStatus?.location && (
+                <p style={{ marginBottom: '0.5rem' }}>
+                  <strong>Current Location:</strong> {settings.transport.currentStatus.location}
+                </p>
+              )}
+              {settings?.transport?.currentStatus?.estimatedArrival && (
+                <p style={{ marginBottom: '1rem' }}>
+                  <strong>Est. Arrival:</strong> {settings.transport.currentStatus.estimatedArrival}
+                </p>
+              )}
+              {settings?.transport?.baseSchedule?.filter(s => s.active).length > 0 ? (
+                <>
+                  <p style={{ fontWeight: 700, marginBottom: '0.8rem' }}>Today's Scheduled Runs:</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    {settings.transport.baseSchedule
+                      .filter(s => s.active)
+                      .map((slot, i) => (
+                        <span key={i} style={{ background: 'var(--gold-glow)', border: '1px solid var(--gold)', color: 'var(--gold)', padding: '0.3rem 0.8rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 700 }}>
+                          {slot.time}
+                        </span>
+                      ))}
+                  </div>
+                </>
+              ) : (
+                <p>{settings?.transportSchedule || 'Schedule currently being updated. Please check back soon!'}</p>
+              )}
             </div>
           </motion.div>
         </motion.div>
