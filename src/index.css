@@ -1121,3 +1121,159 @@ body.night-owl-active::after {
   border-radius: var(--radius-lg);
   border: 1px dashed var(--glass-border);
 }
+
+/* ======================================
+   ADMIN INPUT - Global Form Styling
+   ====================================== */
+.admin-input {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: var(--font-primary);
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  box-sizing: border-box;
+}
+
+.admin-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.admin-input::placeholder {
+  color: var(--text-muted);
+}
+
+select.admin-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23C5A059' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 10px;
+  padding-right: 2.5rem;
+}
+
+textarea.admin-input {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+/* Light mode admin input overrides */
+body.light-mode .admin-input {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--text-primary);
+}
+
+body.light-mode .admin-input:focus {
+  border-color: var(--gold);
+}
+
+body.light-mode select.admin-input option {
+  background: #fff;
+  color: #1a202c;
+}
+
+/* ======================================
+   ADMIN DASHBOARD - Mobile / Android
+   ====================================== */
+
+/* Admin dashboard root always fills screen */
+.admin-dashboard-root {
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport for mobile browsers */
+}
+
+/* Prevent sidebar from showing behind content on mobile */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    width: 85vw !important;
+    max-width: 300px !important;
+  }
+
+  .admin-main-content {
+    padding: 80px 1rem 2rem !important;
+  }
+
+  .admin-list-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Make action buttons stack cleanly on small phones */
+  .admin-actions-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100%;
+  }
+
+  .admin-actions-bar > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-container {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Admin modal full-screen on mobile */
+  .modal-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+
+  .modal-content {
+    max-height: 95dvh !important;
+    border-radius: 24px 24px 0 0 !important;
+    padding: 1.5rem !important;
+  }
+
+  /* Fix admin home cards stacking on mobile */
+  .admin-item-card {
+    padding: 1.2rem !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* Very small screens (Android 360px wide) */
+@media (max-width: 400px) {
+  .admin-mobile-header h2 {
+    font-size: 1rem !important;
+  }
+
+  .admin-actions-bar button,
+  .admin-actions-bar .cta-button {
+    font-size: 0.75rem !important;
+    padding: 0.7rem 1rem !important;
+  }
+
+  .admin-input {
+    font-size: 0.82rem;
+    padding: 0.75rem 0.9rem;
+  }
+}
+
+/* Fix no-deco anchor */
+.no-deco { text-decoration: none !important; }
+
+/* Staff access bar */
+.staff-access-bar {
+  position: relative;
+  z-index: 1;
+}
+
+.staff-label {
+  font-size: 0.7rem;
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
