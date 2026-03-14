@@ -104,7 +104,8 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 role: 'student',
                 studentNumber: '',
                 roomNumber: '',
-                idNumber: ''
+                idNumber: '',
+                profilePictureUrl: ''
             } : {
                 title: '',
                 description: '',
@@ -151,7 +152,7 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             return res.data;
         };
 
-        if (file) {
+        if (file instanceof File) {
             try {
                 const signData = await getSignature();
                 const uploadFormData = new FormData();
@@ -162,9 +163,14 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 uploadFormData.append('folder', signData.folder);
 
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${signData.cloud_name}/image/upload`, uploadFormData);
-                finalData.imageUrl = res.data.secure_url;
-                if (finalData.imagePublicId !== undefined) {
-                    finalData.imagePublicId = res.data.public_id;
+                
+                if (type === 'admins') {
+                    finalData.profilePictureUrl = res.data.secure_url;
+                } else {
+                    finalData.imageUrl = res.data.secure_url;
+                    if (finalData.imagePublicId !== undefined) {
+                        finalData.imagePublicId = res.data.public_id;
+                    }
                 }
             } catch (err) {
                 console.error('Upload error', err);
@@ -671,10 +677,16 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Main Image</label>
+                <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                    {type === 'admins' ? 'Profile Picture (Optional)' : 'Main Image'}
+                </label>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    {formData.imageUrl && (
-                        <img src={formData.imageUrl} style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--glass-border)' }} alt="Preview" />
+                    {(formData.imageUrl || formData.profilePictureUrl) && (
+                        <img 
+                            src={type === 'admins' ? formData.profilePictureUrl : formData.imageUrl} 
+                            style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--glass-border)' }} 
+                            alt="Preview" 
+                        />
                     )}
                     <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ color: 'var(--text-primary)', fontSize: '0.8rem' }} />
                 </div>
@@ -710,28 +722,60 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
     );
 
     return (
-        <div className="modal-overlay" style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '1rem'
-        }}>
-            <div className="modal-content" style={{
-                background: 'var(--navy)', width: '100%', maxWidth: '600px',
-                maxHeight: '90vh', overflowY: 'auto', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)',
-                padding: '2.5rem', position: 'relative'
-            }}>
-                <button onClick={onClose} style={{ position: 'absolute', right: '1.5rem', top: '1.5rem', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}>
-                    <X size={24} />
-                </button>
-                <h2 style={{ color: 'var(--gold)', marginBottom: '2rem' }}>{editingItem ? 'Edit' : 'Add'} {type === 'admins' ? 'User' : type}</h2>
-                <form onSubmit={handleSubmit}>
-                    {type === 'settings' ? (editingItem?.isBuildingGallery ? renderGalleryFields() : renderSettingsFields()) : renderContentFields()}
-                    <button type="submit" disabled={uploading} className="cta-button" style={{ width: '100%', marginTop: '1.5rem' }}>
-                        {uploading ? <Loader className="spin" /> : <Save />} {editingItem ? 'Save Changes' : 'Create'}
-                    </button>
-                </form>
-            </div>
-            <style>{`.spin { animation: spin 1s linear infinite; } @keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-        </div>
+        <AnimatePresence>
+            {isOpen && (
+                <div className="modal-overlay" style={{
+                    position: 'fixed', inset: 0, background: 'rgba(5, 10, 26, 0.9)', backdropFilter: 'blur(15px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '1.5rem'
+                }}>
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                        className="modal-content custom-scrollbar" 
+                        style={{
+                            background: 'var(--glass-deep)', 
+                            width: '100%', 
+                            maxWidth: '750px',
+                            maxHeight: '85vh', 
+                            overflowY: 'auto', 
+                            borderRadius: '40px', 
+                            border: '1px solid var(--glass-border)',
+                            padding: '3.5rem', 
+                            position: 'relative',
+                            boxShadow: '0 50px 100px rgba(0,0,0,0.5)'
+                        }}
+                    >
+                        <button onClick={onClose} style={{ position: 'absolute', right: '2rem', top: '2rem', background: 'var(--glass)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <X size={20} />
+                        </button>
+                        
+                        <div style={{ marginBottom: '3rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--gold)', fontWeight: 900, fontSize: '0.7rem', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                                <ShieldCheck size={14} /> System Access
+                            </div>
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-1px' }}>
+                                {editingItem ? 'Modify' : 'Initialize'} <span className="gold-text">{type === 'admins' ? 'Identity' : type}</span>
+                            </h2>
+                        </div>
+
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            {type === 'settings' ? (editingItem?.isBuildingGallery ? renderGalleryFields() : renderSettingsFields()) : renderContentFields()}
+                            
+                            <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem' }}>
+                                <button type="button" onClick={onClose} style={{ flex: 1, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '1.2rem', borderRadius: '18px', cursor: 'pointer', fontWeight: 900 }}>
+                                    ABORT
+                                </button>
+                                <button type="submit" disabled={uploading} className="cta-button" style={{ flex: 2, padding: '1.2rem', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem' }}>
+                                    {uploading ? <Loader className="spin" size={20} /> : <Save size={20} />} 
+                                    {editingItem ? 'COMMIT CHANGES' : 'EXECUTE CREATION'}
+                                </button>
+                            </div>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
     );
 };
 

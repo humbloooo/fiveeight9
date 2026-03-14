@@ -10,8 +10,8 @@ const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const Cafeteria = lazy(() => import('./pages/Cafeteria'));
 const Safety = lazy(() => import('./pages/Safety'));
-const TenantForum = lazy(() => import('./pages/TenantForum'));
 const WellnessCenter = lazy(() => import('./pages/WellnessCenter'));
+const StudentAccount = lazy(() => import('./pages/StudentAccount'));
 const EventsCalendar = lazy(() => import('./pages/EventsCalendar'));
 const MaintenanceTicket = lazy(() => import('./pages/MaintenanceTicket'));
 const RoomsPage = lazy(() => import('./pages/RoomsPage'));
@@ -33,8 +33,8 @@ const AnimatedRoutes = ({ token, setToken }) => {
           <Route path="/" element={<MainSite />} />
           <Route path="/cafeteria" element={<Cafeteria />} />
           <Route path="/safety" element={<Safety />} />
-          <Route path="/forum" element={<TenantForum />} />
           <Route path="/wellness" element={<WellnessCenter />} />
+          <Route path="/account" element={<StudentAccount />} />
           <Route path="/events" element={<EventsCalendar />} />
           <Route path="/maintenance" element={<MaintenanceTicket />} />
           <Route path="/rooms" element={<RoomsPage />} />

@@ -121,11 +121,11 @@ const Navigation = () => {
   ];
 
   const residentLinks = [
-    { name: 'Group Chat', href: '/forum' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Events', href: '/events' },
     { name: 'Maintenance Ticket', href: '/maintenance' },
-  ];
+    localStorage.getItem('studentToken') ? { name: 'My Account', href: '/account' } : null
+  ].filter(Boolean);
 
   return (
     <>

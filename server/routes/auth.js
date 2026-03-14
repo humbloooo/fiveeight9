@@ -34,13 +34,13 @@ router.post('/login', async (req, res) => {
 
 // Student Login
 router.post('/student-login', async (req, res) => {
-    const { studentNumber, idNumber } = req.body;
+    const { email, idNumber } = req.body;
 
     try {
-        // Find user by student number
-        const user = await User.findOne({ studentNumber });
-        if (!user) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+        // Find user by email (as requested)
+        const user = await User.findOne({ email });
+        if (!user || user.role !== 'student') {
+            return res.status(400).json({ message: 'Invalid credentials or access denied' });
         }
 
         // Check if ID number matches (acting as password for students)
@@ -59,10 +59,25 @@ router.post('/student-login', async (req, res) => {
             token, 
             user: { 
                 username: user.username, 
+                email: user.email,
                 role: user.role,
-                studentNumber: user.studentNumber 
+                studentNumber: user.studentNumber,
+                roomNumber: user.roomNumber,
+                profilePictureUrl: user.profilePictureUrl || ''
             } 
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Get current student/user info
+router.get('/me', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -134,6 +149,7 @@ router.patch('/users/:id', [auth, requireAdmin], async (req, res) => {
         if (role) user.role = role;
         if (studentNumber) user.studentNumber = studentNumber;
         if (roomNumber) user.roomNumber = roomNumber;
+        if (req.body.profilePictureUrl !== undefined) user.profilePictureUrl = req.body.profilePictureUrl;
         
         // If ID number is provided, we need to re-hash it as it acts as password for students
         if (idNumber) {
@@ -145,7 +161,7 @@ router.patch('/users/:id', [auth, requireAdmin], async (req, res) => {
         }
 
         await user.save();
-        res.json({ message: 'User updated successfully', user: { email: user.email, role: user.role } });
+        res.json({ message: 'User updated successfully', user: { email: user.email, role: user.role, profilePictureUrl: user.profilePictureUrl } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });

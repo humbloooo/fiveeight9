@@ -78,41 +78,68 @@ const MainSite = () => {
 
             <main>
                 {/* Section 1: Hero */}
-                <section id="home" className="section hero-section reveal" style={{
+                <section id="home" className="section hero-section" style={{
                     minHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    paddingTop: '100px', // Extra padding to avoid header overlap
-                    marginTop: 0
+                    paddingTop: '120px', 
+                    position: 'relative'
                 }}>
-                    <div style={{ width: '100%', maxWidth: '800px', padding: '0 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-                        <img src={logo} alt="Five Eight 9 Hero" style={{ width: '100%', maxWidth: '140px', height: 'auto', animation: 'fadeIn 1.2s ease' }} />
-                        <h1 style={{ fontWeight: 900, fontSize: 'clamp(2.5rem, 8vw, 5rem)', letterSpacing: '4px', textAlign: 'center', textTransform: 'uppercase', lineHeight: 1.1 }}>
-                            Five Eight<span style={{ color: 'var(--gold)' }}>9</span>
-                        </h1>
+                    {/* Hero Ambient Glow */}
+                    <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%', height: '500px', background: 'radial-gradient(circle, var(--gold-glow), transparent 70%)', opacity: 0.15, filter: 'blur(80px)', pointerEvents: 'none' }}></div>
+
+                    <div style={{ width: '100%', maxWidth: '900px', padding: '0 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative' }} className="reveal">
+                        <motion.img 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1 }}
+                            src={logo} alt="Five Eight 9 Hero" 
+                            style={{ width: '100%', maxWidth: '160px', height: 'auto', marginBottom: '1rem' }} 
+                        />
+                        <motion.h1 
+                            initial={{ opacity: 0, letterSpacing: '15px' }}
+                            animate={{ opacity: 1, letterSpacing: '4px' }}
+                            transition={{ duration: 1.5, ease: 'easeOut' }}
+                            style={{ fontWeight: 900, fontSize: 'clamp(3rem, 10vw, 6rem)', textAlign: 'center', textTransform: 'uppercase', lineHeight: 1 }}
+                        >
+                            Five Eight<span className="gold-text">9</span>
+                        </motion.h1>
                     </div>
                     
                     {/* Dynamic Room Counter (Refinement 001) */}
-                    <div style={{ display: 'flex', gap: '3rem', marginTop: '2.5rem' }} className="reveal reveal-delay-2">
-                        <div className="stat-item">
-                            <span className="stat-number gold-text">{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
-                            <span className="stat-label">{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
+                    <div style={{ display: 'flex', gap: '4rem', marginTop: '4rem' }} className="reveal reveal-delay-1">
+                        <div className="stat-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <span className="stat-number gold-text" style={{ fontSize: '3rem', fontWeight: 900 }}>{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
+                            <span className="stat-label" style={{ fontSize: '0.7rem', letterSpacing: '3px', opacity: 0.6, fontWeight: 900 }}>{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
                         </div>
-                        <div className="stat-item">
-                            <span className="stat-number gold-text">{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
-                            <span className="stat-label">{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
+                        <div style={{ width: '1px', height: '60px', background: 'var(--glass-border)', alignSelf: 'center', opacity: 0.3 }}></div>
+                        <div className="stat-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <span className="stat-number gold-text" style={{ fontSize: '3rem', fontWeight: 900 }}>{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
+                            <span className="stat-label" style={{ fontSize: '0.7rem', letterSpacing: '3px', opacity: 0.6, fontWeight: 900 }}>{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
                         </div>
                     </div>
 
-                    <p style={{ marginTop: '2.5rem', maxWidth: '600px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 20px', lineHeight: '1.8' }}>
-                        Providing secure, high-quality, and modern lofts for the next generation of leaders in Thohoyandou.
+                    <p className="reveal reveal-delay-2" style={{ marginTop: '3rem', maxWidth: '700px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 40px', lineHeight: '1.8', fontSize: '1.1rem' }}>
+                        Defining the intersection of <span className="gold-text" style={{ fontWeight: 800 }}>luxury</span> and <span className="gold-text" style={{ fontWeight: 800 }}>academic excellence</span>. Private, secure, and modern lofts tailored for the elite student lifestyle in Thohoyandou.
                     </p>
-                    <div className="hero-actions reveal reveal-delay-3" style={{ marginTop: '3.5rem' }}>
-                            <a href="/rooms" className="cta-button">EXPLORE THE BUILDING</a>
-                            <button className="secondary-button" onClick={() => setIsBookingOpen(true)}>RESERVE A LOFT</button>
-                        </div>
+
+                    <div className="hero-actions reveal reveal-delay-3" style={{ marginTop: '4rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        <a href="/rooms" className="cta-button" style={{ padding: '1.4rem 3rem', fontSize: '1rem' }}>EXPLORE THE BUILDING</a>
+                        <button className="secondary-button" style={{ padding: '1.4rem 3rem', fontSize: '1rem', background: 'var(--glass)', border: '1px solid var(--glass-border)' }} onClick={() => setIsBookingOpen(true)}>RESERVE A LOFT</button>
+                    </div>
+
+                    {/* Scroll Indicator */}
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 3, duration: 1 }}
+                        style={{ position: 'absolute', bottom: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', opacity: 0.5 }}
+                    >
+                        <span style={{ fontSize: '0.6rem', letterSpacing: '2px', fontWeight: 800, textTransform: 'uppercase' }}>Scroll</span>
+                        <div style={{ width: '1px', height: '40px', background: 'var(--gold)', animation: 'pulse 2s infinite' }}></div>
+                    </motion.div>
                 </section>
 
                 {/* (NEW) Res Full Banner */}

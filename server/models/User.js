@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     studentNumber: { type: String, unique: true, sparse: true },
     roomNumber: { type: String, sparse: true },
     idNumber: { type: String, unique: true, sparse: true },
+    profilePictureUrl: { type: String, default: '' },
     role: { type: String, enum: ['student', 'staff', 'admin'], default: 'student' },
     createdAt: { type: Date, default: Date.now }
 });

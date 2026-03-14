@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import Background from '../components/Background';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Shield, Eye, Lock, Clock, CheckCircle } from 'lucide-react';
+import { Shield, Eye, Lock, Zap, CheckCircle, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Safety = () => {
+    const navigate = useNavigate();
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -27,7 +29,7 @@ const Safety = () => {
         { title: 'PSG Security Guards', icon: <Shield />, desc: 'Manned by professional PSG Security personnel patrolling the premises 24/7.' },
         { title: 'Armed Response', icon: <Lock />, desc: 'Highly trained armed units available 24/7 with immediate response capabilities.' },
         { title: 'HD Surveillance', icon: <Eye />, desc: 'Comprehensive CCTV coverage integrated with backup power for zero downtime.' },
-        { title: 'Boundary Defense', icon: <Clock />, desc: 'Reinforced walls with electric fencing, consistently powered by backup systems.' },
+        { title: 'Boundary Defense', icon: <Zap />, desc: 'Reinforced walls with electric fencing, consistently powered by backup systems.' },
     ];
 
     return (
@@ -129,11 +131,18 @@ const Safety = () => {
                         <h3 style={{ color: 'var(--gold)', marginBottom: '1.5rem', fontWeight: 900, fontSize: 'clamp(1.3rem, 4vw, 1.8rem)', display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
                             <CheckCircle size={32} /> Redundant Security Power
                         </h3>
-                        <p style={{ color: 'var(--text-primary)', lineHeight: '1.9', fontSize: 'clamp(1rem, 2vw, 1.1rem)', fontWeight: 400 }}>
+                        <p style={{ color: 'var(--text-primary)', lineHeight: '1.9', fontSize: 'clamp(1rem, 2vw, 1.1rem)', fontWeight: 400, marginBottom: '2rem' }}>
                             Five Eight 9 is equipped with robust backup power solutions specifically for our security infrastructure. 
                             Our CCTV cameras and electric fencing remain 100% operational during outages, ensuring that your 
                             safety is never compromised by external power failures.
                         </p>
+                        <button 
+                            className="cta-button" 
+                            onClick={() => navigate('/wellness')}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '1rem 2rem' }}
+                        >
+                            Emergency Protocols <ArrowRight size={18} />
+                        </button>
                     </motion.div>
                 </section>
             </main>
@@ -143,3 +152,4 @@ const Safety = () => {
 };
 
 export default Safety;
+
