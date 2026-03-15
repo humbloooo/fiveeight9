@@ -458,19 +458,23 @@ body.light-mode {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .nav-cluster {
-    padding: 0.8rem 1.2rem;
-    width: 95%;
-    border-radius: 80px;
+    padding: 0.6rem 1rem;
   }
 
   .section {
-    padding: clamp(1.5rem, 5vw, 3rem) 1.2rem;
+    padding: clamp(1.5rem, 5vw, 3rem) 1rem;
   }
 
   .section-title {
-    font-size: clamp(2.2rem, 10vw, 3.2rem);
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
     letter-spacing: -1px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-section {
+    padding-top: 80px !important;
+    min-height: auto !important;
+    padding-bottom: 3rem !important;
   }
 
   .room-display-grid,
@@ -480,6 +484,60 @@ body.light-mode {
 
   .section:last-of-type {
     padding-bottom: 0;
+  }
+
+  .cta-button,
+  .secondary-button {
+    padding: 1rem 1.8rem;
+    font-size: 0.8rem;
+  }
+
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    border-radius: 20px;
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+
+  .glass-panel {
+    border-radius: 20px !important;
+  }
+
+  .overlay-content {
+    padding: 8vh 5% !important;
+  }
+
+  .overlay-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-8) !important;
+  }
+
+  .scroll-indicator-desktop {
+    display: none !important;
+  }
+}
+
+/* Small phones (360-400px) */
+@media (max-width: 400px) {
+  .section-title {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+    letter-spacing: 0;
+  }
+
+  .cta-button,
+  .secondary-button {
+    padding: 0.85rem 1.4rem;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  .logo-text {
+    font-size: 1.1rem !important;
+    letter-spacing: 1px !important;
   }
 }
 

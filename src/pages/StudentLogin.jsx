@@ -64,7 +64,7 @@ const StudentLogin = () => {
                 alignItems: 'center', 
                 justifyContent: 'center', 
                 minHeight: 'calc(100vh - 100px)',
-                padding: '120px 5% 80px'
+                padding: 'clamp(90px, 15vw, 120px) 5% clamp(3rem, 8vw, 80px)'
             }}>
                 <motion.div 
                     initial={{ y: 30, opacity: 0, scale: 0.95 }}
@@ -75,8 +75,8 @@ const StudentLogin = () => {
                         maxWidth: '480px',
                         background: 'var(--glass-deep)',
                         backdropFilter: 'blur(40px)',
-                        padding: '4rem 3rem',
-                        borderRadius: '40px',
+                        padding: 'clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem)',
+                        borderRadius: 'clamp(24px, 4vw, 40px)',
                         border: '1px solid var(--glass-border)',
                         boxShadow: '0 50px 120px rgba(0,0,0,0.6)',
                         textAlign: 'center',
@@ -110,8 +110,8 @@ const StudentLogin = () => {
                         <GraduationCap size={40} color="var(--navy)" />
                     </div>
 
-                    <h1 style={{ 
-                        fontSize: '2.5rem', 
+                    <h1 style={{
+                        fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
                         fontWeight: 900, 
                         marginBottom: '0.8rem', 
                         color: 'var(--text-primary)',
@@ -165,7 +165,7 @@ const StudentLogin = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                     style={{
                                         width: '100%',
-                                        padding: '1.2rem 1.2rem 1.2rem 3.5rem',
+                                        padding: '1rem 1rem 1rem 3rem',
                                         background: 'rgba(255,255,255,0.03)',
                                         border: '1px solid var(--glass-border)',
                                         borderRadius: '18px',
@@ -194,7 +194,7 @@ const StudentLogin = () => {
                                     onChange={(e) => setIdNumber(e.target.value)}
                                     style={{
                                         width: '100%',
-                                        padding: '1.2rem 1.2rem 1.2rem 3.5rem',
+                                        padding: '1rem 1rem 1rem 3rem',
                                         background: 'rgba(255,255,255,0.03)',
                                         border: '1px solid var(--glass-border)',
                                         borderRadius: '18px',

@@ -84,7 +84,7 @@ const MainSite = () => {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    paddingTop: '120px', 
+                    paddingTop: 'clamp(80px, 15vw, 120px)',
                     position: 'relative'
                 }}>
                     {/* Hero Ambient Glow */}
@@ -109,37 +109,39 @@ const MainSite = () => {
                     </div>
                     
                     {/* Dynamic Room Counter (Refinement 001) */}
-                    <div style={{ display: 'flex', gap: '4rem', marginTop: '4rem' }} className="reveal reveal-delay-1">
+                    <div style={{ display: 'flex', gap: 'clamp(2rem, 8vw, 4rem)', marginTop: 'clamp(2rem, 5vw, 4rem)' }} className="reveal reveal-delay-1">
                         <div className="stat-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <span className="stat-number gold-text" style={{ fontSize: '3rem', fontWeight: 900 }}>{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
+                            <span className="stat-number gold-text" style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 900 }}>{(settings?.homeStats?.count || '231').toString().replace(/%/g, '')}</span>
                             <span className="stat-label" style={{ fontSize: '0.7rem', letterSpacing: '3px', opacity: 0.6, fontWeight: 900 }}>{settings?.homeStats?.label || 'SINGLE ROOMS'}</span>
                         </div>
-                        <div style={{ width: '1px', height: '60px', background: 'var(--glass-border)', alignSelf: 'center', opacity: 0.3 }}></div>
+                        <div style={{ width: '1px', height: '50px', background: 'var(--glass-border)', alignSelf: 'center', opacity: 0.3 }}></div>
                         <div className="stat-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <span className="stat-number gold-text" style={{ fontSize: '3rem', fontWeight: 900 }}>{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
+                            <span className="stat-number gold-text" style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 900 }}>{((settings?.homeStats?.subCount === '15%' || settings?.homeStats?.subCount === '15' || !settings?.homeStats?.subCount) ? '62' : settings.homeStats.subCount).toString().replace(/%/g, '')}</span>
                             <span className="stat-label" style={{ fontSize: '0.7rem', letterSpacing: '3px', opacity: 0.6, fontWeight: 900 }}>{settings?.homeStats?.subLabel || 'SHARING ROOMS'}</span>
                         </div>
                     </div>
 
-                    <p className="reveal reveal-delay-2" style={{ marginTop: '3rem', maxWidth: '700px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 40px', lineHeight: '1.8', fontSize: '1.1rem' }}>
+                    <p className="reveal reveal-delay-2" style={{ marginTop: 'clamp(1.5rem, 4vw, 3rem)', maxWidth: '700px', textAlign: 'center', color: 'var(--text-secondary)', padding: '0 clamp(1rem, 5vw, 2.5rem)', lineHeight: '1.8', fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)' }}>
                         Defining the intersection of <span className="gold-text" style={{ fontWeight: 800 }}>luxury</span> and <span className="gold-text" style={{ fontWeight: 800 }}>academic excellence</span>. Private, secure, and modern lofts tailored for the elite student lifestyle in Thohoyandou.
                     </p>
 
-                    <div className="hero-actions reveal reveal-delay-3" style={{ marginTop: '4rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        <a href="/rooms" className="cta-button" style={{ padding: '1.4rem 3rem', fontSize: '1rem' }}>EXPLORE THE BUILDING</a>
-                        <button className="secondary-button" style={{ padding: '1.4rem 3rem', fontSize: '1rem', background: 'var(--glass)', border: '1px solid var(--glass-border)' }} onClick={() => setIsBookingOpen(true)}>RESERVE A LOFT</button>
+                    <div className="hero-actions reveal reveal-delay-3" style={{ marginTop: 'clamp(2rem, 5vw, 4rem)', display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        <a href="/rooms" className="cta-button" style={{ padding: 'clamp(1rem, 2.5vw, 1.4rem) clamp(1.5rem, 4vw, 3rem)', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>EXPLORE THE BUILDING</a>
+                        <button className="secondary-button" style={{ padding: 'clamp(1rem, 2.5vw, 1.4rem) clamp(1.5rem, 4vw, 3rem)', fontSize: 'clamp(0.8rem, 2vw, 1rem)', background: 'var(--glass)', border: '1px solid var(--glass-border)' }} onClick={() => setIsBookingOpen(true)}>RESERVE A LOFT</button>
                     </div>
 
-                    {/* Scroll Indicator */}
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 3, duration: 1 }}
-                        style={{ position: 'absolute', bottom: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', opacity: 0.5 }}
-                    >
-                        <span style={{ fontSize: '0.6rem', letterSpacing: '2px', fontWeight: 800, textTransform: 'uppercase' }}>Scroll</span>
-                        <div style={{ width: '1px', height: '40px', background: 'var(--gold)', animation: 'pulse 2s infinite' }}></div>
-                    </motion.div>
+                    {/* Scroll Indicator - hidden on mobile to avoid overlap */}
+                    <div className="scroll-indicator-desktop" style={{ position: 'absolute', bottom: '2rem' }}>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 3, duration: 1 }}
+                            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', opacity: 0.5 }}
+                        >
+                            <span style={{ fontSize: '0.6rem', letterSpacing: '2px', fontWeight: 800, textTransform: 'uppercase' }}>Scroll</span>
+                            <div style={{ width: '1px', height: '40px', background: 'var(--gold)', animation: 'pulse 2s infinite' }}></div>
+                        </motion.div>
+                    </div>
                 </section>
 
                 {/* (NEW) Res Full Banner */}
@@ -224,7 +226,7 @@ const MainSite = () => {
                             className="section" 
                             style={{ paddingTop: '2rem', paddingBottom: '0' }}
                         >
-                            <div className="glass-panel" style={{ padding: '2rem', borderRadius: '32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', border: '1px solid var(--gold-glow)' }}>
+                            <div className="glass-panel" style={{ padding: 'clamp(1.2rem, 3vw, 2rem)', borderRadius: 'clamp(20px, 4vw, 32px)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem', border: '1px solid var(--gold-glow)' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                                     <h3 style={{ fontSize: '0.8rem', color: 'var(--gold)', letterSpacing: '1px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                         <MapPin size={14} /> RESIDENCE ADDRESS
@@ -283,8 +285,8 @@ const MainSite = () => {
                 {/* Section 2.5: Detailed Transport Schedule */}
                 <section id="transport" className="section reveal">
                     <h2 className="section-title"><span>Transport</span> Schedule</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                        <div className="glass-panel" style={{ padding: '2.5rem', borderRadius: '40px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
+                        <div className="glass-panel" style={{ padding: 'clamp(1.5rem, 4vw, 2.5rem)', borderRadius: 'clamp(20px, 4vw, 40px)' }}>
                             <h3 style={{ fontSize: '1.2rem', color: 'var(--gold)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                 <Truck size={20} /> Recurring Daily Bus
                             </h3>
@@ -310,7 +312,7 @@ const MainSite = () => {
                         </div>
 
                         {settings?.transport?.exceptions?.length > 0 && (
-                            <div className="glass-panel" style={{ padding: '2.5rem', borderRadius: '40px', border: '1px solid rgba(255, 71, 87, 0.2)' }}>
+                            <div className="glass-panel" style={{ padding: 'clamp(1.5rem, 4vw, 2.5rem)', borderRadius: 'clamp(20px, 4vw, 40px)', border: '1px solid rgba(255, 71, 87, 0.2)' }}>
                                 <h3 style={{ fontSize: '1.2rem', color: '#ff4757', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                     <Truck size={20} /> Schedule Exceptions
                                 </h3>
@@ -337,10 +339,10 @@ const MainSite = () => {
                 </section>
 
                 {/* Section 4: Contact/CTA */}
-                <section id="contact" className="section reveal" style={{ minHeight: '60vh' }}>
+                <section id="contact" className="section reveal" style={{ minHeight: 'auto' }}>
                     <div className="glass-panel" style={{
-                        padding: '5rem',
-                        borderRadius: '60px',
+                        padding: 'clamp(2rem, 6vw, 5rem)',
+                        borderRadius: 'clamp(24px, 5vw, 60px)',
                         textAlign: 'center',
                         maxWidth: '1000px',
                         width: '100%',
@@ -349,10 +351,10 @@ const MainSite = () => {
                     }}>
                         <div style={{ position: 'absolute', top: '-10%', left: '0', width: '100%', height: '100%', background: 'radial-gradient(circle at center, var(--gold-glow), transparent 70%)', opacity: 0.1, pointerEvents: 'none' }}></div>
                         <h2 className="section-title" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1.5rem' }}>Ready to <span className="gold-text">Move In?</span></h2>
-                        <p style={{ maxWidth: '650px', marginBottom: '3.5rem', color: 'var(--text-secondary)', textAlign: 'center', margin: '0 auto 3.5rem', lineHeight: '1.8', fontSize: '1.1rem' }}>
+                        <p style={{ maxWidth: '650px', color: 'var(--text-secondary)', textAlign: 'center', margin: '0 auto', marginBottom: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: '1.8', fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)', padding: '0 clamp(0.5rem, 3vw, 1rem)' }}>
                             Join a community of high-achieving students in an environment that fosters academic excellence and a vibrant social vibe.
                         </p>
-                        <button className="cta-button" style={{ fontSize: '1.1rem', padding: '1.3rem 4rem' }} onClick={() => setIsBookingOpen(true)}>REQUEST A VIEWING</button>
+                        <button className="cta-button" style={{ fontSize: 'clamp(0.85rem, 2vw, 1.1rem)', padding: 'clamp(1rem, 2.5vw, 1.3rem) clamp(2rem, 5vw, 4rem)' }} onClick={() => setIsBookingOpen(true)}>REQUEST A VIEWING</button>
                     </div>
                 </section>
             </main>

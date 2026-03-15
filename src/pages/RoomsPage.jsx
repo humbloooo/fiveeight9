@@ -15,7 +15,7 @@ const GalleryCategory = ({ title, icon: GalleryIcon, items, delay }) => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay }}
-        style={{ marginBottom: '8rem' }}
+        style={{ marginBottom: 'clamp(4rem, 10vw, 8rem)' }}
     >
         <div style={{ 
             display: 'flex', 
@@ -70,10 +70,10 @@ const GalleryCategory = ({ title, icon: GalleryIcon, items, delay }) => (
                     className="gallery-item-wrapper" 
                     whileHover={{ y: -15 }}
                     style={{
-                        minWidth: 'clamp(320px, 85vw, 550px)',
-                        height: 'clamp(400px, 60vh, 600px)',
+                        minWidth: 'clamp(260px, 80vw, 550px)',
+                        height: 'clamp(300px, 50vh, 600px)',
                         scrollSnapAlign: 'center',
-                        borderRadius: '40px',
+                        borderRadius: 'clamp(24px, 4vw, 40px)',
                         overflow: 'hidden',
                         position: 'relative',
                         border: '1px solid var(--glass-border)',
@@ -93,7 +93,7 @@ const GalleryCategory = ({ title, icon: GalleryIcon, items, delay }) => (
                         bottom: 0,
                         left: 0,
                         width: '100%',
-                        padding: '3rem 2.5rem',
+                        padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.5rem)',
                         background: 'linear-gradient(transparent, rgba(0,0,0,0.9))',
                         color: 'white',
                         display: 'flex',
@@ -210,8 +210,8 @@ const RoomsPage = () => {
             <Background />
             <Navigation />
 
-            <div style={{ paddingTop: '180px', paddingBottom: '10rem' }}>
-                <header className="reveal" style={{ textAlign: 'center', marginBottom: '10rem', padding: '0 5%' }}>
+            <div style={{ paddingTop: 'clamp(100px, 20vw, 180px)', paddingBottom: 'clamp(4rem, 10vw, 10rem)' }}>
+                <header className="reveal" style={{ textAlign: 'center', marginBottom: 'clamp(4rem, 10vw, 10rem)', padding: '0 5%' }}>
                     <div style={{
                         background: 'rgba(197, 160, 89, 0.1)',
                         width: 'fit-content',
@@ -242,12 +242,12 @@ const RoomsPage = () => {
                 <GalleryCategory title="Safety" icon={Shield} items={galleryData.security} delay={0.4} />
                 <GalleryCategory title="Transport" icon={Truck} items={galleryData.transport} delay={0.5} />
 
-                <section style={{ 
-                    textAlign: 'center', 
-                    padding: '8rem 5%', 
-                    background: 'var(--glass-deep)', 
-                    margin: '0 5%', 
-                    borderRadius: '50px', 
+                <section style={{
+                    textAlign: 'center',
+                    padding: 'clamp(3rem, 8vw, 8rem) 5%',
+                    background: 'var(--glass-deep)',
+                    margin: '0 clamp(1rem, 3vw, 5%)',
+                    borderRadius: 'clamp(24px, 5vw, 50px)',
                     border: '1px solid var(--glass-border)',
                     position: 'relative',
                     overflow: 'hidden',
@@ -269,12 +269,12 @@ const RoomsPage = () => {
                     <h2 style={{ marginBottom: '2rem', fontWeight: 900, fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '-1px' }}>
                         Experience the <span className="gold-text">Difference.</span>
                     </h2>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '4rem', maxWidth: '650px', margin: '0 auto 4rem', fontSize: '1.15rem', lineHeight: '1.8' }}>
+                    <p style={{ color: 'var(--text-secondary)', maxWidth: '650px', margin: '0 auto clamp(2rem, 5vw, 4rem)', fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)', lineHeight: '1.8', padding: '0 clamp(0.5rem, 3vw, 1rem)' }}>
                         Our spaces are engineered for success and comfort. Limited availability remains for the upcoming semester.
                     </p>
-                    <button className="cta-button" 
+                    <button className="cta-button"
                         onClick={() => window.dispatchEvent(new CustomEvent('openBooking'))}
-                        style={{ padding: '1.5rem 3rem', fontSize: '1.1rem', borderRadius: '20px' }}
+                        style={{ padding: 'clamp(1rem, 2.5vw, 1.5rem) clamp(1.5rem, 4vw, 3rem)', fontSize: 'clamp(0.85rem, 2vw, 1.1rem)', borderRadius: '20px' }}
                     >
                         Secure Your Residence <ArrowRight size={22} style={{ marginLeft: '1rem' }} />
                     </button>

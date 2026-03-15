@@ -94,7 +94,7 @@ const Cafeteria = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 style={{
                                     width: '100%',
-                                    padding: '1.2rem 1.2rem 1.2rem 3.5rem',
+                                    padding: '1rem 1rem 1rem 3rem',
                                     background: 'var(--glass)',
                                     border: '1px solid var(--glass-border)',
                                     borderRadius: '16px',
@@ -137,8 +137,8 @@ const Cafeteria = () => {
 
                     <div className="menu-grid" style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))',
-                        gap: '2.5rem',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+                        gap: 'clamp(1.5rem, 3vw, 2.5rem)',
                         maxWidth: '1200px',
                         width: '100%',
                         margin: '0 auto',
@@ -160,8 +160,8 @@ const Cafeteria = () => {
                                         className="menu-card reveal" 
                                         style={{
                                             background: 'var(--glass)',
-                                            padding: '2.5rem',
-                                            borderRadius: '32px',
+                                            padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+                                            borderRadius: 'clamp(20px, 3vw, 32px)',
                                             border: '1px solid var(--glass-border)',
                                             display: 'flex',
                                             flexDirection: 'column',
