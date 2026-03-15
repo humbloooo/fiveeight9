@@ -3,10 +3,11 @@ const router = express.Router();
 const Amenity = require('../models/Amenity');
 const { auth, requireAdmin } = require('../middleware/auth');
 
-// Public: Get all amenities
+// Public: Get all available amenities
 router.get('/', async (req, res) => {
     try {
-        const amenities = await Amenity.find();
+        const filter = req.query.all === 'true' ? {} : { available: { $ne: false } };
+        const amenities = await Amenity.find(filter).sort({ createdAt: 1 });
         res.json(amenities);
     } catch (err) {
         res.status(500).json({ message: err.message });

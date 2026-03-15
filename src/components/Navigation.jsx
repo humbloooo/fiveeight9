@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, User, LogIn, LogOut, Shield, Moon, Sun, Phone, Truck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, ChevronDown, User, LogOut, Shield, Moon, Sun, Truck } from 'lucide-react';
 import axios from 'axios';
 import API_BASE_URL from '../config';
 import Toast from './Toast';
