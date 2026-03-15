@@ -60,7 +60,7 @@ const StudentAccount = () => {
         <div style={{ 
             minHeight: '100vh', 
             background: 'var(--navy)', 
-            padding: '120px 2rem 5rem', 
+            padding: 'clamp(90px, 15vw, 120px) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 5rem)',
             color: 'var(--text-primary)',
             position: 'relative',
             overflow: 'hidden'
@@ -96,7 +96,7 @@ const StudentAccount = () => {
                     </motion.p>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '3rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 'clamp(1.5rem, 4vw, 3rem)' }}>
                     {/* Left Column - Profile Card */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
@@ -104,15 +104,15 @@ const StudentAccount = () => {
                         transition={{ delay: 0.3 }}
                         style={{ 
                             background: 'var(--glass-deep)', 
-                            borderRadius: '40px', 
-                            border: '1px solid var(--glass-border)', 
-                            padding: '3rem 2rem', 
+                            borderRadius: 'clamp(24px, 4vw, 40px)',
+                            border: '1px solid var(--glass-border)',
+                            padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2rem)',
                             textAlign: 'center',
                             height: 'fit-content',
                             boxShadow: '0 40px 100px rgba(0,0,0,0.3)'
                         }}
                     >
-                        <div style={{ position: 'relative', width: '180px', height: '180px', margin: '0 auto 2.5rem' }}>
+                        <div style={{ position: 'relative', width: 'min(180px, 40vw)', height: 'min(180px, 40vw)', margin: '0 auto 2rem' }}>
                             <div style={{ 
                                 width: '100%', 
                                 height: '100%', 
@@ -171,12 +171,12 @@ const StudentAccount = () => {
                         transition={{ delay: 0.4 }}
                         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
                     >
-                        <div style={{ background: 'var(--glass-deep)', borderRadius: '40px', border: '1px solid var(--glass-border)', padding: '3rem' }}>
+                        <div style={{ background: 'var(--glass-deep)', borderRadius: 'clamp(24px, 4vw, 40px)', border: '1px solid var(--glass-border)', padding: 'clamp(1.5rem, 4vw, 3rem)' }}>
                             <h3 style={{ fontSize: '1.4rem', fontWeight: 900, marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <Building2 size={24} color="var(--gold)" /> Identity Metadata
                             </h3>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: 'clamp(1.5rem, 3vw, 2.5rem)' }}>
                                 {[
                                     { label: 'Email Address', value: userData.email, icon: <Mail size={18} /> },
                                     { label: 'Student ID', value: userData.studentNumber, icon: <Hash size={18} /> },
@@ -193,7 +193,7 @@ const StudentAccount = () => {
                             </div>
                         </div>
 
-                        <div style={{ background: 'var(--glass-glow)', borderRadius: '40px', border: '1px solid var(--gold)', padding: '2.5rem', display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                        <div style={{ background: 'var(--glass-glow)', borderRadius: 'clamp(24px, 4vw, 40px)', border: '1px solid var(--gold)', padding: 'clamp(1.5rem, 4vw, 2.5rem)', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                             <div style={{ background: 'var(--gold)', color: 'var(--navy)', width: '60px', height: '60px', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <ShieldCheck size={32} />
                             </div>

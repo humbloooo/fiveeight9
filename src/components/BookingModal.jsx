@@ -40,8 +40,8 @@ const BookingModal = ({ isOpen, onClose }) => {
                 background: 'var(--navy)',
                 width: '100%',
                 maxWidth: '550px',
-                padding: '3.5rem',
-                borderRadius: '40px',
+                padding: 'clamp(1.5rem, 5vw, 3.5rem)',
+                borderRadius: 'clamp(24px, 4vw, 40px)',
                 border: '1px solid var(--glass-border)',
                 position: 'relative',
                 boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
@@ -85,7 +85,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                                         <Mail size={18} className="input-icon" />
                                         <input type="email" placeholder="Email Address" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
                                     </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.2rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '1rem' }}>
                                         <div className="input-group">
                                             <Phone size={18} className="input-icon" />
                                             <input type="tel" placeholder="Phone" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
@@ -133,7 +133,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                     }
                     input, select {
                         width: 100%;
-                        padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+                        padding: 1rem 1rem 1rem 3rem;
                         background: var(--glass-thick);
                         border: 1px solid var(--glass-border);
                         color: white !important;

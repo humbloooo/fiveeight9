@@ -45,7 +45,7 @@ const MaintenanceTicket = () => {
                 <Background />
                 <Navigation />
                 <main className="section">
-                    <div style={{ textAlign: 'center', background: 'var(--glass)', padding: '5rem', borderRadius: '32px', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ textAlign: 'center', background: 'var(--glass)', padding: 'clamp(2.5rem, 6vw, 5rem)', borderRadius: 'clamp(20px, 4vw, 32px)', border: '1px solid var(--glass-border)' }}>
                         <CheckCircle size={80} color="var(--gold)" style={{ marginBottom: '2rem' }} />
                         <h1 className="section-title" style={{ fontSize: '2.5rem' }}>Ticket <span>Submitted</span></h1>
                         <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem' }}>Your request has been logged. Our technicians will attend to it shortly.</p>
@@ -179,7 +179,7 @@ const MaintenanceTicket = () => {
 
                         {/* Info Panel */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                            <div style={{ background: 'var(--glass)', padding: '2.5rem', borderRadius: '24px', border: '1px solid var(--glass-border)' }}>
+                            <div style={{ background: 'var(--glass)', padding: 'clamp(1.5rem, 4vw, 2.5rem)', borderRadius: 'clamp(16px, 3vw, 24px)', border: '1px solid var(--glass-border)' }}>
                                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
                                     <AlertTriangle color="var(--gold)" />
                                     <h4 style={{ fontWeight: 800 }}>Emergency Issues?</h4>
@@ -191,7 +191,7 @@ const MaintenanceTicket = () => {
                                 </p>
                             </div>
 
-                            <div style={{ background: 'rgba(197, 160, 89, 0.05)', padding: '2.5rem', borderRadius: '24px', border: '1px solid var(--gold-glow)' }}>
+                            <div style={{ background: 'rgba(197, 160, 89, 0.05)', padding: 'clamp(1.5rem, 4vw, 2.5rem)', borderRadius: 'clamp(16px, 3vw, 24px)', border: '1px solid var(--gold-glow)' }}>
                                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
                                     <Info color="var(--gold)" />
                                     <h4 style={{ fontWeight: 800 }}>What Happens Next?</h4>

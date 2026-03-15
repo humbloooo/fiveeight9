@@ -79,8 +79,8 @@ const Safety = () => {
                                 whileHover={{ y: -10, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}
                                 style={{
                                     background: 'var(--glass)',
-                                    padding: '3rem 2rem',
-                                    borderRadius: '32px',
+                                    padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2rem)',
+                                    borderRadius: 'clamp(20px, 3vw, 32px)',
                                     border: '1px solid var(--glass-border)',
                                     textAlign: 'center',
                                     display: 'flex',
@@ -89,8 +89,8 @@ const Safety = () => {
                                 }}
                             >
                                 <div className="amenity-icon" style={{ 
-                                    width: '70px',
-                                    height: '70px',
+                                    width: 'min(70px, 15vw)',
+                                    height: 'min(70px, 15vw)',
                                     borderColor: 'var(--gold)', 
                                     color: 'var(--gold)',
                                     background: 'rgba(197, 160, 89, 0.1)',
@@ -117,7 +117,7 @@ const Safety = () => {
                             marginTop: 'clamp(4rem, 12vw, 7rem)',
                             background: 'var(--glass)',
                             padding: 'clamp(2rem, 6vw, 4rem)',
-                            borderRadius: '35px',
+                            borderRadius: 'clamp(20px, 4vw, 35px)',
                             border: '1px solid var(--glass-border)',
                             maxWidth: '1000px',
                             width: '100%',

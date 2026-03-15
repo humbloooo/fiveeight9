@@ -36,7 +36,7 @@ const Footer = () => {
     return (
         <footer style={{
             background: 'var(--navy)',
-            padding: 'clamp(3rem, 10vw, 8rem) 2rem 4rem',
+            padding: 'clamp(3rem, 10vw, 8rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 4rem)',
             borderTop: '1px solid var(--glass-border)',
             position: 'relative',
             overflow: 'hidden'
@@ -48,8 +48,8 @@ const Footer = () => {
                 maxWidth: '1200px',
                 margin: '0 auto',
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '4rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
+                gap: 'clamp(2rem, 5vw, 4rem)'
             }}>
                 {/* Brand Info */}
                 <div className="reveal">
@@ -140,8 +140,8 @@ const Footer = () => {
             </div>
 
             <div style={{
-                marginTop: '6rem',
-                paddingTop: '3rem',
+                marginTop: 'clamp(3rem, 6vw, 6rem)',
+                paddingTop: 'clamp(1.5rem, 4vw, 3rem)',
                 borderTop: '1px solid var(--glass-border)',
                 textAlign: 'center',
                 color: 'var(--text-secondary)',

@@ -58,7 +58,7 @@ const EventCard = ({ event, index }) => {
                 </div>
             )}
 
-            <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ padding: 'clamp(1.2rem, 3vw, 2rem)', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 {/* Header row */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ background: cat.bg, border: `1px solid ${cat.border}`, color: cat.text, padding: '0.3rem 0.9rem', borderRadius: '50px', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.5px' }}>
@@ -215,7 +215,7 @@ const EventsCalendar = () => {
 
                     {/* Events grid */}
                     {loading ? (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '2rem', width: '100%', maxWidth: '1200px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '2rem', width: '100%', maxWidth: '1200px' }}>
                             {Array(3).fill(0).map((_, i) => <SkeletonLoader key={i} height="360px" borderRadius="24px" />)}
                         </div>
                     ) : error ? (
@@ -234,7 +234,7 @@ const EventsCalendar = () => {
                             </p>
                         </div>
                     ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '2rem', width: '100%', maxWidth: '1200px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '2rem', width: '100%', maxWidth: '1200px' }}>
                             {filtered.map((event, i) => (
                                 <EventCard key={event._id || i} event={event} index={i} />
                             ))}

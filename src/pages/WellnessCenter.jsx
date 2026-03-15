@@ -60,7 +60,7 @@ const FAQItem = ({ faq, index }) => {
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         style={{ overflow: 'hidden' }}
                     >
-                        <div style={{ padding: '0 2rem 1.5rem 4.5rem', color: 'var(--text-secondary)', lineHeight: '1.7', fontSize: '0.95rem' }}>
+                        <div style={{ padding: '0 clamp(1rem, 3vw, 2rem) 1.5rem clamp(2.5rem, 6vw, 4.5rem)', color: 'var(--text-secondary)', lineHeight: '1.7', fontSize: '0.95rem' }}>
                             {faq.a}
                         </div>
                     </motion.div>
@@ -123,7 +123,7 @@ const WellnessCenter = () => {
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
                                 whileHover={{ y: -10, scale: 1.02 }}
-                                style={{ background: 'var(--glass)', padding: '2.5rem 2rem', borderRadius: '32px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+                                style={{ background: 'var(--glass)', padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1.2rem, 3vw, 2rem)', borderRadius: 'clamp(20px, 3vw, 32px)', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
                             >
                                 <div className="amenity-icon" style={{
                                     width: '64px', height: '64px', background: 'var(--gold-gradient)',
@@ -187,7 +187,7 @@ const WellnessCenter = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             style={{
-                                marginTop: '4rem', textAlign: 'center', padding: '3rem',
+                                marginTop: 'clamp(2rem, 5vw, 4rem)', textAlign: 'center', padding: 'clamp(1.5rem, 4vw, 3rem)',
                                 background: 'var(--glass)', borderRadius: '24px', border: '1px solid var(--glass-border)'
                             }}
                         >
