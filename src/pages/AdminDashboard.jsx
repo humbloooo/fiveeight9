@@ -30,7 +30,8 @@ const AdminDashboard = ({ token, setToken }) => {
             if (activeTab === 'settings') endpoint = 'settings';
             if (activeTab === 'admins') endpoint = 'auth/users';
             
-            const res = await axios.get(`${API_BASE_URL}/api/${endpoint}`, {
+            const queryStr = ['amenities', 'rooms', 'events'].includes(endpoint) ? '?all=true' : '';
+            const res = await axios.get(`${API_BASE_URL}/api/${endpoint}${queryStr}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setData(res.data);
@@ -461,6 +462,11 @@ const AdminDashboard = ({ token, setToken }) => {
                                             {activeTab === 'admins' && (
                                                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', fontSize: '0.8rem', fontWeight: 800 }}>
                                                     <span style={{ color: 'var(--gold)' }}>ACCESS LEVEL:</span> {item.role.toUpperCase()}
+                                                </div>
+                                            )}
+                                            {activeTab === 'amenities' && item.available === false && (
+                                                <div style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: 'rgba(255, 77, 77, 0.1)', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800, color: '#ff4d4d', letterSpacing: '1px', textTransform: 'uppercase', textAlign: 'center' }}>
+                                                    Hidden from public
                                                 </div>
                                             )}
                                         </motion.div>

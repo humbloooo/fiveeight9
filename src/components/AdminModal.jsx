@@ -676,6 +676,22 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                 />
             </div>
 
+            {type === 'amenities' && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                        Detailed Description <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>(shown in detail modal, supports HTML)</span>
+                    </label>
+                    <textarea
+                        name="detailedDesc"
+                        value={formData.detailedDesc || ''}
+                        onChange={handleChange}
+                        className="admin-input"
+                        rows={5}
+                        placeholder="Extended description shown when a user clicks on this amenity. You can use HTML tags for formatting."
+                    />
+                </div>
+            )}
+
             <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
                     {type === 'admins' ? 'Profile Picture (Optional)' : 'Main Image'}
@@ -716,6 +732,20 @@ const AdminModal = ({ type, isOpen, onClose, onSubmit, editingItem }) => {
                         style={{ color: 'var(--text-primary)', fontSize: '0.8rem' }} 
                     />
                     {mediaFiles.length > 0 && <div style={{ fontSize: '0.7rem', color: 'var(--gold)', marginTop: '0.5rem' }}>{mediaFiles.length} new files ready for upload</div>}
+                </div>
+            )}
+
+            {type === 'amenities' && (
+                <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <label style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <input
+                            type="checkbox"
+                            checked={formData.available !== false}
+                            onChange={(e) => setFormData(prev => ({ ...prev, available: e.target.checked }))}
+                            style={{ width: '18px', height: '18px', accentColor: 'var(--gold)', cursor: 'pointer' }}
+                        />
+                        Visible to public
+                    </label>
                 </div>
             )}
         </>
